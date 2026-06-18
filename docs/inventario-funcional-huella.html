@@ -1,0 +1,1872 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventario Funcional — Plataforma Huella</title>
+    <style>
+        :root {
+            --primary: #5B2D8E;
+            --primary-light: #7B4BAE;
+            --secondary: #2563EB;
+            --secondary-light: #3B82F6;
+            --accent: #06B6D4;
+            --bg: #F8FAFC;
+            --card-bg: #FFFFFF;
+            --text: #1E293B;
+            --text-light: #64748B;
+            --border: #E2E8F0;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --gradient: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+        .header { background: var(--gradient); color: white; padding: 2rem 1.5rem 1rem; position: relative; overflow: hidden; }
+        .header::before { content: ''; position: absolute; top: -50%; right: -20%; width: 60%; height: 200%; background: rgba(255,255,255,0.05); border-radius: 50%; }
+        .header h1 { font-size: 1.8rem; font-weight: 700; margin-bottom: 0.3rem; }
+        .header .subtitle { opacity: 0.9; font-size: 0.95rem; margin-bottom: 1rem; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 0.75rem; margin-top: 1rem; }
+        .stat-card { background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); border-radius: 10px; padding: 0.75rem; text-align: center; border: 1px solid rgba(255,255,255,0.2); }
+        .stat-card .number { font-size: 1.5rem; font-weight: 700; }
+        .stat-card .label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.85; }
+        .tabs-container { position: sticky; top: 0; z-index: 100; background: var(--card-bg); border-bottom: 1px solid var(--border); box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+        .tabs { display: flex; overflow-x: auto; padding: 0; }
+        .tab { flex: 1; min-width: 120px; padding: 1rem 0.75rem; text-align: center; cursor: pointer; font-size: 0.85rem; font-weight: 600; color: var(--text-light); border-bottom: 3px solid transparent; transition: all 0.2s; white-space: nowrap; }
+        .tab:hover { color: var(--primary); background: rgba(91,45,142,0.04); }
+        .tab.active { color: var(--primary); border-bottom-color: var(--primary); background: rgba(91,45,142,0.06); }
+        .tab .tab-icon { display: block; font-size: 1.2rem; margin-bottom: 0.2rem; }
+        .content { max-width: 1200px; margin: 0 auto; padding: 1.5rem; }
+        .tab-content { display: none; animation: fadeIn 0.3s ease; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .card { background: var(--card-bg); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.25rem; box-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04); border: 1px solid var(--border); }
+        .card h2 { font-size: 1.2rem; color: var(--primary); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
+        .card h3 { font-size: 1rem; color: var(--text); margin: 1rem 0 0.5rem; }
+        .process-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; }
+        .process-card { background: linear-gradient(135deg, rgba(91,45,142,0.05), rgba(37,99,235,0.05)); border-radius: 10px; padding: 1.25rem; border: 1px solid rgba(91,45,142,0.15); transition: transform 0.2s, box-shadow 0.2s; }
+        .process-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(91,45,142,0.12); }
+        .process-card .icon { font-size: 2rem; margin-bottom: 0.5rem; }
+        .process-card h4 { color: var(--primary); margin-bottom: 0.3rem; }
+        .process-card p { font-size: 0.85rem; color: var(--text-light); }
+        .module { border: 1px solid var(--border); border-radius: 10px; margin-bottom: 0.75rem; overflow: hidden; }
+        .module-header { padding: 1rem 1.25rem; cursor: pointer; display: flex; justify-content: space-between; align-items: center; background: rgba(91,45,142,0.03); transition: background 0.2s; }
+        .module-header:hover { background: rgba(91,45,142,0.07); }
+        .module-header h4 { font-size: 0.95rem; color: var(--text); display: flex; align-items: center; gap: 0.5rem; }
+        .module-header .badge { background: var(--primary); color: white; font-size: 0.7rem; padding: 0.15rem 0.5rem; border-radius: 10px; }
+        .module-header .arrow { transition: transform 0.3s; font-size: 0.8rem; }
+        .module-header.open .arrow { transform: rotate(180deg); }
+        .module-body { padding: 0 1.25rem 1rem; display: none; }
+        .module-body.open { display: block; }
+        .func-list { list-style: none; padding: 0; }
+        .func-list li { padding: 0.4rem 0; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 0.5rem; font-size: 0.88rem; }
+        .func-list li:last-child { border-bottom: none; }
+        .func-list input[type="checkbox"] { accent-color: var(--primary); width: 16px; height: 16px; cursor: pointer; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin-top: 0.5rem; }
+        th, td { padding: 0.6rem 0.75rem; text-align: left; border-bottom: 1px solid var(--border); }
+        th { background: rgba(91,45,142,0.06); font-weight: 600; color: var(--primary); position: sticky; top: 0; }
+        tr:hover td { background: rgba(91,45,142,0.02); }
+        .table-wrapper { overflow-x: auto; border-radius: 8px; border: 1px solid var(--border); }
+        .tag { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 6px; font-size: 0.75rem; font-weight: 500; margin: 0.15rem; }
+        .tag-high { background: #FEE2E2; color: #991B1B; }
+        .tag-medium { background: #FEF3C7; color: #92400E; }
+        .tag-low { background: #D1FAE5; color: #065F46; }
+        .tag-tech { background: #EDE9FE; color: #5B21B6; }
+        pre { background: #1E293B; color: #E2E8F0; padding: 1rem; border-radius: 8px; overflow-x: auto; font-size: 0.8rem; line-height: 1.5; margin: 0.75rem 0; }
+        code { font-family: 'JetBrains Mono', 'Fira Code', monospace; }
+        .search-box { width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--border); border-radius: 8px; font-size: 0.9rem; margin-bottom: 1rem; outline: none; transition: border-color 0.2s; }
+        .search-box:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(91,45,142,0.1); }
+        .progress-float { position: fixed; bottom: 1.5rem; right: 1.5rem; background: var(--primary); color: white; padding: 0.6rem 1rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600; box-shadow: 0 4px 12px rgba(91,45,142,0.3); z-index: 200; display: none; }
+        .footer { background: var(--text); color: rgba(255,255,255,0.7); padding: 1.5rem; margin-top: 2rem; font-size: 0.8rem; text-align: center; border-radius: 12px 12px 0 0; }
+        .footer strong { color: white; }
+        .impact-list { list-style: none; padding: 0; }
+        .impact-list li { padding: 0.5rem 0; padding-left: 1.5rem; position: relative; }
+        .impact-list li::before { content: '✓'; position: absolute; left: 0; color: var(--success); font-weight: bold; }
+        .phase { display: flex; align-items: flex-start; gap: 1rem; padding: 0.75rem 0; border-bottom: 1px solid var(--border); }
+        .phase-num { background: var(--gradient); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; flex-shrink: 0; }
+        .phase-content h4 { font-size: 0.9rem; margin-bottom: 0.2rem; }
+        .phase-content p { font-size: 0.82rem; color: var(--text-light); }
+        @media (max-width: 768px) {
+            .header h1 { font-size: 1.4rem; }
+            .stats-grid { grid-template-columns: repeat(3, 1fr); }
+            .content { padding: 1rem; }
+            .process-grid { grid-template-columns: 1fr; }
+            .tab { font-size: 0.75rem; padding: 0.75rem 0.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📋 Inventario Funcional — Plataforma Huella</h1>
+        <p class="subtitle">Oracle B2C Service (Service Cloud) · Gestión de Cobranza y Arrendamiento · Seguros Bolívar</p>
+        <div class="stats-grid">
+            <div class="stat-card"><div class="number">19</div><div class="label">Módulos</div></div>
+            <div class="stat-card"><div class="number">155+</div><div class="label">Funcionalidades</div></div>
+            <div class="stat-card"><div class="number">9</div><div class="label">Integraciones</div></div>
+            <div class="stat-card"><div class="number">13</div><div class="label">Custom Objects</div></div>
+            <div class="stat-card"><div class="number">789K</div><div class="label">Siniestros</div></div>
+            <div class="stat-card"><div class="number">1,640</div><div class="label">Cuentas</div></div>
+            <div class="stat-card"><div class="number">23</div><div class="label">Objetos SC</div></div>
+            <div class="stat-card"><div class="number">519</div><div class="label">Campos DTO</div></div>
+        </div>
+    </div>
+
+    <div class="tabs-container">
+        <div class="tabs">
+            <div class="tab active" data-tab="negocio"><span class="tab-icon">💼</span>Negocio</div>
+            <div class="tab" data-tab="operacion"><span class="tab-icon">⚙️</span>Operación</div>
+            <div class="tab" data-tab="integraciones"><span class="tab-icon">🔌</span>Integraciones</div>
+            <div class="tab" data-tab="flujos"><span class="tab-icon">🔎</span>Flujos UI</div>
+            <div class="tab" data-tab="arquitectura"><span class="tab-icon">🏗️</span>Arquitectura</div>
+            <div class="tab" data-tab="desarrollo"><span class="tab-icon">💻</span>Desarrollo</div>
+            <div class="tab" data-tab="documentacion"><span class="tab-icon">📚</span>Documentación</div>
+            <div class="tab" data-tab="wscore"><span class="tab-icon">🔗</span>WS Core</div>
+            <div class="tab" data-tab="reglas"><span class="tab-icon">⚡</span>Business Rules</div>
+        </div>
+    </div>
+
+    <div class="content">
+
+        <!-- TAB 1: NEGOCIO -->
+        <div class="tab-content active" id="negocio">
+            <div class="card">
+                <h2>📌 Resumen Ejecutivo</h2>
+                <p><strong>Huella</strong> es la plataforma de gestión de cobranza y procesos operativos de arrendamiento de Seguros Bolívar. Opera sobre <strong>Oracle B2C Service</strong> (Oracle Service Cloud), provista por <strong>ImagineCX</strong> y soportada por <strong>Stefanini</strong>.</p>
+                <p style="margin-top:0.75rem;">Gestiona el ciclo completo de cobranza jurídica y pre-jurídica, desistimientos, desocupaciones, liquidaciones y devoluciones para contratos de arrendamiento, con <strong>1,640 usuarios activos</strong> distribuidos en <strong>40 grupos organizacionales</strong>.</p>
+            </div>
+
+            <div class="card">
+                <h2>🔄 Procesos Principales</h2>
+                <div class="process-grid">
+                    <div class="process-card">
+                        <div class="icon">⚖️</div>
+                        <h4>Cobranza Jurídica</h4>
+                        <p>Gestión de cobros mediante procesos legales. Incluye radicación, seguimiento de demandas, sentencias y ejecución de fallos judiciales.</p>
+                    </div>
+                    <div class="process-card">
+                        <div class="icon">📋</div>
+                        <h4>Cobranza Pre-Jurídica</h4>
+                        <p>Gestión preventiva antes de acción legal. Contacto con deudores, acuerdos de pago, negociación de condiciones y seguimiento de compromisos.</p>
+                    </div>
+                    <div class="process-card">
+                        <div class="icon">🚪</div>
+                        <h4>Desistimiento</h4>
+                        <p>Proceso de terminación voluntaria de contratos. Gestión de avisos, validación de condiciones y cierre administrativo del contrato.</p>
+                    </div>
+                    <div class="process-card">
+                        <div class="icon">🏠</div>
+                        <h4>Desocupaciones</h4>
+                        <p>Gestión de entrega de inmuebles arrendados. Coordinación de inspecciones, actas de entrega y liquidación final del contrato.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>📊 Volumetría de la Plataforma</h2>
+                <div class="table-wrapper">
+                    <table>
+                        <thead><tr><th>Indicador</th><th>Valor</th><th>Detalle</th></tr></thead>
+                        <tbody>
+                            <tr><td>Cuentas de personal</td><td><strong>1,640</strong></td><td>Incluye activas, deshabilitadas y de integración</td></tr>
+                            <tr><td>Grupos organizacionales</td><td><strong>40</strong></td><td>Desde Administradores hasta Cobranza regional</td></tr>
+                            <tr><td>Perfiles de acceso</td><td><strong>40</strong></td><td>Gestor (527), Abogado Externo (210), Gestor Jurídico (202)...</td></tr>
+                            <tr><td>Custom Objects</td><td><strong>13</strong></td><td>Entidades de negocio (Contratos, Amparos, Liquidaciones...)</td></tr>
+                            <tr><td>Campos documentados</td><td><strong>326</strong></td><td>Distribuidos en los 13 Custom Objects</td></tr>
+                            <tr><td>Recursos API</td><td><strong>192</strong></td><td>Endpoints REST disponibles (Connect API v1.4)</td></tr>
+                            <tr><td>Módulos funcionales</td><td><strong>19</strong></td><td>5 menú + 6 admin + 1 integraciones + 4 procesos + 3 API</td></tr>
+                            <tr><td>Funcionalidades</td><td><strong>155+</strong></td><td>Documentadas entre todos los módulos</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>🎯 Impacto de la Migración</h2>
+                <h3>¿Qué se gana con la migración?</h3>
+                <ul class="impact-list">
+                    <li>Eliminación de dependencia de Oracle DB (stack legacy) → PostgreSQL (estándar aprobado)</li>
+                    <li>Reducción de costos de licenciamiento Oracle Service Cloud</li>
+                    <li>Mayor autonomía tecnológica (sin dependencia de ImagineCX/Stefanini)</li>
+                    <li>Integración nativa con el ecosistema cloud AWS de la organización</li>
+                    <li>Modernización de la experiencia de usuario (UX actual limitada por Oracle Agent Desktop)</li>
+                    <li>Capacidad de escalar y personalizar sin restricciones de plataforma</li>
+                    <li>Observabilidad completa con Datadog (APM, logs, métricas)</li>
+                    <li>CI/CD con GitHub Actions (actualmente sin pipeline automatizado)</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- TAB 2: OPERACIÓN -->
+        <div class="tab-content" id="operacion">
+            <div class="card">
+                <h2>📦 Módulos del Menú Principal</h2>
+                <p style="margin-bottom:1rem; color: var(--text-light); font-size:0.88rem;">5 módulos visibles en la navegación lateral del agente. Marca las funcionalidades revisadas.</p>
+
+                <div class="module">
+                    <div class="module-header" onclick="toggleModule(this)">
+                        <h4>📊 1. Análisis <span class="badge">17 func.</span></h4>
+                        <span class="arrow">▼</span>
+                    </div>
+                    <div class="module-body">
+                        <p style="font-size:0.82rem; color:var(--text-light); margin-bottom:0.5rem;">Gestión de Informes y Explorador de Informes</p>
+                        <ul class="func-list">
+                            <li><input type="checkbox" data-key="op-1-1"> Árbol de navegación de informes (carpetas)</li>
+                            <li><input type="checkbox" data-key="op-1-2"> Cuadrícula de datos (28 informes listados)</li>
+                            <li><input type="checkbox" data-key="op-1-3"> Buscar informes</li>
+                            <li><input type="checkbox" data-key="op-1-4"> Refrescar lista de informes</li>
+                            <li><input type="checkbox" data-key="op-1-5"> Restablecer vista</li>
+                            <li><input type="checkbox" data-key="op-1-6"> Abrir informe</li>
+                            <li><input type="checkbox" data-key="op-1-7"> Imprimir informe</li>
+                            <li><input type="checkbox" data-key="op-1-8"> Ver definición de informe</li>
+                            <li><input type="checkbox" data-key="op-1-9"> Opciones de tiempo de ejecución</li>
+                            <li><input type="checkbox" data-key="op-1-10"> Ejecuciones en 30 días</li>
+                            <li><input type="checkbox" data-key="op-1-11"> Definir como diferido</li>
+                            <li><input type="checkbox" data-key="op-1-12"> Analizar informe</li>
+                            <li><input type="checkbox" data-key="op-1-13"> Anular diferimiento</li>
+                            <li><input type="checkbox" data-key="op-1-14"> Explorador de informes (vista interactiva)</li>
+                            <li><input type="checkbox" data-key="op-1-15"> Filtros dinámicos en explorador</li>
+                            <li><input type="checkbox" data-key="op-1-16"> Exportar resultados</li>
+                            <li><input type="checkbox" data-key="op-1-17"> Informes públicos vs privados</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="module">
+                    <div class="module-header" onclick="toggleModule(this)">
+                        <h4>⚙️ 2. Configuración <span class="badge">22 func.</span></h4>
+                        <span class="arrow">▼</span>
+                    </div>
+                    <div class="module-body">
+                        <p style="font-size:0.82rem; color:var(--text-light); margin-bottom:0.5rem;">Priorización, Clasificación Cartera, Gestión Personal, Config Sitio, Servicio</p>
+                        <h3 style="font-size:0.9rem;">Motor de Priorización</h3>
+                        <ul class="func-list">
+                            <li><input type="checkbox" data-key="op-2-1"> Configurar rangos de priorización</li>
+                            <li><input type="checkbox" data-key="op-2-2"> Asignar valores por rango (1-10)</li>
+                            <li><input type="checkbox" data-key="op-2-3"> Priorización por antigüedad de deuda</li>
+                            <li><input type="checkbox" data-key="op-2-4"> Priorización por monto</li>
+                            <li><input type="checkbox" data-key="op-2-5"> Priorización por tipo de contrato</li>
+                            <li><input type="checkbox" data-key="op-2-6"> Clasificación de cartera (segmentos)</li>
+                            <li><input type="checkbox" data-key="op-2-7"> Gestión de personal (CRUD cuentas)</li>
+                            <li><input type="checkbox" data-key="op-2-8"> Asignación de perfiles a personal</li>
+                            <li><input type="checkbox" data-key="op-2-9"> Asignación de grupos a personal</li>
+                            <li><input type="checkbox" data-key="op-2-10"> Configuración de sitio (parámetros globales)</li>
+                            <li><input type="checkbox" data-key="op-2-11"> Configuración de servicio (SLAs)</li>
+                            <li><input type="checkbox" data-key="op-2-12"> Habilitar/deshabilitar cuentas</li>
+                            <li><input type="checkbox" data-key="op-2-13"> Resetear contraseñas</li>
+                            <li><input type="checkbox" data-key="op-2-14"> Configurar horarios de atención</li>
+                            <li><input type="checkbox" data-key="op-2-15"> Gestión de colas de trabajo</li>
+                            <li><input type="checkbox" data-key="op-2-16"> Distribución automática de cuentas</li>
+                            <li><input type="checkbox" data-key="op-2-17"> Reglas de asignación por grupo</li>
+                            <li><input type="checkbox" data-key="op-2-18"> Configurar notificaciones del sistema</li>
+                            <li><input type="checkbox" data-key="op-2-19"> Parámetros de timeout de sesión</li>
+                            <li><input type="checkbox" data-key="op-2-20"> Configurar campos obligatorios por perfil</li>
+                            <li><input type="checkbox" data-key="op-2-21"> Gestión de catálogos (listas de valores)</li>
+                            <li><input type="checkbox" data-key="op-2-22"> Auditoría de cambios de configuración</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="module">
+                    <div class="module-header" onclick="toggleModule(this)">
+                        <h4>🏠 3. Inicio <span class="badge">8 func.</span></h4>
+                        <span class="arrow">▼</span>
+                    </div>
+                    <div class="module-body">
+                        <p style="font-size:0.82rem; color:var(--text-light); margin-bottom:0.5rem;">Centro de acciones, Búsqueda rápida, Pestañas</p>
+                        <ul class="func-list">
+                            <li><input type="checkbox" data-key="op-3-1"> Centro de acciones (dashboard personal)</li>
+                            <li><input type="checkbox" data-key="op-3-2"> Búsqueda rápida de contratos/pólizas</li>
+                            <li><input type="checkbox" data-key="op-3-3"> Pestañas de trabajo múltiple</li>
+                            <li><input type="checkbox" data-key="op-3-4"> Notificaciones pendientes</li>
+                            <li><input type="checkbox" data-key="op-3-5"> Accesos directos configurables</li>
+                            <li><input type="checkbox" data-key="op-3-6"> Resumen de gestión del día</li>
+                            <li><input type="checkbox" data-key="op-3-7"> Indicadores de productividad</li>
+                            <li><input type="checkbox" data-key="op-3-8"> Últimos registros consultados</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="module">
+                    <div class="module-header" onclick="toggleModule(this)">
+                        <h4>📧 4. Correos <span class="badge">10 func.</span></h4>
+                        <span class="arrow">▼</span>
+                    </div>
+                    <div class="module-body">
+                        <p style="font-size:0.82rem; color:var(--text-light); margin-bottom:0.5rem;">Cambio de Notificaciones, Estado de Notificaciones</p>
+                        <ul class="func-list">
+                            <li><input type="checkbox" data-key="op-4-1"> Cambio de notificaciones (reasignar)</li>
+                            <li><input type="checkbox" data-key="op-4-2"> Estado de notificaciones (tracking)</li>
+                            <li><input type="checkbox" data-key="op-4-3"> Envío masivo de notificaciones</li>
+                            <li><input type="checkbox" data-key="op-4-4"> Plantillas de correo predefinidas</li>
+                            <li><input type="checkbox" data-key="op-4-5"> Historial de envíos por contrato</li>
+                            <li><input type="checkbox" data-key="op-4-6"> Reenvío de notificaciones fallidas</li>
+                            <li><input type="checkbox" data-key="op-4-7"> Configurar destinatarios por tipo</li>
+                            <li><input type="checkbox" data-key="op-4-8"> Adjuntar documentos a notificaciones</li>
+                            <li><input type="checkbox" data-key="op-4-9"> Programar envíos diferidos</li>
+                            <li><input type="checkbox" data-key="op-4-10"> Reportes de entregabilidad</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="module">
+                    <div class="module-header" onclick="toggleModule(this)">
+                        <h4>💰 5. Mayores Valores <span class="badge">4 func.</span></h4>
+                        <span class="arrow">▼</span>
+                    </div>
+                    <div class="module-body">
+                        <p style="font-size:0.82rem; color:var(--text-light); margin-bottom:0.5rem;">Devolución por Reintegro</p>
+                        <ul class="func-list">
+                            <li><input type="checkbox" data-key="op-5-1"> Consulta de mayores valores por contrato</li>
+                            <li><input type="checkbox" data-key="op-5-2"> Solicitud de devolución por reintegro</li>
+                            <li><input type="checkbox" data-key="op-5-3"> Aprobación/rechazo de devoluciones</li>
+                            <li><input type="checkbox" data-key="op-5-4"> Trazabilidad de pagos devueltos</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>🔧 Módulos Administrativos (no visibles en menú)</h2>
+
+                <div class="module">
+                    <div class="module-header" onclick="toggleModule(this)">
+                        <h4>🖥️ 6. Espacios de Trabajo <span class="badge">11 func.</span></h4>
+                        <span class="arrow">▼</span>
+                    </div>
+                    <div class="module-body">
+                        <ul class="func-list">
+                            <li><input type="checkbox" data-key="op-6-1"> Crear espacios de trabajo</li>
+                            <li><input type="checkbox" data-key="op-6-2"> Configurar layouts por perfil</li>
+                            <li><input type="checkbox" data-key="op-6-3"> Asignar espacios a grupos</li>
+                            <li><input type="checkbox" data-key="op-6-4"> Personalizar paneles laterales</li>
+                            <li><input type="checkbox" data-key="op-6-5"> Configurar campos visibles por workspace</li>
+                            <li><input type="checkbox" data-key="op-6-6"> Definir acciones rápidas por workspace</li>
+                            <li><input type="checkbox" data-key="op-6-7"> Configurar pestañas del workspace</li>
+                            <li><input type="checkbox" data-key="op-6-8"> Reglas de visibilidad condicional</li>
+                            <li><input type="checkbox" data-key="op-6-9"> Herencia de configuración entre workspaces</li>
+                            <li><input type="checkbox" data-key="op-6-10"> Exportar/importar configuración</li>
+                            <li><input type="checkbox" data-key="op-6-11"> Versionamiento de workspaces</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="module">
+                    <div class="module-header" onclick="toggleModule(this)">
+                        <h4>🗂️ 7. Campos y Objetos Personalizados <span class="badge">9 func.</span></h4>
+                        <span class="arrow">▼</span>
+                    </div>
+                    <div class="module-body">
+                        <ul class="func-list">
+                            <li><input type="checkbox" data-key="op-7-1"> Crear Custom Objects</li>
+                            <li><input type="checkbox" data-key="op-7-2"> Definir campos (tipos: text, number, date, menu)</li>
+                            <li><input type="checkbox" data-key="op-7-3"> Configurar relaciones entre objetos (FK)</li>
+                            <li><input type="checkbox" data-key="op-7-4"> Definir campos obligatorios</li>
+                            <li><input type="checkbox" data-key="op-7-5"> Configurar valores por defecto</li>
+                            <li><input type="checkbox" data-key="op-7-6"> Crear campos calculados</li>
+                            <li><input type="checkbox" data-key="op-7-7"> Gestionar menús desplegables (opciones)</li>
+                            <li><input type="checkbox" data-key="op-7-8"> Auditoría de cambios en schema</li>
+                            <li><input type="checkbox" data-key="op-7-9"> Migración de datos entre objetos</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="module">
+                    <div class="module-header" onclick="toggleModule(this)">
+                        <h4>📐 8. Reglas de Negocio <span class="badge">7 func.</span></h4>
+                        <span class="arrow">▼</span>
+                    </div>
+                    <div class="module-body">
+                        <ul class="func-list">
+                            <li><input type="checkbox" data-key="op-8-1"> Crear reglas de negocio (condición → acción)</li>
+                            <li><input type="checkbox" data-key="op-8-2"> Reglas de asignación automática</li>
+                            <li><input type="checkbox" data-key="op-8-3"> Reglas de escalamiento</li>
+                            <li><input type="checkbox" data-key="op-8-4"> Reglas de notificación automática</li>
+                            <li><input type="checkbox" data-key="op-8-5"> Reglas de validación de datos</li>
+                            <li><input type="checkbox" data-key="op-8-6"> Priorización de ejecución de reglas</li>
+                            <li><input type="checkbox" data-key="op-8-7"> Logs de ejecución de reglas</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="module">
+                    <div class="module-header" onclick="toggleModule(this)">
+                        <h4>📝 9. Plantillas de Respuesta <span class="badge">6 func.</span></h4>
+                        <span class="arrow">▼</span>
+                    </div>
+                    <div class="module-body">
+                        <ul class="func-list">
+                            <li><input type="checkbox" data-key="op-9-1"> Crear plantillas de respuesta</li>
+                            <li><input type="checkbox" data-key="op-9-2"> Variables dinámicas en plantillas</li>
+                            <li><input type="checkbox" data-key="op-9-3"> Categorizar plantillas por proceso</li>
+                            <li><input type="checkbox" data-key="op-9-4"> Plantillas con adjuntos predefinidos</li>
+                            <li><input type="checkbox" data-key="op-9-5"> Versionamiento de plantillas</li>
+                            <li><input type="checkbox" data-key="op-9-6"> Aprobación de plantillas nuevas</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="module">
+                    <div class="module-header" onclick="toggleModule(this)">
+                        <h4>🏷️ 10. Productos, Categorías y Disposiciones <span class="badge">5 func.</span></h4>
+                        <span class="arrow">▼</span>
+                    </div>
+                    <div class="module-body">
+                        <ul class="func-list">
+                            <li><input type="checkbox" data-key="op-10-1"> Gestión de productos de servicio (5 con jerarquía)</li>
+                            <li><input type="checkbox" data-key="op-10-2"> Categorías de servicio (2 categorías)</li>
+                            <li><input type="checkbox" data-key="op-10-3"> Disposiciones (estados de cierre)</li>
+                            <li><input type="checkbox" data-key="op-10-4"> Jerarquía producto → categoría → disposición</li>
+                            <li><input type="checkbox" data-key="op-10-5"> Asociar productos a tipos de incidente</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="module">
+                    <div class="module-header" onclick="toggleModule(this)">
+                        <h4>📱 11. Módulo de SMS <span class="badge">6 func.</span></h4>
+                        <span class="arrow">▼</span>
+                    </div>
+                    <div class="module-body">
+                        <ul class="func-list">
+                            <li><input type="checkbox" data-key="op-11-1"> Envío individual de SMS</li>
+                            <li><input type="checkbox" data-key="op-11-2"> Envío masivo de SMS</li>
+                            <li><input type="checkbox" data-key="op-11-3"> Plantillas de SMS</li>
+                            <li><input type="checkbox" data-key="op-11-4"> Tracking de entrega de SMS</li>
+                            <li><input type="checkbox" data-key="op-11-5"> Programación de envíos</li>
+                            <li><input type="checkbox" data-key="op-11-6"> Reportes de SMS enviados/fallidos</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>👥 Perfiles y Grupos</h2>
+                <h3>Top 10 Perfiles por Cuentas Asignadas</h3>
+                <div class="table-wrapper">
+                    <table>
+                        <thead><tr><th>Perfil</th><th>Cuentas</th><th>% del Total</th></tr></thead>
+                        <tbody>
+                            <tr><td>Gestor</td><td><strong>527</strong></td><td>32.1%</td></tr>
+                            <tr><td>Abogado Externo</td><td><strong>210</strong></td><td>12.8%</td></tr>
+                            <tr><td>Gestor Jurídico</td><td><strong>202</strong></td><td>12.3%</td></tr>
+                            <tr><td>Gestor cuotas al día</td><td><strong>79</strong></td><td>4.8%</td></tr>
+                            <tr><td>Abogado Junior</td><td><strong>45</strong></td><td>2.7%</td></tr>
+                            <tr><td>Auxiliar</td><td><strong>41</strong></td><td>2.5%</td></tr>
+                            <tr><td>Asesor agencia</td><td><strong>32</strong></td><td>2.0%</td></tr>
+                            <tr><td>Administrador</td><td><strong>19</strong></td><td>1.2%</td></tr>
+                            <tr><td>Coordinador Jurídico</td><td><strong>15</strong></td><td>0.9%</td></tr>
+                            <tr><td>Analista</td><td><strong>10</strong></td><td>0.6%</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 style="margin-top:1.5rem;">40 Grupos Organizacionales</h3>
+                <p style="font-size:0.85rem; color:var(--text-light); margin-bottom:0.5rem;">Administradores, Cuotas Al Dia, Directores, Coordinadores, Gerentes, Sistema, Coordinacion Cartera Y Juridico (Pereira, Medellín, Barranquilla), Coordinacion Juridico (Cali, Bucaramanga, Bogotá), Dirección Juridica, Gerencia Juridica, Subgerencia Naci De Cobranza Prejuridica, Subdirección De Cobranza Prejuridica, Dirección De Control Legal, Dirección De Control Judicial, Gerencia General, Por Definir, Integradores, Agencia El Libertador, Dirección de notificaciones, Apoyo covid comerciales, Apoyo libertador covid, Fidelizacion, Adicionales externos, Operaciones, Asesor beta, RNTAccess group, Operaciones Bolivar, AECSA, NGSO, Libertador HA, CYC, J-RAMOS, ALG, Auditoria, Alejandro Gonzalez prueba, Cobranza.</p>
+            </div>
+        </div>
+
+        <!-- TAB 3: INTEGRACIONES -->
+        <div class="tab-content" id="integraciones">
+            <div class="card">
+                <h2>🗺️ Mapa de Integraciones Activas</h2>
+                <p style="margin-bottom:1rem;">Huella mantiene <strong>9 integraciones activas</strong> con sistemas internos y externos, orquestadas principalmente a través de un <strong>bus de servicios on-premise</strong> de Seguros Bolívar.</p>
+                <div class="table-wrapper">
+                    <table>
+                        <thead><tr><th>#</th><th>Sistema</th><th>Dirección</th><th>Protocolo</th><th>Criticidad</th></tr></thead>
+                        <tbody>
+                            <tr><td>1</td><td><strong>SAI</strong> (Sistema de Administración de Inmuebles)</td><td>Bidireccional</td><td>REST API (via bus)</td><td><span class="tag tag-high">Crítica</span></td></tr>
+                            <tr><td>2</td><td><strong>Base de Terceros</strong></td><td>Bidireccional</td><td>REST API (via bus)</td><td><span class="tag tag-high">Crítica</span></td></tr>
+                            <tr><td>3</td><td><strong>Módulo Jurídico</strong></td><td>Unidireccional (→ Huella)</td><td>REST API (via bus)</td><td><span class="tag tag-medium">Alta</span></td></tr>
+                            <tr><td>4</td><td><strong>Microservicio ImagineCX</strong> (Paz y Salvo)</td><td>Bidireccional</td><td>REST API (directo)</td><td><span class="tag tag-medium">Alta</span></td></tr>
+                            <tr><td>5</td><td><strong>SA Web</strong> (Embebidos)</td><td>Unidireccional (render)</td><td>iFrame / URL</td><td><span class="tag tag-low">Media</span></td></tr>
+                            <tr><td>6</td><td><strong>Proveedor SMS</strong></td><td>Saliente</td><td>API REST</td><td><span class="tag tag-low">Media</span></td></tr>
+                            <tr><td>7</td><td><strong>Servidor de Correo</strong> (Oracle Mailbox)</td><td>Bidireccional</td><td>POP/IMAP + SMTP</td><td><span class="tag tag-low">Media</span></td></tr>
+                            <tr><td>8</td><td><strong>ELI</strong> (Portal Inmobiliarias)</td><td>Entrada</td><td>Web/API</td><td><span class="tag tag-low">Media</span></td></tr>
+                            <tr><td>9</td><td><strong>Oracle Cloud</strong> (Gestión instancia)</td><td>Administración</td><td>Console/API</td><td><span class="tag tag-low">Baja</span></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>🏗️ Arquitectura de Integración</h2>
+                <pre><code>                         ┌─────────────────────────────┐
+                         │        ORACLE CLOUD          │
+                         │   ┌───────────────────────┐  │
+                         │   │        HUELLA          │  │
+                         │   │   (Oracle B2C Service) │  │
+                         │   │                       │  │
+                         │   │   ┌───────────────┐   │  │
+                         │   │   │ Connect API   │   │  │
+                         │   │   │  REST v1.4    │   │  │
+                         │   │   └───────┬───────┘   │  │
+                         │   │           │           │  │
+                         │   │   ┌───────┴───────┐   │  │
+                         │   │   │  Diseñador    │   │  │
+                         │   │   │ de Procesos   │   │  │
+                         │   │   └───────────────┘   │  │
+                         │   └───────────────────────┘  │
+                         └──────────┬───┬───┬───────────┘
+                                    │   │   │
+          ┌─────────────────────────┼───┼───┼──────────────────────┐
+          │                         │   │   │                      │
+    ┌─────▼─────┐          ┌────────▼───▼───▼────────┐      ┌─────▼─────┐
+    │Microserv. │          │   BUS DE SERVICIOS      │      │  SA Web   │
+    │ImagineCX  │          │     (on-premise)        │      │ (iFrame)  │
+    │(Paz/Salvo)│          └────┬────────┬────────┬──┘      └───────────┘
+    └─────┬─────┘               │        │        │
+          │                ┌────▼───┐ ┌──▼─────┐ ┌▼───────────┐
+    ┌─────▼─────┐          │  SAI   │ │Módulo  │ │  Base de   │
+    │    SAI    │          │(direct)│ │Jurídico│ │  Terceros  │
+    │(via micro)│          └────────┘ └────────┘ └────────────┘
+    └───────────┘
+
+    ┌─────────────┐   ┌──────────────┐   ┌─────────────┐
+    │Proveedor SMS│   │Servidor Correo│   │    ELI      │
+    │  (externo)  │   │(Oracle SMTP)  │   │  (Portal)   │
+    └─────────────┘   └──────────────┘   └─────────────┘</code></pre>
+            </div>
+
+            <div class="card">
+                <h2>⚡ SAI — Sistema de Administración de Inmuebles</h2>
+                <p style="margin-bottom:0.75rem;"><span class="tag tag-high">Crítica</span> SAI es la <strong>fuente de verdad</strong> de toda la información de cobranza. Alimenta a Huella con siniestros, pólizas, contratos, amparos, aumentos y estados de pago.</p>
+                <h3>Flujos de datos</h3>
+                <div class="table-wrapper">
+                    <table>
+                        <thead><tr><th>Flujo</th><th>Dirección</th><th>Datos</th><th>Frecuencia</th></tr></thead>
+                        <tbody>
+                            <tr><td>Creación de siniestros</td><td>SAI → Huella</td><td>Siniestro + póliza + amparos + aumentos</td><td>Tiempo real</td></tr>
+                            <tr><td>Actualización de estados</td><td>SAI → Huella</td><td>Estado siniestro, estado pago, novedades</td><td>Tiempo real</td></tr>
+                            <tr><td>Creación de terceros</td><td>SAI → Huella</td><td>Tipo documento + número documento</td><td>Con cada siniestro</td></tr>
+                            <tr><td>Bitácora de gestión</td><td>Huella → SAI</td><td>Registros de gestión de agentes</td><td>Tiempo real</td></tr>
+                            <tr><td>Actualización de estados</td><td>Huella → SAI</td><td>Cambios de estado de siniestros</td><td>Tiempo real</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p style="font-size:0.82rem; color:var(--text-light); margin-top:0.5rem;"><strong>Punto de fallo:</strong> El bus de servicios es el primer punto de diagnóstico cuando hay desincronización. Contiene la mayor parte de la lógica de integración.</p>
+            </div>
+
+            <div class="card">
+                <h2>👥 Base de Terceros</h2>
+                <p style="margin-bottom:0.75rem;"><span class="tag tag-high">Crítica</span> Base centralizada del grupo empresarial con información de personas naturales y jurídicas (nombres, contacto, ubicación).</p>
+                <h3>Comportamiento especial</h3>
+                <ul class="impact-list">
+                    <li><strong>No sobreescribe datos originales:</strong> Actualizaciones de Huella se guardan en espacio dedicado</li>
+                    <li><strong>Datos compartidos:</strong> Otras empresas del grupo acceden al repositorio genérico</li>
+                    <li><strong>Dato faltante = "N":</strong> Si un tercero muestra "N" en nombre, Huella aún no consultó la base</li>
+                    <li><strong>Trigger:</strong> Huella consulta cuando SAI crea un siniestro con terceros nuevos</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h2>⚖️ Módulo Jurídico</h2>
+                <p style="margin-bottom:0.75rem;"><span class="tag tag-medium">Alta</span> Sistema on-premise que envía información de procesos judiciales a Huella. <strong>Unidireccional</strong> — Huella no modifica ni devuelve datos.</p>
+                <p style="font-size:0.85rem; color:var(--text-light);">Carga contratos y datos de procesos judiciales activos. Toda comunicación pasa por el bus de servicios.</p>
+            </div>
+
+            <div class="card">
+                <h2>🚀 Microservicio ImagineCX</h2>
+                <p style="margin-bottom:0.75rem;"><span class="tag tag-medium">Alta</span> Microservicio externo (~2 años en producción) que orquesta paz y salvo, terminación de siniestros y desocupación.</p>
+                <h3>Características</h3>
+                <ul class="impact-list">
+                    <li>Corre fuera de Huella — no depende de su carga</li>
+                    <li>Comunicación casi inmediata (resuelve latencia anterior Huella↔SAI)</li>
+                    <li>Mantenido por ImagineCX</li>
+                </ul>
+                <h3>Procesos que orquesta</h3>
+                <p style="font-size:0.85rem;">1. Paz y Salvo &nbsp;|&nbsp; 2. Terminación de siniestros &nbsp;|&nbsp; 3. Desocupación</p>
+            </div>
+
+            <div class="card">
+                <h2>🖥️ SA Web (Embebidos / iFrames)</h2>
+                <p style="margin-bottom:0.75rem;"><span class="tag tag-low">Media</span> Funcionalidades de SA Web renderizadas dentro de Huella via iFrames.</p>
+                <div class="table-wrapper">
+                    <table>
+                        <thead><tr><th>Embebido</th><th>Función</th><th>Responsable</th></tr></thead>
+                        <tbody>
+                            <tr><td>Liquidación</td><td>Visualización y gestión de liquidaciones</td><td>Equipo SA</td></tr>
+                            <tr><td>Histórico de siniestros</td><td>Consulta de historial</td><td>Equipo SA</td></tr>
+                            <tr><td>Histórico de bitácoras</td><td>Consulta de gestiones anteriores</td><td>Equipo SA</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p style="font-size:0.82rem; color:var(--text-light); margin-top:0.5rem;">Huella es solo una "ventana" — no procesa ni almacena estos datos. Scripts de carga en el Gestor de Archivos.</p>
+            </div>
+
+            <div class="card">
+                <h2>📱 Canales de Comunicación</h2>
+                <div class="process-grid">
+                    <div class="process-card">
+                        <div class="icon">💬</div>
+                        <h4>Proveedor SMS</h4>
+                        <p>Campañas (único, transaccional, recurrente) + SMS automáticos al crear siniestros. Control de horarios hábiles y festivos. 160 chars/SMS.</p>
+                    </div>
+                    <div class="process-card">
+                        <div class="icon">📧</div>
+                        <h4>Correo Oracle</h4>
+                        <p>Buzón Service (POP/IMAP — crea incidentes) + Buzón Outreach (SMTP — campañas, encuestas). Plantillas con campos de fusión dinámicos.</p>
+                    </div>
+                    <div class="process-card">
+                        <div class="icon">🏢</div>
+                        <h4>Portal ELI</h4>
+                        <p>Portal web para inmobiliarias. Solicitudes de desocupación. Valida estado de cuenta en SAI (regla 4-2-10) antes de registrar en Huella.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>❓ Integraciones por Confirmar (BPMN)</h2>
+                <p style="margin-bottom:0.75rem; color:var(--text-light); font-size:0.88rem;">Identificadas en diagramas de procesos pero no detalladas en sesiones de capacitación.</p>
+                <div class="table-wrapper">
+                    <table>
+                        <thead><tr><th>Sistema</th><th>Proceso</th><th>Tipo</th><th>Prioridad investigación</th></tr></thead>
+                        <tbody>
+                            <tr><td>Pasarelas de Pago</td><td>Cobranza Pre-Jurídica</td><td>Consulta de pagos</td><td><span class="tag tag-high">Alta</span></td></tr>
+                            <tr><td>Central de Riesgo</td><td>Cobranza Pre-Jurídica</td><td>Consulta crediticia</td><td><span class="tag tag-high">Alta</span></td></tr>
+                            <tr><td>WhatsApp Business</td><td>Cobranza Pre-Jurídica</td><td>Notificaciones</td><td><span class="tag tag-medium">Media</span></td></tr>
+                            <tr><td>Drive 24h</td><td>Desocupación</td><td>Workflow interno</td><td><span class="tag tag-low">Baja</span></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>🎯 Decisiones Arquitectónicas — DEFINIDAS (Mayo 2026)</h2>
+                <div class="table-wrapper">
+                    <table>
+                        <thead><tr><th>#</th><th>Decisión</th><th>Resolución</th><th>ADR</th><th>Estado</th></tr></thead>
+                        <tbody>
+                            <tr><td>1</td><td>Bus de servicios</td><td><strong>Mantener</strong> bus on-premise actual</td><td>ADR-001</td><td><span class="tag tag-low">✅ Decidida</span></td></tr>
+                            <tr><td>2</td><td>Microservicio ImagineCX</td><td><strong>Reescribir</strong> como servicio propio</td><td>ADR-002</td><td><span class="tag tag-low">✅ Decidida</span></td></tr>
+                            <tr><td>3</td><td>Embebidos SA Web</td><td><strong>Replicar</strong> con UI propia (Angular)</td><td>ADR-003</td><td><span class="tag tag-medium">⚠️ Pendiente investigar SA Web</span></td></tr>
+                            <tr><td>4</td><td>Canal SMS</td><td><strong>Integrar Salesforce</strong></td><td>ADR-004</td><td><span class="tag tag-low">✅ Decidida</span></td></tr>
+                            <tr><td>5</td><td>Canal Correo</td><td><strong>Integrar Salesforce</strong></td><td>ADR-005</td><td><span class="tag tag-low">✅ Decidida</span></td></tr>
+                            <tr><td>6</td><td>Motor BPM</td><td><strong>AWS Step Functions</strong> + state machines</td><td>ADR-006</td><td><span class="tag tag-low">✅ Decidida</span></td></tr>
+                            <tr><td>7</td><td>Portal ELI</td><td><strong>Mantener</strong> portal actual</td><td>ADR-007</td><td><span class="tag tag-medium">⚠️ Pendiente validar ELI</span></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 style="margin-top:1.5rem;">🏗️ Arquitectura Target</h3>
+                <div style="background:#1E293B; border-radius:10px; padding:1.5rem; margin-top:0.75rem; overflow-x:auto;">
+                    <pre style="background:transparent; color:#E2E8F0; font-size:0.72rem; line-height:1.35; margin:0;"><code>┌───────────────────────────────────────────────────────────────────────────────────────────┐
+│                        ARQUITECTURA TARGET — MIGRACIÓN HUELLA (Mayo 2026)                  │
+└───────────────────────────────────────────────────────────────────────────────────────────┘
+
+  SISTEMAS EXTERNOS              AWS CLOUD — Nueva Plataforma                    SALESFORCE
+  (On-Premise)                                                                Comunicaciones
+ ┌──────────────────┐    ┌─────────────────────────────────────────────┐    ┌──────────────┐
+ │                  │    │                                             │    │              │
+ │ ┌──────────────┐ │    │  ┌─────────────────────────────────────┐   │    │ ┌──────────┐ │
+ │ │     SAI      │ │    │  │   Frontend — Angular 17+ (S3+CF)    │   │    │ │   SMS    │ │
+ │ │(Fuente verdad│ │    │  └──────────────────┬──────────────────┘   │    │ │Marketing │ │
+ │ └──────┬───────┘ │    │                     │                      │    │ │ ADR-004  │ │
+ │        │         │    │              ┌──────▼──────┐               │    │ └──────────┘ │
+ │ ┌──────▼───────┐ │    │              │     ALB     │               │    │              │
+ │ │Bus Servicios │─┼────┼──────────────┤             ├────────┐      │    │ ┌──────────┐ │
+ │ │ ADR-001:     │ │    │              └──────┬──────┘        │      │    │ │  Correo  │ │
+ │ │  Mantener    │ │    │                     │               │      │    │ │Email2Case│ │
+ │ └──────▲───────┘ │    │         ┌───────────▼─────┐  ┌─────▼────┐ │    │ │ ADR-005  │ │
+ │        │         │    │         │ Backend API     │  │Paz/Salvo │ │    │ └──────────┘ │
+ │ ┌──────┴───────┐ │    │         │ Node.js 20     │  │Reescrito │ │    │              │
+ │ │Mod. Jurídico │ │    │         │ ECS Fargate    │  │ ADR-002  │ │    │ ┌──────────┐ │
+ │ └──────────────┘ │    │         └───────┬─────────┘  └──────────┘ │    │ │WhatsApp? │ │
+ │                  │    │                 │                          │    │ │(confirmar│ │
+ │ ┌──────────────┐ │    │      ┌──────────▼────────────────────┐    │    │ └──────────┘ │
+ │ │Base Terceros │ │    │      │    AWS Step Functions          │    │    │              │
+ │ └──────────────┘ │    │      │    4 Procesos Core (ADR-006)  │────┼───►│ ┌──────────┐ │
+ │                  │    │      │    • Jurídica                  │    │    │ │ Campañas │ │
+ │ ┌──────────────┐ │    │      │    • Pre-Jurídica             │    │    │ │Analytics │ │
+ │ │ Portal ELI   │─┼────┼─────►│    • Desistimiento            │    │    │ └──────────┘ │
+ │ │ ADR-007:     │ │    │      │    • Desocupación             │    │    │              │
+ │ │  Mantener    │ │    │      └───────┬───────────┬───────────┘    │    └──────────────┘
+ │ └──────────────┘ │    │             │           │                 │
+ └──────────────────┘    │   ┌─────────▼───┐ ┌────▼──────────┐      │
+                         │   │Scoring Svc  │ │ EventBridge   │      │
+                         │   │  (Lambda)   │ │ Timers + SLAs │      │
+                         │   └─────────────┘ └───────────────┘      │
+                         │                                           │
+                         │   ┌─────────────┐ ┌───────────────┐      │
+                         │   │PostgreSQL 15│ │Vistas SA Web  │      │
+                         │   │  AWS RDS    │ │(Réplica UI)   │      │
+                         │   │             │ │ ADR-003       │      │
+                         │   └─────────────┘ └───────────────┘      │
+                         └─────────────────────────────────────────────┘
+
+ ┌───────────────────────────────────────────────────────────────────────────────────────────┐
+ │ Observabilidad: Datadog │ CI/CD: GitHub Actions │ IaC: Terraform │ Auth: OAuth2 + JWT     │
+ │ Secrets: Parameter Store │ DB: PostgreSQL 15+ (RDS) │ Containers: ECS Fargate             │
+ └───────────────────────────────────────────────────────────────────────────────────────────┘</code></pre>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>⚠️ Gaps de Información</h2>
+                <div class="table-wrapper">
+                    <table>
+                        <thead><tr><th>#</th><th>Gap</th><th>Impacto</th><th>Acción</th></tr></thead>
+                        <tbody>
+                            <tr><td>1</td><td>Endpoints exactos del bus de servicios</td><td><span class="tag tag-high">Crítico</span></td><td>Solicitar doc técnica a equipo integraciones</td></tr>
+                            <tr><td>2</td><td>Lógica exacta del bus (transformaciones)</td><td><span class="tag tag-high">Crítico</span></td><td>Solicitar código/documentación del bus</td></tr>
+                            <tr><td>3</td><td>Autenticación actual proveedor SMS</td><td><span class="tag tag-medium">Alto</span></td><td>Consultar con ImagineCX</td></tr>
+                            <tr><td>4</td><td>Integración con pasarelas de pago</td><td><span class="tag tag-medium">Alto</span></td><td>Confirmar con equipo operativo</td></tr>
+                            <tr><td>5</td><td>Integración con Central de Riesgo</td><td><span class="tag tag-medium">Alto</span></td><td>Confirmar con equipo operativo</td></tr>
+                            <tr><td>6</td><td>WhatsApp Business (activa o no)</td><td><span class="tag tag-low">Medio</span></td><td>Confirmar con equipo operativo</td></tr>
+                            <tr><td>7</td><td>SLAs de cada integración (timeouts)</td><td><span class="tag tag-medium">Alto</span></td><td>Documentar con equipo soporte</td></tr>
+                            <tr><td>8</td><td>Volumetría de mensajes (SMS/correo)</td><td><span class="tag tag-low">Medio</span></td><td>Extraer de reportes de Huella</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB: FLUJOS UI -->
+        <div class="tab-content" id="flujos">
+            <div class="card">
+                <h2>🔎 Flujos de Usuario Documentados</h2>
+                <p style="margin-bottom:1rem; color: var(--text-light); font-size:0.88rem;">Flujos funcionales explorados directamente en la UI del ambiente QA (Oracle Agent Desktop). Cada flujo documenta la ruta de navegación, filtros, columnas de resultado y acciones disponibles.</p>
+                <div class="stats-grid" style="margin-bottom:1.5rem;">
+                    <div class="stat-card" style="background:rgba(91,45,142,0.08); border-color:rgba(91,45,142,0.2);">
+                        <div class="number" style="color:var(--primary);">789,717</div>
+                        <div class="label" style="color:var(--text);">Siniestros</div>
+                    </div>
+                    <div class="stat-card" style="background:rgba(91,45,142,0.08); border-color:rgba(91,45,142,0.2);">
+                        <div class="number" style="color:var(--primary);">23</div>
+                        <div class="label" style="color:var(--text);">Reportes Siniestros</div>
+                    </div>
+                    <div class="stat-card" style="background:rgba(91,45,142,0.08); border-color:rgba(91,45,142,0.2);">
+                        <div class="number" style="color:var(--primary);">8</div>
+                        <div class="label" style="color:var(--text);">Filtros Búsqueda</div>
+                    </div>
+                    <div class="stat-card" style="background:rgba(91,45,142,0.08); border-color:rgba(91,45,142,0.2);">
+                        <div class="number" style="color:var(--primary);">14</div>
+                        <div class="label" style="color:var(--text);">Columnas Resultado</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>⚖️ Búsqueda de Siniestro</h2>
+                <p style="margin-bottom:0.5rem;"><strong>Módulo:</strong> Análisis → Explorador de Informes → Reporte "Siniestros" (ID 100948)</p>
+                <p style="margin-bottom:1rem; color: var(--text-light); font-size:0.85rem;">La búsqueda de siniestros se realiza a través del módulo de Reportes, no como funcionalidad independiente del menú. El reporte permite buscar y listar siniestros según múltiples criterios.</p>
+
+                <h3>📍 Ruta de Navegación</h3>
+                <div style="display:flex; flex-wrap:wrap; gap:0.5rem; align-items:center; margin:0.75rem 0 1.25rem; padding:1rem; background:rgba(91,45,142,0.04); border-radius:8px; border:1px solid rgba(91,45,142,0.1);">
+                    <span class="tag tag-tech">Login SSO</span>
+                    <span style="color:var(--text-light);">→</span>
+                    <span class="tag tag-tech">Menú Navegación</span>
+                    <span style="color:var(--text-light);">→</span>
+                    <span class="tag tag-tech">Análisis</span>
+                    <span style="color:var(--text-light);">→</span>
+                    <span class="tag tag-tech">Explorador de Informes</span>
+                    <span style="color:var(--text-light);">→</span>
+                    <span class="tag tag-tech">Buscar "Siniestros"</span>
+                    <span style="color:var(--text-light);">→</span>
+                    <span class="tag tag-tech">Abrir Reporte ID 100948</span>
+                    <span style="color:var(--text-light);">→</span>
+                    <span class="tag tag-tech">Filtros + Buscar</span>
+                </div>
+
+                <h3>🔍 Filtros de Búsqueda</h3>
+                <div class="table-wrapper" style="margin-top:0.5rem;">
+                    <table>
+                        <thead><tr><th>#</th><th>Campo</th><th>Tipo</th><th>Valores / Formato</th><th>Obligatorio</th></tr></thead>
+                        <tbody>
+                            <tr><td>1</td><td>ID Siniestro</td><td>Numérico (spinbutton)</td><td>Entero con botones +/-</td><td>No</td></tr>
+                            <tr><td>2</td><td>Ubicación</td><td>Texto libre</td><td>JURIDICO, PREJURIDICO, TERMINADO POR PAGO, TERMINADO POR DEUDA ESPECIAL</td><td>No</td></tr>
+                            <tr><td>3</td><td>Estado Siniestro</td><td>Texto libre</td><td>Vigente, Desistido, Terminado</td><td>No</td></tr>
+                            <tr><td>4</td><td>Tipo póliza</td><td>Texto libre</td><td>POLIZA COLECTIVA</td><td>No</td></tr>
+                            <tr><td>5</td><td>Cód. tipo póliza</td><td>Texto libre</td><td>C</td><td>No</td></tr>
+                            <tr><td>6</td><td>Fecha Envío Prog. PYS</td><td>Fecha (calendario)</td><td>DD/MM/YYYY + opción "Relativo"</td><td>No</td></tr>
+                            <tr><td>7</td><td>Enviar PYS</td><td>Combo (select)</td><td>Todos / Sí / No</td><td>No (default: Todos)</td></tr>
+                            <tr><td>8</td><td>Bloqueo PYS</td><td>Combo (select)</td><td>Todos / Sí / No</td><td>No (default: Todos)</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 style="margin-top:1.25rem;">📊 Columnas del Resultado</h3>
+                <div class="table-wrapper" style="margin-top:0.5rem;">
+                    <table>
+                        <thead><tr><th>#</th><th>Columna</th><th>Descripción</th><th>Ejemplo</th></tr></thead>
+                        <tbody>
+                            <tr><td>1</td><td>ID</td><td>ID interno del siniestro</td><td>1624041</td></tr>
+                            <tr><td>2</td><td>Solicitud No</td><td>Número de solicitud/póliza</td><td>7192655</td></tr>
+                            <tr><td>3</td><td>Estado del Siniestro</td><td>Estado actual</td><td>Vigente, Desistido, Terminado</td></tr>
+                            <tr><td>4</td><td>Ubicación</td><td>Etapa del proceso</td><td>JURIDICO, PREJURIDICO</td></tr>
+                            <tr><td>5</td><td>TPOLIZA</td><td>Código tipo póliza</td><td>C</td></tr>
+                            <tr><td>6</td><td>Tipo de Póliza</td><td>Descripción tipo póliza</td><td>POLIZA COLECTIVA</td></tr>
+                            <tr><td>7</td><td>Bloqueo Paz y Salvo</td><td>Bloqueo de PYS</td><td>Sí / No</td></tr>
+                            <tr><td>8</td><td>Envío Programado</td><td>Fecha envío PYS</td><td>DD/MM/YYYY o Sin valor</td></tr>
+                            <tr><td>9</td><td>Enviar al Arrendatario</td><td>Envío al arrendatario</td><td>Sí / No / Sin valor</td></tr>
+                            <tr><td>10</td><td>Enviar Paz y Salvo</td><td>Envío de PYS</td><td>Sí / No</td></tr>
+                            <tr><td>11</td><td>Paz y Salvo Enviado</td><td>PYS ya enviado</td><td>Sí / No</td></tr>
+                            <tr><td>12</td><td>Identificación Arrendatario</td><td>Documento del arrendatario</td><td>43591206</td></tr>
+                            <tr><td>13</td><td>Tipo de Amparo</td><td>Tipo amparo (puede estar vacío)</td><td>Sin valor</td></tr>
+                            <tr><td>14</td><td>Tipo Amparo</td><td>Clasificación del amparo</td><td>INTEGRAL</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 style="margin-top:1.25rem;">🛠️ Acciones Disponibles (Barra de Herramientas)</h3>
+                <div style="display:flex; flex-wrap:wrap; gap:0.4rem; margin-top:0.5rem;">
+                    <span class="tag tag-tech">Buscar</span>
+                    <span class="tag tag-tech">Refrescar</span>
+                    <span class="tag tag-tech">Restablecer</span>
+                    <span class="tag tag-tech">Abrir</span>
+                    <span class="tag tag-tech">Nuevo</span>
+                    <span class="tag tag-tech">Suprimir</span>
+                    <span class="tag tag-tech">Imprimir</span>
+                    <span class="tag tag-tech">Copiar</span>
+                    <span class="tag tag-tech">Asignar</span>
+                    <span class="tag tag-tech">Marcador</span>
+                    <span class="tag tag-tech">Opciones de tiempo de ejecución</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>📁 Reportes Relacionados con Siniestros (23)</h2>
+                <p style="margin-bottom:0.75rem; color: var(--text-light); font-size:0.85rem;">Todos los reportes encontrados al buscar "Siniestros" en el Explorador de Informes.</p>
+                <div class="table-wrapper">
+                    <table>
+                        <thead><tr><th>#</th><th>Nombre</th><th>ID</th><th>Tipo</th><th>Creado</th></tr></thead>
+                        <tbody>
+                            <tr><td>1</td><td>Siniestros</td><td>100267</td><td>📁 Carpeta</td><td>—</td></tr>
+                            <tr><td>2</td><td>Siniestros</td><td>102911</td><td>📁 Carpeta</td><td>—</td></tr>
+                            <tr><td>3</td><td>Gráfica Siniestros por año</td><td>101233</td><td>📊 Reporte</td><td>24/07/2025</td></tr>
+                            <tr><td>4</td><td>Siniestros Simultáneos por Siniestro</td><td>100325</td><td>📊 Reporte</td><td>31/07/2018</td></tr>
+                            <tr><td>5</td><td>Siniestros con Garantía</td><td>100346</td><td>📊 Reporte</td><td>06/09/2018</td></tr>
+                            <tr><td>6</td><td>Siniestros Prematuros</td><td>100351</td><td>📊 Reporte</td><td>12/09/2018</td></tr>
+                            <tr><td>7</td><td>Grandes Siniestros</td><td>100126</td><td>📊 Reporte</td><td>15/03/2018</td></tr>
+                            <tr><td>8</td><td>Grandes Siniestros por Ubicación</td><td>100121</td><td>📊 Reporte</td><td>14/03/2018</td></tr>
+                            <tr><td>9</td><td>Siniestros D</td><td>100163</td><td>📊 Reporte</td><td>03/04/2018</td></tr>
+                            <tr><td>10</td><td>Siniestros por Estado</td><td>100120</td><td>📊 Reporte</td><td>14/03/2018</td></tr>
+                            <tr><td>11</td><td>Siniestros por Gestor</td><td>100122</td><td>📊 Reporte</td><td>14/03/2018</td></tr>
+                            <tr><td>12</td><td>Siniestros por Sucursal</td><td>100123</td><td>📊 Reporte</td><td>14/03/2018</td></tr>
+                            <tr><td>13</td><td>Siniestros Priorizados</td><td>100129</td><td>📊 Reporte</td><td>15/03/2018</td></tr>
+                            <tr style="background:rgba(91,45,142,0.06);"><td><strong>14</strong></td><td><strong>Siniestros (principal)</strong></td><td><strong>100948</strong></td><td><strong>📊 Reporte</strong></td><td><strong>12/08/2022</strong></td></tr>
+                            <tr><td>15</td><td>Eliminar Siniestros Sin Data</td><td>100428</td><td>📊 Reporte</td><td>11/01/2019</td></tr>
+                            <tr><td>16</td><td>Grandes Siniestros (2024)</td><td>101150</td><td>📊 Reporte</td><td>14/03/2024</td></tr>
+                            <tr><td>17</td><td>Siniestros - Análisis de Objeciones</td><td>100733</td><td>📊 Reporte</td><td>08/04/2020</td></tr>
+                            <tr><td>18</td><td>Siniestros activos por sucursal</td><td>100819</td><td>📊 Reporte</td><td>24/03/2021</td></tr>
+                            <tr><td>19</td><td>Siniestros Not Prueba</td><td>100258</td><td>📊 Reporte</td><td>29/06/2018</td></tr>
+                            <tr><td>20</td><td>Siniestros sin Data</td><td>100671</td><td>📊 Reporte</td><td>16/12/2019</td></tr>
+                            <tr><td>21</td><td>Siniestros sin distribución enero</td><td>100696</td><td>📊 Reporte</td><td>27/01/2020</td></tr>
+                            <tr><td>22</td><td>Siniestros y Responsables</td><td>101062</td><td>📊 Reporte</td><td>28/08/2023</td></tr>
+                            <tr><td>23</td><td>Validación Siniestros</td><td>101207</td><td>📊 Reporte</td><td>30/10/2024</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>📋 Valores de Dominio Identificados</h2>
+                <div class="process-grid">
+                    <div class="process-card">
+                        <div class="icon">📌</div>
+                        <h4>Estados del Siniestro</h4>
+                        <p><span class="tag tag-low">Vigente</span> <span class="tag tag-medium">Desistido</span> <span class="tag tag-high">Terminado</span></p>
+                    </div>
+                    <div class="process-card">
+                        <div class="icon">📍</div>
+                        <h4>Ubicaciones (Etapas)</h4>
+                        <p><span class="tag tag-tech">JURIDICO</span> <span class="tag tag-tech">PREJURIDICO</span> <span class="tag tag-tech">TERMINADO POR PAGO</span> <span class="tag tag-tech">TERMINADO POR DEUDA ESPECIAL</span></p>
+                    </div>
+                    <div class="process-card">
+                        <div class="icon">📄</div>
+                        <h4>Tipos de Póliza</h4>
+                        <p><span class="tag tag-tech">POLIZA COLECTIVA (C)</span></p>
+                    </div>
+                    <div class="process-card">
+                        <div class="icon">🛡️</div>
+                        <h4>Tipos de Amparo</h4>
+                        <p><span class="tag tag-tech">INTEGRAL</span></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>⚠️ Consideraciones para la Migración</h2>
+                <ul class="impact-list">
+                    <li><strong>Volumetría alta:</strong> 789,717 siniestros requieren estrategia de migración por lotes con validación de integridad.</li>
+                    <li><strong>Modelo de datos:</strong> Siniestro vinculado a Solicitud, Arrendatario, Tipo Póliza y Amparo — relaciones que deben preservarse.</li>
+                    <li><strong>Flujo PYS:</strong> Existe un flujo de envío programado de Paz y Salvo con bloqueo que debe replicarse.</li>
+                    <li><strong>23 reportes especializados:</strong> Múltiples vistas de negocio que deben cubrirse en la nueva plataforma.</li>
+                    <li><strong>Búsqueda por reporte:</strong> En la nueva plataforma, implementar como vista de búsqueda dedicada con filtros dinámicos (mejor UX).</li>
+                    <li><strong>Paginación masiva:</strong> 10,000 registros por página — considerar paginación server-side con cursor en la nueva implementación.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- TAB 4: ARQUITECTURA -->
+        <div class="tab-content" id="arquitectura">
+            <div class="card">
+                <h2>🔌 Stack Tecnológico Actual</h2>
+                <div class="table-wrapper">
+                    <table>
+                        <thead><tr><th>Componente</th><th>Tecnología</th><th>Versión/Detalle</th></tr></thead>
+                        <tbody>
+                            <tr><td>Plataforma CRM</td><td><span class="tag tag-tech">Oracle B2C Service</span></td><td>Oracle Service Cloud (Agent Desktop)</td></tr>
+                            <tr><td>Base de Datos</td><td><span class="tag tag-tech">Oracle Database</span></td><td>Gestionada por Oracle Cloud</td></tr>
+                            <tr><td>API REST</td><td><span class="tag tag-tech">Connect REST API</span></td><td>v1.4 — 192 recursos disponibles</td></tr>
+                            <tr><td>Proveedor</td><td><span class="tag tag-tech">ImagineCX</span></td><td>Desarrollo y personalización</td></tr>
+                            <tr><td>Soporte</td><td><span class="tag tag-tech">Stefanini</span></td><td>Soporte operativo y mantenimiento</td></tr>
+                            <tr><td>Interfaz</td><td><span class="tag tag-tech">Browser Agent Desktop</span></td><td>Escritorio de agente web</td></tr>
+                            <tr><td>Integraciones</td><td><span class="tag tag-tech">SA + Bus de Servicios</span></td><td>Microservicios ImagineCX</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>🗃️ 13 Custom Objects</h2>
+                <p style="margin-bottom:1rem; color:var(--text-light); font-size:0.88rem;">Entidades de negocio que extienden el modelo estándar de Oracle Service Cloud.</p>
+                <div class="table-wrapper">
+                    <table>
+                        <thead><tr><th>#</th><th>Objeto</th><th>Campos</th><th>Dominio</th><th>Impacto</th></tr></thead>
+                        <tbody>
+                            <tr><td>1</td><td><code>ACUERDOS.acuerdos_novedad</code></td><td>37</td><td>Acuerdos de pago</td><td><span class="tag tag-low">Bajo</span></td></tr>
+                            <tr><td>2</td><td><code>CO.Amparo</code></td><td>25</td><td>Amparos de pólizas</td><td><span class="tag tag-medium">Medio</span></td></tr>
+                            <tr><td>3</td><td><code>CO.Contrato</code></td><td>53</td><td>ENTIDAD CENTRAL</td><td><span class="tag tag-high">Alto</span></td></tr>
+                            <tr><td>4</td><td><code>CO.Objecion</code></td><td>22</td><td>Objeciones a cobros</td><td><span class="tag tag-medium">Medio</span></td></tr>
+                            <tr><td>5</td><td><code>CO.Suspension</code></td><td>21</td><td>Suspensiones</td><td><span class="tag tag-low">Bajo</span></td></tr>
+                            <tr><td>6</td><td><code>CO.Desocupacion</code></td><td>13</td><td>Desocupaciones</td><td><span class="tag tag-medium">Medio</span></td></tr>
+                            <tr><td>7</td><td><code>CO.Devolucion</code></td><td>18</td><td>Devoluciones</td><td><span class="tag tag-low">Bajo</span></td></tr>
+                            <tr><td>8</td><td><code>CO.Deduccion</code></td><td>23</td><td>Deducciones</td><td><span class="tag tag-low">Bajo</span></td></tr>
+                            <tr><td>9</td><td><code>CO.Reversion</code></td><td>23</td><td>Reversiones</td><td><span class="tag tag-low">Bajo</span></td></tr>
+                            <tr><td>10</td><td><code>CO.Aumento</code></td><td>22</td><td>Aumentos de canon</td><td><span class="tag tag-medium">Medio</span></td></tr>
+                            <tr><td>11</td><td><code>CO.Liquidacion</code></td><td>16</td><td>Liquidaciones</td><td><span class="tag tag-high">Alto</span></td></tr>
+                            <tr><td>12</td><td><code>CO.DetalleLiquidacion</code></td><td>25</td><td>Detalle liquidaciones</td><td><span class="tag tag-high">Alto</span></td></tr>
+                            <tr><td>13</td><td><code>CO.ValorLiquidacion</code></td><td>28</td><td>Valores liquidaciones</td><td><span class="tag tag-high">Alto</span></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p style="margin-top:0.75rem; font-size:0.82rem; color:var(--text-light);"><strong>Namespaces:</strong> CO.* (12 objetos — core de cobranza/contratos) | ACUERDOS.* (1 objeto — gestión de acuerdos)</p>
+            </div>
+
+            <div class="card">
+                <h2>🔗 Modelo de Relaciones</h2>
+                <pre><code>┌─────────────────────────────────────────────────────────────────┐
+│                    MODELO DE RELACIONES                          │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  Póliza ──────────┐                                             │
+│                   ▼                                              │
+│            ┌─────────────┐                                      │
+│            │ CO.Contrato │  ◄── ENTIDAD CENTRAL (53 campos)     │
+│            └─────────────┘                                      │
+│                                                                 │
+│  Incident ────────┐                                             │
+│  (Siniestro)      ▼                                             │
+│            ┌─────────────┐                                      │
+│            │  CO.Amparo  │  ◄── Amparos de pólizas              │
+│            └──────┬──────┘                                      │
+│                   │                                              │
+│         ┌─────────┼─────────┬──────────┬──────────┐            │
+│         ▼         ▼         ▼          ▼          ▼            │
+│   CO.Objecion CO.Suspension CO.Deduccion CO.Aumento            │
+│                                         CO.ValorLiquidacion     │
+│                                                                 │
+│  Incident ────────┐                                             │
+│                   ├──► CO.Desocupacion                          │
+│                   ├──► CO.Devolucion                            │
+│                   └──► CO.Reversion                             │
+│                                                                 │
+│  ┌────────────────────────────────────────────┐                │
+│  │ JERARQUÍA DE LIQUIDACIÓN                   │                │
+│  │                                            │                │
+│  │  CO.Liquidacion (padre)                    │                │
+│  │       │                                    │                │
+│  │       ▼                                    │                │
+│  │  CO.DetalleLiquidacion (hijo)              │                │
+│  │       │                                    │                │
+│  │       ▼                                    │                │
+│  │  CO.ValorLiquidacion (nieto)               │                │
+│  │                                            │                │
+│  │  ⚠️  Requiere migración atómica           │                │
+│  └────────────────────────────────────────────┘                │
+│                                                                 │
+│  ACUERDOS.acuerdos_novedad ──► Independiente (ref. a póliza)   │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘</code></pre>
+            </div>
+
+            <div class="card">
+                <h2>🌐 Recursos API (192 disponibles)</h2>
+                <p style="margin-bottom:1rem; color:var(--text-light); font-size:0.88rem;">Connect REST API v1.4 — Agrupados por dominio funcional.</p>
+                <div class="table-wrapper">
+                    <table>
+                        <thead><tr><th>Grupo</th><th>Recursos</th><th>Ejemplos</th></tr></thead>
+                        <tbody>
+                            <tr><td>Cuentas de Personal</td><td>~15</td><td>CRUD accounts, profiles, groups</td></tr>
+                            <tr><td>Incidentes (Siniestros)</td><td>~20</td><td>CRUD incidents, threads, attachments</td></tr>
+                            <tr><td>Contactos</td><td>~12</td><td>CRUD contacts, organizations</td></tr>
+                            <tr><td>Custom Objects (13)</td><td>~52</td><td>CRUD por cada CO (4 ops x 13)</td></tr>
+                            <tr><td>Analítica</td><td>~10</td><td>Reports, analytics queries</td></tr>
+                            <tr><td>Configuración</td><td>~25</td><td>Sites, mailboxes, categories, products</td></tr>
+                            <tr><td>Comunicaciones</td><td>~15</td><td>Notifications, templates, SMS</td></tr>
+                            <tr><td>Metadata</td><td>~20</td><td>Schema discovery, field definitions</td></tr>
+                            <tr><td>Otros</td><td>~23</td><td>Search, bulk operations, utilities</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>🔄 Integraciones Conocidas</h2>
+                <div class="module">
+                    <div class="module-header" onclick="toggleModule(this)">
+                        <h4>🔌 12. Integraciones <span class="badge">9 func.</span></h4>
+                        <span class="arrow">▼</span>
+                    </div>
+                    <div class="module-body">
+                        <ul class="func-list">
+                            <li><input type="checkbox" data-key="op-12-1"> Integración con SA (Sistema de Arrendamiento)</li>
+                            <li><input type="checkbox" data-key="op-12-2"> Bus de servicios empresarial (ESB)</li>
+                            <li><input type="checkbox" data-key="op-12-3"> Microservicios ImagineCX</li>
+                            <li><input type="checkbox" data-key="op-12-4"> Sincronización de pólizas desde core</li>
+                            <li><input type="checkbox" data-key="op-12-5"> Consulta de centrales de riesgo</li>
+                            <li><input type="checkbox" data-key="op-12-6"> Notificaciones externas (email/SMS)</li>
+                            <li><input type="checkbox" data-key="op-12-7"> Generación de documentos (PDFs)</li>
+                            <li><input type="checkbox" data-key="op-12-8"> Integración con pasarelas de pago</li>
+                            <li><input type="checkbox" data-key="op-12-9"> APIs de consulta para portales externos</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>🐘 Propuesta de Migración a PostgreSQL</h2>
+                <h3>Mapeo de Tipos Oracle → PostgreSQL</h3>
+                <div class="table-wrapper">
+                    <table>
+                        <thead><tr><th>Tipo Oracle (Service Cloud)</th><th>Tipo PostgreSQL</th><th>Notas</th></tr></thead>
+                        <tbody>
+                            <tr><td>number (ID)</td><td><code>BIGINT</code></td><td>Primary keys, foreign keys</td></tr>
+                            <tr><td>number (moneda)</td><td><code>NUMERIC(15,2)</code></td><td>Valores monetarios — nunca FLOAT</td></tr>
+                            <tr><td>number (general)</td><td><code>INTEGER / BIGINT</code></td><td>Según rango esperado</td></tr>
+                            <tr><td>string (corto)</td><td><code>VARCHAR(255)</code></td><td>Nombres, códigos</td></tr>
+                            <tr><td>string (largo)</td><td><code>TEXT</code></td><td>Observaciones, descripciones</td></tr>
+                            <tr><td>boolean</td><td><code>BOOLEAN</code></td><td>Directo</td></tr>
+                            <tr><td>datetime</td><td><code>TIMESTAMPTZ</code></td><td>Siempre con timezone</td></tr>
+                            <tr><td>date</td><td><code>DATE</code></td><td>Solo fecha sin hora</td></tr>
+                            <tr><td>object/FK</td><td><code>BIGINT REFERENCES</code></td><td>Foreign key explícita</td></tr>
+                            <tr><td>menu (enum)</td><td><code>VARCHAR + CHECK</code></td><td>O tabla de lookup</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 4: DESARROLLO -->
+        <div class="tab-content" id="desarrollo">
+            <div class="card">
+                <h2>🔍 Schema de Custom Objects</h2>
+                <input type="text" class="search-box" id="schemaSearch" placeholder="Buscar campo, objeto o tipo... (ej: poliza, contrato, number)">
+                <div id="schemaResults">
+
+                <div class="module" data-schema="acuerdos">
+                    <div class="module-header" onclick="toggleModule(this)">
+                        <h4>1. ACUERDOS.acuerdos_novedad <span class="badge">37 campos</span></h4>
+                        <span class="arrow">▼</span>
+                    </div>
+                    <div class="module-body">
+                        <div class="table-wrapper">
+                            <table>
+                                <thead><tr><th>Campo</th><th>Tipo</th><th>Nullable</th><th>FK</th><th>Descripción</th></tr></thead>
+                                <tbody>
+                                    <tr><td>id</td><td>number</td><td>No</td><td>—</td><td>ID del registro</td></tr>
+                                    <tr><td>Solicitud</td><td>number</td><td>No</td><td>—</td><td>Número de solicitud vinculada</td></tr>
+                                    <tr><td>poliza</td><td>number</td><td>No</td><td>—</td><td>Número de póliza</td></tr>
+                                    <tr><td>cedula_arrendatario</td><td>number</td><td>No</td><td>—</td><td>Cédula del arrendatario (PII)</td></tr>
+                                    <tr><td>Valor_canon_inicial</td><td>number</td><td>No</td><td>—</td><td>Canon original</td></tr>
+                                    <tr><td>valor_canon_negociado</td><td>number</td><td>No</td><td>—</td><td>Canon negociado</td></tr>
+                                    <tr><td>Valor_admin_inicial</td><td>number</td><td>No</td><td>—</td><td>Administración original</td></tr>
+                                    <tr><td>Valor_admin_negociado</td><td>number</td><td>No</td><td>—</td><td>Administración negociada</td></tr>
+                                    <tr><td>Observacion</td><td>string</td><td>Sí</td><td>—</td><td>Texto libre de observación</td></tr>
+                                    <tr><td>Correo_acuerdo</td><td>boolean</td><td>No</td><td>—</td><td>Si se envió correo</td></tr>
+                                    <tr><td>Asesor_encargado</td><td>object/FK</td><td>Sí</td><td>Cuenta personal</td><td>Referencia a asesor</td></tr>
+                                    <tr><td>tipo_acuerdo</td><td>object/FK</td><td>Sí</td><td>Tipo acuerdo</td><td>Referencia a tipo</td></tr>
+                                    <tr><td>Abril - Octubre</td><td>number</td><td>Sí</td><td>—</td><td>Valores negociados por mes (7 campos)</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="module" data-schema="contrato">
+                    <div class="module-header" onclick="toggleModule(this)">
+                        <h4>3. CO.Contrato — ENTIDAD CENTRAL <span class="badge">53 campos</span></h4>
+                        <span class="arrow">▼</span>
+                    </div>
+                    <div class="module-body">
+                        <div class="table-wrapper">
+                            <table>
+                                <thead><tr><th>Campo</th><th>Tipo</th><th>Nullable</th><th>FK</th><th>Descripción</th></tr></thead>
+                                <tbody>
+                                    <tr><td>id</td><td>number</td><td>No</td><td>—</td><td>ID del contrato</td></tr>
+                                    <tr><td>poliza</td><td>number</td><td>No</td><td>—</td><td>Número de póliza asociada</td></tr>
+                                    <tr><td>numero_contrato</td><td>string</td><td>No</td><td>—</td><td>Número de contrato</td></tr>
+                                    <tr><td>estado</td><td>string/menu</td><td>No</td><td>—</td><td>Estado del contrato</td></tr>
+                                    <tr><td>fecha_inicio</td><td>date</td><td>No</td><td>—</td><td>Fecha inicio contrato</td></tr>
+                                    <tr><td>fecha_fin</td><td>date</td><td>Sí</td><td>—</td><td>Fecha fin contrato</td></tr>
+                                    <tr><td>valor_canon</td><td>number</td><td>No</td><td>—</td><td>Valor del canon mensual</td></tr>
+                                    <tr><td>valor_administracion</td><td>number</td><td>Sí</td><td>—</td><td>Valor administración</td></tr>
+                                    <tr><td>cedula_arrendatario</td><td>number</td><td>No</td><td>—</td><td>Cédula arrendatario (PII)</td></tr>
+                                    <tr><td>nombre_arrendatario</td><td>string</td><td>Sí</td><td>—</td><td>Nombre completo (PII)</td></tr>
+                                    <tr><td>direccion_inmueble</td><td>string</td><td>Sí</td><td>—</td><td>Dirección del inmueble</td></tr>
+                                    <tr><td>ciudad</td><td>string</td><td>Sí</td><td>—</td><td>Ciudad del inmueble</td></tr>
+                                    <tr><td>tipo_inmueble</td><td>string/menu</td><td>Sí</td><td>—</td><td>Tipo (casa, apto, local, etc.)</td></tr>
+                                    <tr><td>gestor_asignado</td><td>object/FK</td><td>Sí</td><td>Cuenta personal</td><td>Gestor responsable</td></tr>
+                                    <tr><td>grupo_asignado</td><td>object/FK</td><td>Sí</td><td>Grupo</td><td>Grupo organizacional</td></tr>
+                                    <tr><td>prioridad</td><td>number</td><td>Sí</td><td>—</td><td>Nivel de prioridad (1-10)</td></tr>
+                                    <tr><td>saldo_deuda</td><td>number</td><td>Sí</td><td>—</td><td>Saldo pendiente</td></tr>
+                                    <tr><td>meses_mora</td><td>number</td><td>Sí</td><td>—</td><td>Meses en mora</td></tr>
+                                    <tr><td>fecha_ultimo_pago</td><td>date</td><td>Sí</td><td>—</td><td>Último pago registrado</td></tr>
+                                    <tr><td>observaciones</td><td>string</td><td>Sí</td><td>—</td><td>Notas generales</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p style="font-size:0.8rem; color:var(--text-light); margin-top:0.5rem;">* Muestra parcial — 53 campos totales. Ver schema completo en schemas-custom-objects-huella.md</p>
+                    </div>
+                </div>
+
+                <div class="module" data-schema="amparo">
+                    <div class="module-header" onclick="toggleModule(this)">
+                        <h4>2. CO.Amparo <span class="badge">25 campos</span></h4>
+                        <span class="arrow">▼</span>
+                    </div>
+                    <div class="module-body">
+                        <p style="font-size:0.85rem; color:var(--text-light);">Amparos de pólizas de arrendamiento. Vinculado a Incident (Siniestro). Campos clave: id, numero_amparo, poliza, tipo_amparo, estado, valor_amparado, fecha_inicio, fecha_fin, beneficiario, observaciones. FK: incident_id → Incident.</p>
+                    </div>
+                </div>
+
+                <div class="module" data-schema="liquidacion">
+                    <div class="module-header" onclick="toggleModule(this)">
+                        <h4>11-13. Tripleta de Liquidación <span class="badge">69 campos</span></h4>
+                        <span class="arrow">▼</span>
+                    </div>
+                    <div class="module-body">
+                        <h3 style="font-size:0.9rem;">CO.Liquidacion (16 campos)</h3>
+                        <p style="font-size:0.85rem; color:var(--text-light); margin-bottom:0.5rem;">Campos clave: id, contrato_id (FK), fecha_liquidacion, tipo_liquidacion, estado, valor_total, observaciones, aprobado_por (FK).</p>
+                        <h3 style="font-size:0.9rem;">CO.DetalleLiquidacion (25 campos)</h3>
+                        <p style="font-size:0.85rem; color:var(--text-light); margin-bottom:0.5rem;">Campos clave: id, liquidacion_id (FK), concepto, periodo_desde, periodo_hasta, valor_base, porcentaje, valor_calculado, estado.</p>
+                        <h3 style="font-size:0.9rem;">CO.ValorLiquidacion (28 campos)</h3>
+                        <p style="font-size:0.85rem; color:var(--text-light);">Campos clave: id, detalle_liquidacion_id (FK), amparo_id (FK), tipo_valor, valor, fecha_calculo, moneda, ajuste, valor_final.</p>
+                    </div>
+                </div>
+
+                <div class="module" data-schema="otros">
+                    <div class="module-header" onclick="toggleModule(this)">
+                        <h4>4-10. Otros Custom Objects <span class="badge">164 campos</span></h4>
+                        <span class="arrow">▼</span>
+                    </div>
+                    <div class="module-body">
+                        <div class="table-wrapper">
+                            <table>
+                                <thead><tr><th>Objeto</th><th>Campos</th><th>Campos Clave</th><th>FKs</th></tr></thead>
+                                <tbody>
+                                    <tr><td>CO.Objecion</td><td>22</td><td>id, amparo_id, tipo_objecion, estado, valor_objetado, fecha, motivo</td><td>amparo_id → CO.Amparo</td></tr>
+                                    <tr><td>CO.Suspension</td><td>21</td><td>id, contrato_id, fecha_inicio, fecha_fin, motivo, estado</td><td>contrato_id → CO.Contrato</td></tr>
+                                    <tr><td>CO.Desocupacion</td><td>13</td><td>id, incident_id, fecha_desocupacion, estado, acta_entrega</td><td>incident_id → Incident</td></tr>
+                                    <tr><td>CO.Devolucion</td><td>18</td><td>id, incident_id, valor, tipo_devolucion, estado, cuenta_destino</td><td>incident_id → Incident</td></tr>
+                                    <tr><td>CO.Deduccion</td><td>23</td><td>id, amparo_id, concepto, valor, porcentaje, estado</td><td>amparo_id → CO.Amparo</td></tr>
+                                    <tr><td>CO.Reversion</td><td>23</td><td>id, incident_id, transaccion_original, valor, motivo, estado</td><td>incident_id → Incident</td></tr>
+                                    <tr><td>CO.Aumento</td><td>22</td><td>id, contrato_id, tipo_aumento, porcentaje_ipc, valor_anterior, valor_nuevo</td><td>contrato_id → CO.Contrato</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>📖 Patrones de Naming</h2>
+                <h3>Diccionario de Abreviaciones</h3>
+                <div class="table-wrapper">
+                    <table>
+                        <thead><tr><th>Abreviación</th><th>Significado</th><th>Contexto</th></tr></thead>
+                        <tbody>
+                            <tr><td>CO</td><td>Custom Object</td><td>Namespace de objetos de cobranza</td></tr>
+                            <tr><td>SA</td><td>Sistema de Arrendamiento</td><td>Sistema core de pólizas</td></tr>
+                            <tr><td>ICX</td><td>ImagineCX</td><td>Proveedor de la plataforma</td></tr>
+                            <tr><td>admin</td><td>Administración (valor)</td><td>Cuota de administración del inmueble</td></tr>
+                            <tr><td>IPC</td><td>Índice de Precios al Consumidor</td><td>Base para aumentos de canon</td></tr>
+                            <tr><td>FK</td><td>Foreign Key</td><td>Relación entre objetos</td></tr>
+                            <tr><td>PII</td><td>Personally Identifiable Info</td><td>Datos sensibles (cédula, nombre, dirección)</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <h3>Convenciones de Campos</h3>
+                <p style="font-size:0.85rem; color:var(--text-light);">
+                    • IDs: siempre <code>id</code> (PK) o <code>*_id</code> (FK)<br>
+                    • Fechas: prefijo <code>fecha_*</code><br>
+                    • Valores monetarios: prefijo <code>valor_*</code> o <code>Valor_*</code><br>
+                    • Estados: campo <code>estado</code> (menu/enum)<br>
+                    • Booleanos: sin prefijo estándar (ej: <code>Correo_acuerdo</code>)<br>
+                    • Observaciones: campo <code>Observacion</code> u <code>observaciones</code> (TEXT)
+                </p>
+            </div>
+
+            <div class="card">
+                <h2>📐 Índices Recomendados para PostgreSQL</h2>
+                <pre><code>-- Índices primarios (todas las tablas)
+CREATE INDEX idx_contrato_poliza ON co_contrato(poliza);
+CREATE INDEX idx_contrato_estado ON co_contrato(estado);
+CREATE INDEX idx_contrato_gestor ON co_contrato(gestor_asignado_id);
+CREATE INDEX idx_contrato_grupo ON co_contrato(grupo_asignado_id);
+CREATE INDEX idx_contrato_cedula ON co_contrato(cedula_arrendatario);
+
+-- Índices para jerarquía de liquidación
+CREATE INDEX idx_detalle_liq_liquidacion ON co_detalle_liquidacion(liquidacion_id);
+CREATE INDEX idx_valor_liq_detalle ON co_valor_liquidacion(detalle_liquidacion_id);
+CREATE INDEX idx_valor_liq_amparo ON co_valor_liquidacion(amparo_id);
+
+-- Índices para relaciones con Incident/Amparo
+CREATE INDEX idx_amparo_incident ON co_amparo(incident_id);
+CREATE INDEX idx_objecion_amparo ON co_objecion(amparo_id);
+CREATE INDEX idx_deduccion_amparo ON co_deduccion(amparo_id);
+CREATE INDEX idx_desocupacion_incident ON co_desocupacion(incident_id);
+CREATE INDEX idx_devolucion_incident ON co_devolucion(incident_id);
+CREATE INDEX idx_reversion_incident ON co_reversion(incident_id);
+
+-- Índices compuestos para consultas frecuentes
+CREATE INDEX idx_contrato_estado_prioridad ON co_contrato(estado, prioridad DESC);
+CREATE INDEX idx_acuerdos_poliza_solicitud ON acuerdos_novedad(poliza, solicitud);</code></pre>
+            </div>
+
+            <div class="card">
+                <h2>🚀 Estrategia de Migración (6 Fases)</h2>
+                <div class="phase">
+                    <div class="phase-num">1</div>
+                    <div class="phase-content">
+                        <h4>Análisis y Diseño del Schema</h4>
+                        <p>Mapear 13 COs a tablas PostgreSQL. Definir tipos, constraints, índices. Validar con equipo de negocio.</p>
+                    </div>
+                </div>
+                <div class="phase">
+                    <div class="phase-num">2</div>
+                    <div class="phase-content">
+                        <h4>Extracción de Datos (ETL)</h4>
+                        <p>Scripts de extracción via Connect REST API v1.4. Paginación, rate limiting, validación de integridad.</p>
+                    </div>
+                </div>
+                <div class="phase">
+                    <div class="phase-num">3</div>
+                    <div class="phase-content">
+                        <h4>Transformación y Carga</h4>
+                        <p>Normalización de datos, mapeo de tipos, resolución de FKs, carga en PostgreSQL con transacciones atómicas.</p>
+                    </div>
+                </div>
+                <div class="phase">
+                    <div class="phase-num">4</div>
+                    <div class="phase-content">
+                        <h4>Construcción de APIs</h4>
+                        <p>APIs REST (Node.js/Express o FastAPI) que repliquen las 192 operaciones actuales. Versionado v1.</p>
+                    </div>
+                </div>
+                <div class="phase">
+                    <div class="phase-num">5</div>
+                    <div class="phase-content">
+                        <h4>Frontend y UX</h4>
+                        <p>Nueva interfaz (Angular) que reemplace el Agent Desktop. Diseño mobile-first, accesibilidad WCAG 2.1.</p>
+                    </div>
+                </div>
+                <div class="phase">
+                    <div class="phase-num">6</div>
+                    <div class="phase-content">
+                        <h4>Migración en Vivo y Cutover</h4>
+                        <p>Sincronización dual, validación de paridad, cutover con rollback plan. Descomisionar Oracle Service Cloud.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>📦 Volumen Estimado por Entidad</h2>
+                <div class="table-wrapper">
+                    <table>
+                        <thead><tr><th>Entidad</th><th>Registros Est.</th><th>Tamaño Est.</th><th>Prioridad ETL</th></tr></thead>
+                        <tbody>
+                            <tr><td>CO.Contrato</td><td>50,000 - 200,000</td><td>~100 MB</td><td><span class="tag tag-high">P1</span></td></tr>
+                            <tr><td>CO.Amparo</td><td>100,000 - 500,000</td><td>~150 MB</td><td><span class="tag tag-high">P1</span></td></tr>
+                            <tr><td>CO.ValorLiquidacion</td><td>500,000 - 2,000,000</td><td>~500 MB</td><td><span class="tag tag-high">P1</span></td></tr>
+                            <tr><td>CO.DetalleLiquidacion</td><td>200,000 - 800,000</td><td>~200 MB</td><td><span class="tag tag-high">P1</span></td></tr>
+                            <tr><td>CO.Liquidacion</td><td>50,000 - 200,000</td><td>~50 MB</td><td><span class="tag tag-medium">P2</span></td></tr>
+                            <tr><td>CO.Deduccion</td><td>100,000 - 400,000</td><td>~100 MB</td><td><span class="tag tag-medium">P2</span></td></tr>
+                            <tr><td>CO.Aumento</td><td>50,000 - 200,000</td><td>~50 MB</td><td><span class="tag tag-medium">P2</span></td></tr>
+                            <tr><td>ACUERDOS.acuerdos_novedad</td><td>10,000 - 50,000</td><td>~30 MB</td><td><span class="tag tag-low">P3</span></td></tr>
+                            <tr><td>CO.Objecion</td><td>10,000 - 50,000</td><td>~20 MB</td><td><span class="tag tag-low">P3</span></td></tr>
+                            <tr><td>CO.Suspension</td><td>5,000 - 20,000</td><td>~10 MB</td><td><span class="tag tag-low">P3</span></td></tr>
+                            <tr><td>CO.Desocupacion</td><td>5,000 - 20,000</td><td>~5 MB</td><td><span class="tag tag-low">P3</span></td></tr>
+                            <tr><td>CO.Devolucion</td><td>5,000 - 20,000</td><td>~10 MB</td><td><span class="tag tag-low">P3</span></td></tr>
+                            <tr><td>CO.Reversion</td><td>2,000 - 10,000</td><td>~5 MB</td><td><span class="tag tag-low">P3</span></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>🔒 Consideraciones de PII y Seguridad</h2>
+                <div class="table-wrapper">
+                    <table>
+                        <thead><tr><th>Campo PII</th><th>Objeto(s)</th><th>Tratamiento Requerido</th></tr></thead>
+                        <tbody>
+                            <tr><td>cedula_arrendatario</td><td>CO.Contrato, ACUERDOS</td><td>Encripción at-rest (AES-256), enmascaramiento en APIs</td></tr>
+                            <tr><td>nombre_arrendatario</td><td>CO.Contrato</td><td>Encripción at-rest, acceso restringido por rol</td></tr>
+                            <tr><td>direccion_inmueble</td><td>CO.Contrato</td><td>Enmascaramiento parcial en respuestas API</td></tr>
+                            <tr><td>cuenta_destino</td><td>CO.Devolucion</td><td>Encripción at-rest, nunca en logs</td></tr>
+                            <tr><td>correo_electronico</td><td>Varios</td><td>Enmascaramiento (****@dominio.com)</td></tr>
+                            <tr><td>telefono</td><td>Varios</td><td>Enmascaramiento (****1234)</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <h3>Políticas de Seguridad</h3>
+                <ul class="impact-list">
+                    <li>Retención máxima: 90 días para datos sensibles (política organizacional)</li>
+                    <li>Encripción at-rest obligatoria (AES-256) para toda columna PII</li>
+                    <li>TLS 1.2+ para toda comunicación en tránsito</li>
+                    <li>RBAC: acceso a PII solo para perfiles Administrador y Coordinador</li>
+                    <li>Auditoría: log de todo acceso a campos PII con correlation-id</li>
+                    <li>Cumplimiento Habeas Data (Ley 1581 de 2012)</li>
+                </ul>
+            </div>
+        </div>
+
+    </div><!-- end .content -->
+
+    <!-- TAB 8: WS CORE -->
+    <div class="tab-content" id="wscore">
+            <div class="card">
+                <h2>🔗 Resumen del Servicio</h2>
+                <div class="table-wrapper">
+                    <table>
+                        <thead><tr><th>Aspecto</th><th>Detalle</th></tr></thead>
+                        <tbody>
+                            <tr><td><strong>Repositorio</strong></td><td><code>segurosbolivar/libertador-sai-huella-ws-core-wl</code></td></tr>
+                            <tr><td><strong>Stack</strong></td><td>Java 1.8 + Spring Boot 2.7.5 + Maven → WAR en WebLogic</td></tr>
+                            <tr><td><strong>Función</strong></td><td>Middleware que sincroniza datos entre Oracle DB local y Oracle Service Cloud REST API v1.3</td></tr>
+                            <tr><td><strong>Arquitectura</strong></td><td>Controller → Facade → Repository (BD local) + Proxy (Oracle SC)</td></tr>
+                            <tr><td><strong>Procesamiento</strong></td><td>Asíncrono con ThreadPoolTaskExecutor</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>🔄 Patrón de Integración</h2>
+                <p style="margin-bottom:0.75rem;">Todas las operaciones contra Oracle Service Cloud siguen el mismo patrón REST:</p>
+                <div class="table-wrapper">
+                    <table>
+                        <thead><tr><th>Operación</th><th>Método HTTP</th><th>URL</th></tr></thead>
+                        <tbody>
+                            <tr><td>Crear</td><td><span class="tag tag-low">POST</span></td><td><code>{baseUrl}{objetoSC}/</code></td></tr>
+                            <tr><td>Actualizar</td><td><span class="tag tag-medium">PATCH</span></td><td><code>{baseUrl}{objetoSC}/{idRightNow}</code></td></tr>
+                            <tr><td>Consultar</td><td><span class="tag tag-tech">GET</span></td><td><code>{baseUrl}{objetoSC}/{idRightNow}</code></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <h3>Configuración de Conexión</h3>
+                <div class="table-wrapper" style="margin-top:0.5rem;">
+                    <table>
+                        <thead><tr><th>Parámetro</th><th>Fuente</th><th>Detalle</th></tr></thead>
+                        <tbody>
+                            <tr><td>Autenticación</td><td>HTTP Basic Auth</td><td>Credenciales en tabla MIG_ENDPOINT</td></tr>
+                            <tr><td>Serialización</td><td>ObjectMapper → JSON</td><td>@JsonInclude(NON_NULL), fechas yyyy-MM-dd</td></tr>
+                            <tr><td>Base URL</td><td>MIG_ENDPOINT (API-HUELLA)</td><td>URL base del servicio Oracle SC</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>📦 Catálogo de 23 Objetos Oracle Service Cloud</h2>
+                <p style="margin-bottom:0.75rem; color:var(--text-light); font-size:0.88rem;">Constantes definidas en el código que mapean a paths REST de Oracle Service Cloud.</p>
+                <div class="table-wrapper">
+                    <table>
+                        <thead><tr><th>Constante</th><th>Path REST</th><th>Objeto</th></tr></thead>
+                        <tbody>
+                            <tr><td><code>URLSINIESTROS</code></td><td>Siniestro.Siniestro/</td><td>Siniestro</td></tr>
+                            <tr><td><code>URLVALORES</code></td><td>CO1.Valor/</td><td>Valor</td></tr>
+                            <tr><td><code>URLAMPARO</code></td><td>CO.Amparo/</td><td>Amparo</td></tr>
+                            <tr><td><code>URLPOLIZAS</code></td><td>CO.Poliza/</td><td>Poliza</td></tr>
+                            <tr><td><code>URLPERSONA</code></td><td>contacts/</td><td>Contacto</td></tr>
+                            <tr><td><code>URLGESTOR</code></td><td>accounts/</td><td>Gestor</td></tr>
+                            <tr><td><code>URLPROCESOS</code></td><td>Siniestro.Proceso/</td><td>Proceso</td></tr>
+                            <tr><td><code>URLRECIBOSCJA</code></td><td>CO.Recibo/</td><td>Recibo</td></tr>
+                            <tr><td><code>URLDETALLERECIBOS</code></td><td>CO.DetalleRecibo/</td><td>DetalleRecibo</td></tr>
+                            <tr><td><code>URLCONCEPTODETALLERECIBOS</code></td><td>CO1.ConceptoRecibo/</td><td>ConceptoRecibo</td></tr>
+                            <tr><td><code>URLDSCPCNES_EFCTDAS</code></td><td>CO.Desocupacion/</td><td>Desocupacion</td></tr>
+                            <tr><td><code>URLLQDCION</code></td><td>CO.Liquidacion/</td><td>Liquidacion</td></tr>
+                            <tr><td><code>URLLQDCIONDETALLE</code></td><td>CO.DetalleLiquidacion/</td><td>DetalleLiquidacion</td></tr>
+                            <tr><td><code>URLCSNESPLZAS</code></td><td>CO.CesionPoliza/</td><td>CesionPoliza</td></tr>
+                            <tr><td><code>URLSSPNSNESSNSTROS</code></td><td>CO.Suspension/</td><td>Suspension</td></tr>
+                            <tr><td><code>URLDDASPOLIZAS</code></td><td>CO.Reintegro/</td><td>Reintegro</td></tr>
+                            <tr><td><code>URLVALORESDEUDA</code></td><td>CO.DeudaRecuperacion/</td><td>DeudaRecuperacion</td></tr>
+                            <tr><td><code>URLVALORESLIQUIDACION</code></td><td>CO.ValorLiquidacion/</td><td>ValorLiquidacion</td></tr>
+                            <tr><td><code>URLLMTESINDRSGOS</code></td><td>CO1.LimiteIndemnizacion/</td><td>LimiteIndemnizacion</td></tr>
+                            <tr><td><code>URLDDSMRCDASSNDAS</code></td><td>CO.DeudaSaneada/</td><td>DeudaSaneada</td></tr>
+                            <tr><td><code>URLAMNTOSSNSTROS</code></td><td>CO.Aumento/</td><td>Aumento</td></tr>
+                            <tr><td><code>URLCNCTRTOSDVLVER</code></td><td>CO.Devolucion/</td><td>Devolucion</td></tr>
+                            <tr><td><code>URLOBJCNESSNSTROS</code></td><td>CO.Objecion/</td><td>Objecion</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>📋 DTOs Principales (Resumen)</h2>
+                <p style="margin-bottom:0.75rem; color:var(--text-light); font-size:0.88rem;">Objetos de transferencia de datos que representan la estructura enviada/recibida de Oracle Service Cloud.</p>
+                <div class="table-wrapper">
+                    <table>
+                        <thead><tr><th>DTO</th><th>Campos</th><th>Objeto Oracle SC</th></tr></thead>
+                        <tbody>
+                            <tr><td><code>SiniestroDTO</code></td><td><strong>83</strong></td><td>Siniestro.Siniestro/</td></tr>
+                            <tr><td><code>PolizaDTO</code></td><td><strong>93</strong></td><td>CO.Poliza/</td></tr>
+                            <tr><td><code>ContactoDTO</code></td><td><strong>68</strong></td><td>contacts/</td></tr>
+                            <tr><td><code>GestorDTO</code></td><td><strong>12</strong></td><td>accounts/</td></tr>
+                            <tr><td><code>ValorDTO</code></td><td><strong>20</strong></td><td>CO1.Valor/</td></tr>
+                            <tr><td><code>AmparoDTO</code></td><td><strong>18</strong></td><td>CO.Amparo/</td></tr>
+                            <tr><td><code>LiquidacionDTO</code></td><td><strong>20</strong></td><td>CO.Liquidacion/</td></tr>
+                            <tr><td><code>DetalleLiquidacionDTO</code></td><td><strong>10</strong></td><td>CO.DetalleLiquidacion/</td></tr>
+                            <tr><td><code>ProcesoDTO</code></td><td><strong>18</strong></td><td>Siniestro.Proceso/</td></tr>
+                            <tr><td><code>ReciboCajaDTO</code></td><td><strong>22</strong></td><td>CO.Recibo/</td></tr>
+                            <tr><td><code>DetalleReciboDTO</code></td><td><strong>12</strong></td><td>CO.DetalleRecibo/</td></tr>
+                            <tr><td><code>DesocupacionDTO</code></td><td><strong>15</strong></td><td>CO.Desocupacion/</td></tr>
+                            <tr><td><code>CesionPolizaDTO</code></td><td><strong>14</strong></td><td>CO.CesionPoliza/</td></tr>
+                            <tr><td><code>SuspensionDTO</code></td><td><strong>14</strong></td><td>CO.Suspension/</td></tr>
+                            <tr><td><code>ReintegroDTO</code></td><td><strong>16</strong></td><td>CO.Reintegro/</td></tr>
+                            <tr><td><code>DeudaRecuperacionDTO</code></td><td><strong>14</strong></td><td>CO.DeudaRecuperacion/</td></tr>
+                            <tr><td><code>AumentoDTO</code></td><td><strong>12</strong></td><td>CO.Aumento/</td></tr>
+                            <tr><td><code>ObjecionDTO</code></td><td><strong>14</strong></td><td>CO.Objecion/</td></tr>
+                            <tr><td><code>DevolucionDTO</code></td><td><strong>14</strong></td><td>CO.Devolucion/</td></tr>
+                            <tr style="background:rgba(91,45,142,0.06);"><td><strong>TOTAL</strong></td><td><strong>~519</strong></td><td><strong>21 objetos</strong></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>🗄️ Base de Datos Local</h2>
+                <h3>Tablas MIG_* (26 tablas de migración)</h3>
+                <p style="margin-bottom:0.75rem; color:var(--text-light); font-size:0.88rem;">Tablas intermedias donde se persisten los datos antes de enviarlos a Oracle Service Cloud.</p>
+                <div class="table-wrapper">
+                    <table>
+                        <thead><tr><th>Tabla</th><th>Función</th></tr></thead>
+                        <tbody>
+                            <tr><td><code>MIG_SINIESTRO</code></td><td>Datos de siniestros pendientes de sincronización</td></tr>
+                            <tr><td><code>MIG_POLIZA</code></td><td>Datos de pólizas pendientes</td></tr>
+                            <tr><td><code>MIG_PERSONA</code></td><td>Datos de contactos/personas</td></tr>
+                            <tr><td><code>MIG_GESTOR</code></td><td>Datos de gestores/cuentas</td></tr>
+                            <tr><td><code>MIG_AMPARO</code></td><td>Datos de amparos</td></tr>
+                            <tr><td><code>MIG_VALOR</code></td><td>Datos de valores</td></tr>
+                            <tr><td><code>MIG_PROCESO</code></td><td>Datos de procesos</td></tr>
+                            <tr><td><code>MIG_LIQUIDACION</code></td><td>Datos de liquidaciones</td></tr>
+                            <tr><td><code>MIG_ERRORES</code></td><td>Registro de errores de sincronización</td></tr>
+                            <tr><td><code>MIG_ENDPOINT</code></td><td>Configuración de conexión (URL, credenciales)</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 style="margin-top:1.25rem;">Vistas V_CRM_* (20 vistas de consulta)</h3>
+                <p style="margin-bottom:0.75rem; color:var(--text-light); font-size:0.88rem;">Vistas que consolidan datos de múltiples tablas para las operaciones de consulta.</p>
+                <div class="table-wrapper">
+                    <table>
+                        <thead><tr><th>Vista</th><th>Función</th></tr></thead>
+                        <tbody>
+                            <tr><td><code>V_CRM_SINIESTRO</code></td><td>Vista consolidada de siniestros</td></tr>
+                            <tr><td><code>V_CRM_POLIZA</code></td><td>Vista consolidada de pólizas</td></tr>
+                            <tr><td><code>V_CRM_PERSONA</code></td><td>Vista consolidada de personas/contactos</td></tr>
+                            <tr><td><code>V_CRM_AMPARO</code></td><td>Vista consolidada de amparos</td></tr>
+                            <tr><td><code>V_CRM_LIQUIDACION</code></td><td>Vista consolidada de liquidaciones</td></tr>
+                            <tr><td><code>V_CRM_PROCESO</code></td><td>Vista consolidada de procesos</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 style="margin-top:1.25rem;">Tabla MIG_ENDPOINT (Configuración)</h3>
+                <div class="table-wrapper" style="margin-top:0.5rem;">
+                    <table>
+                        <thead><tr><th>Clave</th><th>Descripción</th></tr></thead>
+                        <tbody>
+                            <tr><td><code>API-HUELLA</code></td><td>URL base de Oracle Service Cloud REST API</td></tr>
+                            <tr><td><code>API-USERNAME</code></td><td>Usuario para autenticación Basic Auth</td></tr>
+                            <tr><td><code>API-PASSWORD</code></td><td>Contraseña para autenticación Basic Auth</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>⚡ Flujo de Procesamiento</h2>
+                <pre><code>┌──────────────────────────────────────────────────────────────────┐
+│                   FLUJO DE PROCESAMIENTO                         │
+├──────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  1. Cliente ──► POST al Controller                               │
+│                    │                                             │
+│  2. Controller ──► Valida campos obligatorios                    │
+│                    │                                             │
+│  3. Facade (async) ──► Persiste en BD local (estado P)           │
+│                    │                                             │
+│  4. Proxy ──► Envía a Oracle SC via REST                         │
+│                    │                                             │
+│              ┌─────┴─────┐                                       │
+│              │           │                                       │
+│  5a. Éxito ──► Estado C  │  5b. Error ──► Tabla MIG_ERRORES     │
+│              │           │                                       │
+│              └───────────┘                                       │
+│                                                                  │
+├──────────────────────────────────────────────────────────────────┤
+│  ESTADOS:                                                        │
+│                                                                  │
+│  ┌───┐         ┌───┐         ┌───┐                              │
+│  │ P │ ──────► │ O │ ──────► │ C │                              │
+│  └───┘         └───┘         └───┘                              │
+│  Pendiente    Procesando    Completado                           │
+│                                                                  │
+└──────────────────────────────────────────────────────────────────┘</code></pre>
+            </div>
+
+            <div class="card">
+                <h2>🌐 Endpoints del Servicio</h2>
+                <p style="margin-bottom:0.75rem; color:var(--text-light); font-size:0.88rem;">Patrón: <code>POST /{entidad}</code> (crear/actualizar) | <code>POST /{entidad}/get</code> (consultar). Total: 22 endpoints.</p>
+                <div class="table-wrapper">
+                    <table>
+                        <thead><tr><th>#</th><th>Path</th><th>DTO</th><th>Operación</th></tr></thead>
+                        <tbody>
+                            <tr><td>1</td><td><code>POST /siniestro</code></td><td>SiniestroDTO</td><td>Crear/Actualizar</td></tr>
+                            <tr><td>2</td><td><code>POST /siniestro/get</code></td><td>SiniestroDTO</td><td>Consultar</td></tr>
+                            <tr><td>3</td><td><code>POST /poliza</code></td><td>PolizaDTO</td><td>Crear/Actualizar</td></tr>
+                            <tr><td>4</td><td><code>POST /poliza/get</code></td><td>PolizaDTO</td><td>Consultar</td></tr>
+                            <tr><td>5</td><td><code>POST /persona</code></td><td>ContactoDTO</td><td>Crear/Actualizar</td></tr>
+                            <tr><td>6</td><td><code>POST /persona/get</code></td><td>ContactoDTO</td><td>Consultar</td></tr>
+                            <tr><td>7</td><td><code>POST /gestor</code></td><td>GestorDTO</td><td>Crear/Actualizar</td></tr>
+                            <tr><td>8</td><td><code>POST /amparo</code></td><td>AmparoDTO</td><td>Crear/Actualizar</td></tr>
+                            <tr><td>9</td><td><code>POST /valor</code></td><td>ValorDTO</td><td>Crear/Actualizar</td></tr>
+                            <tr><td>10</td><td><code>POST /proceso</code></td><td>ProcesoDTO</td><td>Crear/Actualizar</td></tr>
+                            <tr><td>11</td><td><code>POST /liquidacion</code></td><td>LiquidacionDTO</td><td>Crear/Actualizar</td></tr>
+                            <tr><td>12</td><td><code>POST /detalleLiquidacion</code></td><td>DetalleLiquidacionDTO</td><td>Crear/Actualizar</td></tr>
+                            <tr><td>13</td><td><code>POST /recibo</code></td><td>ReciboCajaDTO</td><td>Crear/Actualizar</td></tr>
+                            <tr><td>14</td><td><code>POST /detalleRecibo</code></td><td>DetalleReciboDTO</td><td>Crear/Actualizar</td></tr>
+                            <tr><td>15</td><td><code>POST /desocupacion</code></td><td>DesocupacionDTO</td><td>Crear/Actualizar</td></tr>
+                            <tr><td>16</td><td><code>POST /cesionPoliza</code></td><td>CesionPolizaDTO</td><td>Crear/Actualizar</td></tr>
+                            <tr><td>17</td><td><code>POST /suspension</code></td><td>SuspensionDTO</td><td>Crear/Actualizar</td></tr>
+                            <tr><td>18</td><td><code>POST /reintegro</code></td><td>ReintegroDTO</td><td>Crear/Actualizar</td></tr>
+                            <tr><td>19</td><td><code>POST /deudaRecuperacion</code></td><td>DeudaRecuperacionDTO</td><td>Crear/Actualizar</td></tr>
+                            <tr><td>20</td><td><code>POST /aumento</code></td><td>AumentoDTO</td><td>Crear/Actualizar</td></tr>
+                            <tr><td>21</td><td><code>POST /objecion</code></td><td>ObjecionDTO</td><td>Crear/Actualizar</td></tr>
+                            <tr><td>22</td><td><code>POST /devolucion</code></td><td>DevolucionDTO</td><td>Crear/Actualizar</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+    </div>
+
+    <!-- TAB 7: DOCUMENTACIÓN -->
+    <div class="tab-content" id="documentacion">
+            <div class="card">
+                <h2>📂 Fuentes Documentales</h2>
+                <p style="margin-bottom:1rem; color:var(--text-light); font-size:0.88rem;">Toda la documentación de Huella proviene de la carpeta de Google Drive. Aquí se consolidan los links para acceso directo.</p>
+                <h3>Carpeta Principal</h3>
+                <p><a href="https://drive.google.com/drive/u/0/folders/1XpBtAJZ52AS40NGv-LXvJEUbn7vhtgqE" target="_blank" style="color:var(--secondary); text-decoration:underline;">📁 Abrir carpeta completa en Drive</a></p>
+            </div>
+
+            <div class="card">
+                <h2>📄 Diagramas de Procesos BPMN</h2>
+                <div class="table-wrapper">
+                    <table>
+                        <thead><tr><th>Documento</th><th>Tipo</th><th>Tamaño</th><th>Link</th></tr></thead>
+                        <tbody>
+                            <tr><td>Proceso de Desistimiento V2025</td><td>PDF</td><td>129 KB</td><td><a href="https://drive.google.com/file/d/1Zhl-enmSz0FI4E2pHn_AIsKNBKNvC7w4/view?usp=drivesdk" target="_blank">Abrir</a></td></tr>
+                            <tr><td>Desistimiento 2025 (diagrama detallado)</td><td>PNG</td><td>994 KB</td><td><a href="https://drive.google.com/file/d/13Sk-mVhpQWHaPQQCYsBe7TeJtsRKxop5/view?usp=drivesdk" target="_blank">Abrir</a></td></tr>
+                            <tr><td>Proceso de Cobranza Jurídica</td><td>PDF</td><td>157 KB</td><td><a href="https://drive.google.com/file/d/1JE4Vlm9GYkBKrJTNFkwcHJwxGuKreGEo/view?usp=drivesdk" target="_blank">Abrir</a></td></tr>
+                            <tr><td>Proceso de Cobranza Jurídica (fuente)</td><td>Binario</td><td>115 KB</td><td><a href="https://drive.google.com/file/d/1jVkxX7DNQ2jAoq5BlP8iIPIMBElO8S2k/view?usp=drivesdk" target="_blank">Abrir</a></td></tr>
+                            <tr><td>Proceso de Cobranza Pre-Jurídica V2025</td><td>PDF</td><td>177 KB</td><td><a href="https://drive.google.com/file/d/1zxwlmw8YouHUo_xquop5gL0uFtTybAUh/view?usp=drivesdk" target="_blank">Abrir</a></td></tr>
+                            <tr><td>Proceso de Cobranza Pre-Jurídica (fuente)</td><td>Binario</td><td>97 KB</td><td><a href="https://drive.google.com/file/d/1KqK58GtyE5Lm1JozqPV4_zLAhlV40rWQ/view?usp=drivesdk" target="_blank">Abrir</a></td></tr>
+                            <tr><td>Procesos Desocupaciones</td><td>PNG</td><td>109 KB</td><td><a href="https://drive.google.com/file/d/1gobwNw976_1KcSXCUa3-t0KAAbvqtCcn/view?usp=drivesdk" target="_blank">Abrir</a></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>🎥 Sesiones de Capacitación (Notas de Gemini)</h2>
+                <p style="margin-bottom:0.5rem; color:var(--text-light); font-size:0.88rem;">16 sesiones de capacitación realizadas entre julio y agosto 2025. Todas extraídas y disponibles localmente.</p>
+                <p style="margin-bottom:1rem;"><a href="https://drive.google.com/drive/folders/1ZUh6YzIHVnEJpca-l85ZDuajik4odkWj" target="_blank" style="color:var(--secondary); text-decoration:underline;">📁 Abrir subcarpeta Videos en Drive</a></p>
+                <div class="table-wrapper">
+                    <table>
+                        <thead><tr><th>#</th><th>Sesión</th><th>Fecha</th><th>Estado</th><th>Link Drive</th></tr></thead>
+                        <tbody>
+                            <tr><td>1</td><td>Introducción a Huella</td><td>2025-07-10</td><td><span class="tag tag-low">Extraído</span></td><td><a href="https://docs.google.com/document/d/1nhgCBHBSAZtGtCEONWFOTsK8-0XeO2IAnlg5QOqvQ8M/edit?usp=drivesdk" target="_blank">Abrir</a></td></tr>
+                            <tr><td>2</td><td>Usuarios Huella</td><td>2025-07-14</td><td><span class="tag tag-low">Extraído</span></td><td><a href="https://docs.google.com/document/d/1Iak_YG9Z5MCJ9e4Tf3TBBFvvj8qu4sw9rGV-qDqhf8M/edit?usp=drivesdk" target="_blank">Abrir</a></td></tr>
+                            <tr><td>3</td><td>Perfiles - Grupos Huella</td><td>2025-07-15</td><td><span class="tag tag-low">Extraído</span></td><td><a href="https://docs.google.com/document/d/1Ujk6oycM1MuDUl2Q3E9xhGAcbLrFa06svcn1gO2J-MA/edit?usp=drivesdk" target="_blank">Abrir</a></td></tr>
+                            <tr><td>4</td><td>Espacios de trabajo (sesión 1)</td><td>2025-07-16</td><td><span class="tag tag-low">Extraído</span></td><td><a href="https://docs.google.com/document/d/1o-E9NQBLW_IaDoMue1_vwINvqK0oGc-4dfQvJmxNjgM/edit?usp=drivesdk" target="_blank">Abrir</a></td></tr>
+                            <tr><td>5</td><td>Espacios de trabajo (sesión 2)</td><td>2025-07-17</td><td><span class="tag tag-low">Extraído</span></td><td><a href="https://docs.google.com/document/d/1V4Dv51D1PaLz-hpsAJRfj9sMde_5h8ARmu6QDYgQt0w/edit?usp=drivesdk" target="_blank">Abrir</a></td></tr>
+                            <tr><td>6</td><td>Juegos de navegación</td><td>2025-07-21</td><td><span class="tag tag-low">Extraído</span></td><td><a href="https://docs.google.com/document/d/1S1coS9ehml76iPOytc8Wq31zdpX0cda8vIw7Zxl0zR0/edit?usp=drivesdk" target="_blank">Abrir</a></td></tr>
+                            <tr><td>7</td><td>Campos y objetos personalizados</td><td>2025-07-22</td><td><span class="tag tag-low">Extraído</span></td><td><a href="https://docs.google.com/document/d/14FOvjE5NIOVSyeuBl3pWzHJcM0GGgplxsi2HHJr3CyM/edit?usp=drivesdk" target="_blank">Abrir</a></td></tr>
+                            <tr><td>8</td><td>Reportes parte 1</td><td>2025-07-23</td><td><span class="tag tag-low">Extraído</span></td><td><a href="https://docs.google.com/document/d/1qzM3WyPzMCbVnW8sjO7YWcbrqLHUkxky3cUEks9kfcQ/edit?usp=drivesdk" target="_blank">Abrir</a></td></tr>
+                            <tr><td>9</td><td>Reportes parte 2</td><td>2025-07-24</td><td><span class="tag tag-low">Extraído</span></td><td><a href="https://docs.google.com/document/d/1LBer8d12tczqAx81EwqOrL5J6NYMH7wgFOh88q3ZXBc/edit?usp=drivesdk" target="_blank">Abrir</a></td></tr>
+                            <tr><td>10</td><td>Integraciones</td><td>2025-07-28</td><td><span class="tag tag-low">Extraído</span></td><td><a href="https://docs.google.com/document/d/1epsQR2GRn6I4b4x2kNLu-KVVciZzMLy5oSyOuiRqiOM/edit?usp=drivesdk" target="_blank">Abrir</a></td></tr>
+                            <tr><td>11</td><td>Reglas de negocio</td><td>2025-07-29</td><td><span class="tag tag-low">Extraído</span></td><td><a href="https://docs.google.com/document/d/1hljDBXU6H4LQPgBh5wsHD9bYz4bpNzQC6R88F_g0_SM/edit?usp=drivesdk" target="_blank">Abrir</a></td></tr>
+                            <tr><td>12</td><td>Buzón de correo y notificaciones</td><td>2025-07-30</td><td><span class="tag tag-low">Extraído</span></td><td><a href="https://docs.google.com/document/d/1RrZ09MVqDLucLvafu0PyeFeTNTUSNtLDSwLnVgs3WVg/edit?usp=drivesdk" target="_blank">Abrir</a></td></tr>
+                            <tr><td>13</td><td>Módulo de SMS</td><td>2025-07-31</td><td><span class="tag tag-low">Extraído</span></td><td><a href="https://docs.google.com/document/d/1R86zQJ3jO3jHj91ya7MV5BLmsuyU4JLiq-CULnqL6xc/edit?usp=drivesdk" target="_blank">Abrir</a></td></tr>
+                            <tr><td>14</td><td>Soporte Oracle / Métricas</td><td>2025-08-04</td><td><span class="tag tag-low">Extraído</span></td><td><a href="https://docs.google.com/document/d/1C8iQlt7uNAIZJU2Zg3v8iZTDSHO8L-lCM-IJxA-PwAU/edit?usp=drivesdk" target="_blank">Abrir</a></td></tr>
+                            <tr><td>15</td><td>Plantillas de respuesta</td><td>2025-08-05</td><td><span class="tag tag-low">Extraído</span></td><td><a href="https://docs.google.com/document/d/1GQejAHaebUPOqCaCH6FCIFxR53PDlL70BoYlCmq5c0E/edit?usp=drivesdk" target="_blank">Abrir</a></td></tr>
+                            <tr><td>16</td><td>Productos, categorías y disposiciones</td><td>2025-08-06</td><td><span class="tag tag-low">Extraído</span></td><td><a href="https://docs.google.com/document/d/1EbdNp2n_ZoY_jMaPQ2RyV5f4upFGT0LAwE4zAdC_jB0/edit?usp=drivesdk" target="_blank">Abrir</a></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>✅ Cobertura Documental</h2>
+                <div class="table-wrapper">
+                    <table>
+                        <thead><tr><th>Fuente</th><th>Archivos</th><th>Extraídos</th><th>Cobertura</th></tr></thead>
+                        <tbody>
+                            <tr><td>PDFs de procesos</td><td>3</td><td>3</td><td><span class="tag tag-low">100%</span></td></tr>
+                            <tr><td>Imágenes de diagramas</td><td>2</td><td>2</td><td><span class="tag tag-low">100%</span></td></tr>
+                            <tr><td>Notas de Gemini (sesiones)</td><td>16</td><td>16</td><td><span class="tag tag-low">100%</span></td></tr>
+                            <tr><td>Google Docs</td><td>1</td><td>1</td><td><span class="tag tag-low">100%</span></td></tr>
+                            <tr><td>Archivos binarios (fuente)</td><td>2</td><td>0</td><td><span class="tag tag-high">No legible</span></td></tr>
+                            <tr><td>Videos (grabaciones)</td><td>1</td><td>0</td><td><span class="tag tag-medium">Cubierto por notas</span></td></tr>
+                            <tr><td><strong>Total contenido útil</strong></td><td><strong>25</strong></td><td><strong>22</strong></td><td><span class="tag tag-low"><strong>100%</strong></span></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+    </div>
+
+    <!-- TAB 9: BUSINESS RULES -->
+    <div class="tab-content" id="reglas">
+            <div class="card">
+                <h2>⚡ Resumen de Business Rules</h2>
+                <p>Las Business Rules de Oracle Service Cloud son reglas automatizadas que se ejecutan cuando ocurren eventos en los objetos del sistema (crear, editar, cambiar estado). Se extrajeron exitosamente usando el endpoint API interno del AgentWeb.</p>
+                <p style="margin-top:0.75rem;"><strong>Hallazgo principal:</strong> Solo el objeto <strong>Bitácora (Incident)</strong> tiene reglas configuradas. Los 9 objetos restantes están vacíos.</p>
+            </div>
+
+            <div class="card">
+                <h2>📊 Estado por Objeto</h2>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr><th>#</th><th>Objeto</th><th>classId</th><th>¿Tiene reglas?</th><th>Total</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>1</td><td><strong>Bitácora (Incident)</strong></td><td>1</td><td><span class="tag tag-high">✅ Sí</span></td><td><strong>9 reglas</strong></td></tr>
+                            <tr><td>2</td><td>Cuenta (Account)</td><td>24</td><td><span class="tag tag-low">❌ No</span></td><td>0</td></tr>
+                            <tr><td>3</td><td>Respuesta (Answer)</td><td>9</td><td><span class="tag tag-low">❌ No</span></td><td>0</td></tr>
+                            <tr><td>4</td><td>Activo (Asset)</td><td>542</td><td><span class="tag tag-low">❌ No</span></td><td>0</td></tr>
+                            <tr><td>5</td><td>Objetos de chat</td><td>N/A</td><td><span class="tag tag-medium">⚠️ No disponible</span></td><td>0</td></tr>
+                            <tr><td>6</td><td>Contacto (Contact)</td><td>2</td><td><span class="tag tag-low">❌ No</span></td><td>0</td></tr>
+                            <tr><td>7</td><td>Objetos personalizados</td><td>-1</td><td><span class="tag tag-low">❌ No</span></td><td>0</td></tr>
+                            <tr><td>8</td><td>Oportunidad (Opportunity)</td><td>87</td><td><span class="tag tag-low">❌ No</span></td><td>0</td></tr>
+                            <tr><td>9</td><td>Organización (Organization)</td><td>3</td><td><span class="tag tag-low">❌ No</span></td><td>0</td></tr>
+                            <tr><td>10</td><td>Tarea (Task)</td><td>106</td><td><span class="tag tag-low">❌ No</span></td><td>0</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>🔄 Flujo de Estados — Bitácora (Incident)</h2>
+                <pre><code>Creación de caso de formulario
+    ├── IF (Origen="Formular pregunta" AND Cola="Cobranza") → Enviar correo
+    └── ELSE → Transición a "Cierre de caso"
+                    └── IF (Estado="Solucionado") → Transición a "Notificaciones"
+                                                      └── [4 reglas DISABLED]
+Capacitación ← (invocada por Regla 1 o transición)
+    └── Invocar "Funcion capacitación"
+        ├── IF (Estado="Sin resolver") → Agregar plantilla a notas
+        └── IF (Estado="En espera") → Agregar plantilla a respuesta</code></pre>
+            </div>
+
+            <div class="card">
+                <h2>✅ Reglas Activas (5)</h2>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr><th>#</th><th>Contexto</th><th>Regla</th><th>Condición (IF)</th><th>Acción (THEN)</th><th>Acción (ELSE)</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>1</td><td>Estado: Creación de caso</td><td><strong>Notificación recepción</strong></td><td>Origen = "Formular pregunta" AND Cola = "Cobranza"</td><td>Enviar correo electrónico recibido</td><td>Transición a "Cierre de caso"</td></tr>
+                            <tr><td>2</td><td>Estado: Capacitación</td><td><strong>Regla en espera</strong></td><td>(sin condición)</td><td>Invocar función "Funcion capacitación"</td><td>—</td></tr>
+                            <tr><td>3</td><td>Estado: Cierre de caso</td><td><strong>Cierre de caso</strong></td><td>Estado = "Solucionado"</td><td>Transición a "Notificaciones"</td><td>—</td></tr>
+                            <tr><td>4</td><td>Función: capacitación</td><td><strong>Funcion nota</strong></td><td>Estado = "Sin resolver"</td><td>Agregar plantilla "Capacitación" a notas</td><td>—</td></tr>
+                            <tr><td>5</td><td>Función: capacitación</td><td><strong>Funcion respuesta</strong></td><td>Estado = "En espera"</td><td>Agregar plantilla "Capacitación" a respuesta</td><td>—</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>❌ Reglas Deshabilitadas (4)</h2>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr><th>#</th><th>Regla</th><th>Condición (IF)</th><th>Acción (THEN)</th><th>Relevancia migración</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>1</td><td><strong>Cobranza</strong></td><td>Origen = "Páginas de usuario final"</td><td>Asignar Cola = "Cobranza"</td><td><span class="tag tag-medium">Media</span></td></tr>
+                            <tr><td>2</td><td><strong>Enviar Notificación Reply</strong></td><td>Origen = Techmail AND Notif.Resp.Enviada = No AND Marcar como Respuesta = Sí</td><td>Enviar email al asignado + Marcar Notif.Resp.Enviada = Sí</td><td><span class="tag tag-medium">Media</span></td></tr>
+                            <tr><td>3</td><td><strong>Enviar Notificación Compromiso</strong></td><td>Marcar como Compromiso = Sí AND Notif.Compromiso.Enviad = No AND Asignado = Sí</td><td>Enviar email al asignado + Marcar Notif.Compromiso.Enviad = Sí</td><td><span class="tag tag-medium">Media</span></td></tr>
+                            <tr><td>4</td><td><strong>Regla 1</strong></td><td>Correo de prueba ImagineCX</td><td>Asignar Asunto + Transición a "Capacitación"</td><td><span class="tag tag-low">Descartable (prueba)</span></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>🚫 Workspace Rules y Guided Assistance</h2>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr><th>Funcionalidad</th><th>AgentWeb</th><th>Admin Console (/ci/admin/)</th><th>API REST</th><th>Service Console (Windows)</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><strong>Business Rules</strong></td><td><span class="tag tag-low">✅ Accesible + Exportable</span></td><td>—</td><td>❌ No expuesto</td><td>✅</td></tr>
+                            <tr><td><strong>Workspace Rules</strong></td><td><span class="tag tag-high">❌ No disponible</span></td><td>❌ Sin permiso CP Admin</td><td>❌ No expuesto</td><td>✅ (requiere Windows)</td></tr>
+                            <tr><td><strong>Guided Assistance</strong></td><td><span class="tag tag-high">❌ No disponible</span></td><td>❌ Sin permiso CP Admin</td><td>❌ No expuesto</td><td>✅ (requiere Windows)</td></tr>
+                            <tr><td><strong>Object Designer</strong></td><td><span class="tag tag-high">❌ No disponible</span></td><td>❌ Sin permiso CP Admin</td><td>Parcial (metadata)</td><td>✅ (requiere Windows)</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <h3 style="margin-top:1rem;">Bloqueos identificados</h3>
+                <ul style="font-size:0.88rem; padding-left:1.5rem; margin-top:0.5rem;">
+                    <li><strong>Admin Console (/ci/admin/):</strong> Mensaje "Esta cuenta no tiene acceso a la administración de Customer Portal". Requiere permiso adicional "Customer Portal Administration".</li>
+                    <li><strong>Service Console (escritorio):</strong> Requiere Microsoft Edge en Windows. No disponible en macOS.</li>
+                    <li><strong>Alternativa:</strong> Solicitar al administrador de Oracle SC que habilite el permiso "Customer Portal Administration" o proporcione credenciales con ese acceso.</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h2>🔧 Endpoint API Descubierto (para automatización)</h2>
+                <p>Se descubrió el endpoint interno del AgentWeb que permite exportar Business Rules programáticamente:</p>
+                <pre><code>POST /AgentWeb/api/contextmanager/v.{version}/businessRulesContext/exportRuleBase
+Body: {
+  "rulebaseId": {classId},
+  "classId": {classId},
+  "entityType": "BusinessRuleRulebaseLive",
+  "exportFormat": "delimited",
+  "ruleExport": true
+}
+
+Polling: GET .../businessRulesContext/{classId}/export/BusinessRuleRulebaseLive/status
+Descarga: POST .../businessRulesContext/{classId}/export/BusinessRuleRulebaseLive/delimited</code></pre>
+                <p style="margin-top:0.75rem; font-size:0.85rem; color:var(--text-light);">Nota: Requiere sesión autenticada en AgentWeb. El rulebaseId coincide con classId excepto para Bitácora (rulebaseId=30317582).</p>
+            </div>
+
+            <div class="card">
+                <h2>📋 Implicaciones para la Migración</h2>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr><th>Regla</th><th>Relevancia</th><th>Acción recomendada</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Notificación recepción</td><td><span class="tag tag-high">Alta</span></td><td>Migrar — lógica de routing de casos entrantes</td></tr>
+                            <tr><td>Cierre de caso</td><td><span class="tag tag-high">Alta</span></td><td>Migrar — transición de estados del workflow</td></tr>
+                            <tr><td>Enviar Notificación Reply</td><td><span class="tag tag-medium">Media</span></td><td>Evaluar reactivación — notificación al cobrador</td></tr>
+                            <tr><td>Enviar Notificación Compromiso</td><td><span class="tag tag-medium">Media</span></td><td>Evaluar reactivación — notificación de compromisos</td></tr>
+                            <tr><td>Cobranza</td><td><span class="tag tag-medium">Media</span></td><td>Evaluar — asignación automática de cola</td></tr>
+                            <tr><td>Regla en espera + Funciones</td><td><span class="tag tag-low">Baja</span></td><td>No migrar — reglas de capacitación/entrenamiento</td></tr>
+                            <tr><td>Regla 1</td><td><span class="tag tag-low">Descartable</span></td><td>No migrar — regla de prueba</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+    </div>
+
+    <!-- Progress Float -->
+    <div class="progress-float" id="progressFloat">✓ <span id="progressCount">0</span> / <span id="progressTotal">0</span> revisadas</div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p><strong>Inventario Funcional — Plataforma Huella</strong></p>
+        <p style="margin-top:0.5rem;">Fuentes: Mapeo QA (May 2026) + API Scan (May 2026) + 16 sesiones de capacitación (Jul-Ago 2025) + Mapa de Integraciones (May 2026) + Flujos UI (May 2026) + Business Rules Export (May 2026)</p>
+        <p>Plataforma: Oracle B2C Service (Oracle Service Cloud) | Proveedor: ImagineCX | Soporte: Stefanini</p>
+        <p style="margin-top:0.5rem; opacity:0.6;">Generado para socialización con equipos de Negocio, Operación, Arquitectura y Desarrollo</p>
+    </div>
+
+    <script>
+    (function() {
+        // Tab navigation
+        const tabs = document.querySelectorAll('.tab');
+        const contents = document.querySelectorAll('.tab-content');
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const target = tab.dataset.tab;
+                tabs.forEach(t => t.classList.remove('active'));
+                contents.forEach(c => c.classList.remove('active'));
+                tab.classList.add('active');
+                document.getElementById(target).classList.add('active');
+                updateProgressVisibility(target);
+            });
+        });
+
+        // Module collapse/expand
+        window.toggleModule = function(header) {
+            header.classList.toggle('open');
+            const body = header.nextElementSibling;
+            body.classList.toggle('open');
+        };
+
+        // Checkbox persistence with localStorage
+        const checkboxes = document.querySelectorAll('input[type="checkbox"][data-key]');
+        const progressFloat = document.getElementById('progressFloat');
+        const progressCount = document.getElementById('progressCount');
+        const progressTotal = document.getElementById('progressTotal');
+
+        progressTotal.textContent = checkboxes.length;
+
+        // Load saved state
+        checkboxes.forEach(cb => {
+            const saved = localStorage.getItem('huella_' + cb.dataset.key);
+            if (saved === 'true') cb.checked = true;
+            cb.addEventListener('change', () => {
+                localStorage.setItem('huella_' + cb.dataset.key, cb.checked);
+                updateProgress();
+            });
+        });
+
+        function updateProgress() {
+            const checked = document.querySelectorAll('input[type="checkbox"][data-key]:checked').length;
+            progressCount.textContent = checked;
+            progressTotal.textContent = checkboxes.length;
+        }
+
+        function updateProgressVisibility(tab) {
+            if (tab === 'operacion' || tab === 'arquitectura' || tab === 'integraciones') {
+                progressFloat.style.display = 'block';
+            } else {
+                progressFloat.style.display = 'none';
+            }
+        }
+
+        updateProgress();
+        updateProgressVisibility('negocio');
+
+        // Schema search (Tab Desarrollo)
+        const searchBox = document.getElementById('schemaSearch');
+        if (searchBox) {
+            searchBox.addEventListener('input', function() {
+                const query = this.value.toLowerCase().trim();
+                const modules = document.querySelectorAll('#schemaResults .module');
+                
+                modules.forEach(mod => {
+                    if (!query) {
+                        mod.style.display = '';
+                        return;
+                    }
+                    const text = mod.textContent.toLowerCase();
+                    mod.style.display = text.includes(query) ? '' : 'none';
+                });
+            });
+        }
+    })();
+    </script>
+</body>
+</html>

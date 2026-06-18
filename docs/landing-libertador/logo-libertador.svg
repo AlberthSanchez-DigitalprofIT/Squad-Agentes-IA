@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 80" fill="none">
+  <!-- Icon: hand + building -->
+  <g transform="translate(0, 5)">
+    <!-- Hand base -->
+    <path d="M8 58 C8 58 18 65 30 60 C32 59 34 57 34 55 L34 48 C34 46 32 44 30 44 L12 44 C10 44 8 46 8 48 Z" fill="#C41E1E"/>
+    <!-- Building -->
+    <rect x="14" y="8" width="6" height="36" rx="1" fill="#C41E1E"/>
+    <rect x="22" y="16" width="6" height="28" rx="1" fill="#C41E1E"/>
+    <rect x="30" y="22" width="6" height="22" rx="1" fill="#C41E1E"/>
+    <!-- Roof line -->
+    <path d="M12 8 L20 2 L38 18" stroke="#C41E1E" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <!-- Hand curve -->
+    <path d="M4 52 C4 52 2 62 10 66 C18 70 32 66 38 60 C40 58 40 54 38 52" stroke="#C41E1E" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  </g>
+  <!-- Text: EL LIBERTADOR -->
+  <text x="60" y="54" font-family="Montserrat, Arial, sans-serif" font-weight="800" font-size="42" fill="#C41E1E" letter-spacing="3">
+    EL LIBERTADOR
+  </text>
+</svg>

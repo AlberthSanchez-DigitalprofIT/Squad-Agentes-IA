@@ -1,0 +1,87 @@
+{
+  "_comment": "Copiar a Workspace/{plataforma}/config/platforms.json. Ver docs/onboarding/01-flujo-primera-interaccion.md. Generar con: node scripts/onboard-platform.js o docs/onboarding/formulario-onboarding.html",
+  "tribu": "Tribu Servicios Bolivar - Facilities - Proyectiva - El Libertador - Mercadeo",
+  "squad": {
+    "name": "Nombre del Squad",
+    "po": "Nombre del Product Owner",
+    "poTransversal": "Nombre del PO Transversal",
+    "ltt": "Nombre del Líder Técnico Transversal"
+  },
+  "platforms": [
+    {
+      "id": "ejemplo",
+      "name": "Nombre del producto o plataforma",
+      "urls": {
+        "app": "https://www.ejemplo.com",
+        "pre": "https://pre.ejemplo.com",
+        "qa": "https://qa.ejemplo.com",
+        "staging": "https://pre.ejemplo.com",
+        "docs": ""
+      },
+      "smokePaths": ["/", "/ruta1", "/ruta2"],
+      "auditZones": [
+        { "name": "Home", "url": "/" },
+        { "name": "Sección A", "url": "/ruta1" },
+        { "name": "Sección B", "url": "/ruta2" }
+      ],
+      "jira": {
+        "cloudId": "",
+        "projectKey": "",
+        "projectUrl": "https://tu-sitio.atlassian.net/browse/PROJ",
+        "boardId": "",
+        "incidentBoardId": "",
+        "incidentBoardUrl": "",
+        "securityIncidentBoardId": "",
+        "securityIncidentBoardUrl": ""
+      },
+      "datadog": {
+        "site": "us1",
+        "dashboardId": "",
+        "dashboardUrl": "",
+        "dashboardIds": [],
+        "monitorTags": [],
+        "criticalServices": [],
+        "serviceToRepos": {
+          "_comment": "Mapeo servicio/tag Datadog → repos GitHub para automation de alertas. Ver docs/runbook/automation-datadog-alert.md",
+          "ejemplo-servicio": ["nombre-org/repo-frontend", "nombre-org/repo-api"]
+        }
+      },
+      "clarity": {
+        "_comment": "Dejar null si no aplica",
+        "projectId": "",
+        "dashboardUrl": "",
+        "tokenEnvVar": "CLARITY_API_TOKEN"
+      },
+      "github": {
+        "org": "nombre-org",
+        "repos": ["repo-frontend", "repo-backend"],
+        "note": ""
+      },
+      "aws": {
+        "_comment": "Dejar null si no aplica",
+        "region": "us-east-1",
+        "cluster": "",
+        "services": ["ECS", "RDS", "S3"]
+      },
+      "bi": {
+        "_comment": "Configuración de BI. Ver docs/runbook/powerbi-connection.md para obtener datasetId",
+        "powerbi": {
+          "tenantId": "",
+          "reportId": "",
+          "datasetId": "",
+          "reportName": "",
+          "reportUrl": ""
+        },
+        "looker": {
+          "_comment": "Dejar null si no aplica. Solo Looker enterprise, no Looker Studio",
+          "instanceUrl": "",
+          "clientId": "ENV:LOOKER_CLIENT_ID",
+          "clientSecret": "ENV:LOOKER_CLIENT_SECRET"
+        }
+      }
+    }
+  ],
+  "defaultPlatformId": "ejemplo",
+  "onboardedAt": "",
+  "onboardedBy": ""
+}

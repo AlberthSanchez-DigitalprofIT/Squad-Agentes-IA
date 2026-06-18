@@ -1,0 +1,15 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "BI MCP Guard",
+      "description": "Solo el agente BI Strategist puede usar los MCPs de Power BI y Looker. Previene que otros agentes accedan a datos de BI sin autorización.",
+      "trigger": "PreToolUse",
+      "action": {
+        "type": "agent",
+        "prompt": "CONTROL DE ACCESO — BI MCP Guard.\n\nSe está intentando usar una herramienta de Power BI o Looker. Verifica que el contexto actual corresponde al agente BI Strategist.\n\nAgentes autorizados para MCPs de BI:\n- BI Strategist (análisis de cifras, KPIs, resúmenes ejecutivos)\n\nSi el agente actual NO es BI Strategist:\n- ACCESO DENEGADO. No ejecutes la herramienta.\n- Informa que esta herramienta está reservada para el agente BI Strategist.\n- Sugiere al usuario activar el BI Strategist vía el Orquestador.\n\nSi el agente actual ES BI Strategist:\n- ACCESO PERMITIDO. Procede con la ejecución."
+      },
+      "enabled": false
+    }
+  ]
+}

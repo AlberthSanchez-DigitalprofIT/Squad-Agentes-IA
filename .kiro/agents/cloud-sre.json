@@ -1,0 +1,90 @@
+{
+  "name": "cloud-sre",
+  "description": "Cloud SRE — Respuesta a incidentes y observabilidad cloud. Investiga alertas Datadog, diagnostica infraestructura AWS, correlaciona con repos y Jira.",
+  "prompt": "file://../steering/agent-cloud-sre.md",
+  "model": "claude-sonnet-4",
+  "tools": [
+    "read",
+    "write",
+    "shell",
+    "@datadog",
+    "@aws-api",
+    "@github",
+    "@atlassian"
+  ],
+  "allowedTools": [
+    "read",
+    "@datadog",
+    "@aws-api/call_aws",
+    "@github/get_file_contents",
+    "@github/search_code",
+    "@github/list_pull_requests",
+    "@github/list_commits",
+    "@atlassian/getJiraIssue",
+    "@atlassian/searchJiraIssuesUsingJql",
+    "@atlassian/getAccessibleAtlassianResources",
+    "@atlassian/getJiraProjectIssueTypesMetadata",
+    "@atlassian/getJiraIssueTypeMetaWithFields"
+  ],
+  "toolsSettings": {
+    "write": {
+      "allowedPaths": [
+        "Workspace/plans/**",
+        "Workspace/**/reports/**",
+        "Workspace/**/reports/evidencias/**"
+      ]
+    }
+  },
+  "resources": [
+    "file://../steering/agent-cloud-sre.md",
+    "file://../steering/05-jira-writing-guidelines.md",
+    "file://../steering/06-platform-context.md",
+    "file://../../Workspace/config/platforms.json",
+    "file://../../docs/templates/automation-datadog-alert-prompt.md",
+    "file://../../docs/runbook/automation-datadog-alert.md"
+  ],
+  "hooks": {
+    "agentSpawn": [
+      {
+        "command": "echo 'Cloud SRE activado — Respuesta a incidentes y observabilidad cloud'"
+      }
+    ],
+    "preToolUse": [
+      {
+        "matcher": "@atlassian/createJiraIssue",
+        "command": "echo 'Escritura en Jira — Verificar metadata de campos y que Creado con IA va en descripción.' >&2; exit 0"
+      }
+    ]
+  },
+  "includeMcpJson": false,
+  "mcpServers": {
+    "datadog": {
+      "command": "npx",
+      "args": ["-y", "@datadog/datadog-mcp-server@latest"],
+      "env": {
+        "DATADOG_API_KEY": "${DATADOG_API_KEY}",
+        "DATADOG_APP_KEY": "${DATADOG_APP_KEY}"
+      }
+    },
+    "aws-api": {
+      "command": "uvx",
+      "args": ["awslabs.aws-api-mcp-server@latest"],
+      "env": {
+        "AWS_REGION": "${AWS_REGION:-us-east-1}"
+      }
+    },
+    "github": {
+      "type": "http",
+      "url": "https://api.github.com/mcp",
+      "oauth": {
+        "oauthScopes": []
+      }
+    },
+    "atlassian": {
+      "command": "npx",
+      "args": ["-y", "mcp-remote@latest", "https://mcp.atlassian.com/v1/mcp"]
+    }
+  },
+  "keyboardShortcut": "ctrl+5",
+  "welcomeMessage": "Cloud SRE activo. ¿Qué alertas o incidentes necesitas investigar?"
+}

@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inventario Funcional - Plataforma Indemnizaciones</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--sb-blue:#1565c0;--sb-blue-dark:#0d47a1;--sb-teal:#00897b;--sb-teal-light:#e0f2f1;--sb-orange:#e8734a;--sb-orange-light:#fff3e0;--sb-navy:#1a237e;--sb-navy-light:#283593;--sb-gray-50:#fafafa;--sb-gray-100:#f5f5f5;--sb-gray-200:#eeeeee;--sb-gray-300:#e0e0e0;--sb-gray-600:#757575;--sb-gray-800:#424242;--sb-white:#ffffff;--sb-shadow:0 2px 12px rgba(0,0,0,.06);--sb-shadow-lg:0 8px 24px rgba(0,0,0,.08);--sb-radius:12px;--sb-radius-sm:8px;--sb-red:#c62828;--sb-red-light:#ffebee;--sb-green:#2e7d32;--sb-green-light:#e8f5e9;--sb-yellow:#f9a825;--sb-yellow-light:#fffde7}
+body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--sb-gray-100);color:var(--sb-gray-800);line-height:1.6}
+.header{background:linear-gradient(135deg,var(--sb-navy) 0%,var(--sb-navy-light) 50%,var(--sb-blue) 100%);color:#fff;padding:2.5rem 2rem 2rem;position:relative;overflow:hidden}
+.header::before{content:'';position:absolute;top:-50%;right:-20%;width:60%;height:200%;background:radial-gradient(ellipse,rgba(0,137,123,.15) 0%,transparent 70%);pointer-events:none}
+.header-inner{max-width:1200px;margin:0 auto;position:relative;z-index:1}
+.header-brand{display:flex;align-items:center;gap:.75rem;margin-bottom:1.5rem}
+.header-logo{width:40px;height:40px;background:var(--sb-teal);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.1rem;color:#fff;flex-shrink:0}
+.header-brand span{font-size:.85rem;opacity:.7;font-weight:400}
+.header h1{font-size:2rem;font-weight:700;margin-bottom:.4rem;letter-spacing:-.02em}
+.header p{opacity:.8;font-size:.95rem;margin-bottom:1.5rem;font-weight:300}
+.stats{display:flex;flex-wrap:wrap;gap:.75rem;margin-top:1.5rem}
+.stat-card{background:rgba(255,255,255,.1);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.15);border-radius:var(--sb-radius);padding:.9rem 1.3rem;min-width:120px;text-align:center;transition:transform .2s,background .2s}
+.stat-card:hover{background:rgba(255,255,255,.18);transform:translateY(-2px)}
+.stat-card .num{font-size:1.7rem;font-weight:700;color:#fff}
+.stat-card .label{font-size:.72rem;opacity:.75;margin-top:.2rem;text-transform:uppercase;letter-spacing:.03em;font-weight:500}
+.content{max-width:1200px;margin:2rem auto;padding:0 1.5rem}
+.card{background:var(--sb-white);border-radius:var(--sb-radius);padding:1.5rem;margin-bottom:1.5rem;box-shadow:var(--sb-shadow);border:1px solid var(--sb-gray-200);transition:box-shadow .2s}
+.card:hover{box-shadow:var(--sb-shadow-lg)}
+.card h2{font-size:1.2rem;color:var(--sb-navy);margin-bottom:1rem;padding-bottom:.6rem;border-bottom:2px solid var(--sb-gray-200);font-weight:600;display:flex;align-items:center;gap:.5rem}
+.card h2::before{content:'';width:4px;height:1.2rem;background:var(--sb-teal);border-radius:2px;flex-shrink:0}
+.card h3{font-size:1.05rem;color:var(--sb-navy);margin:1rem 0 .5rem;font-weight:600}
+table{width:100%;border-collapse:collapse;font-size:.83rem;margin-top:.5rem}
+th{background:var(--sb-gray-100);padding:.7rem .8rem;text-align:left;font-weight:600;color:var(--sb-navy);border-bottom:2px solid var(--sb-gray-300);font-size:.78rem;text-transform:uppercase;letter-spacing:.02em}
+td{padding:.7rem .8rem;border-bottom:1px solid var(--sb-gray-200);vertical-align:top}
+tr:hover td{background:var(--sb-teal-light)}
+.tag{display:inline-block;padding:.2rem .6rem;border-radius:20px;font-size:.7rem;font-weight:600}
+.tag-backend{background:#e3f2fd;color:#1565c0}
+.tag-frontend{background:#e8f5e9;color:#2e7d32}
+.tag-lambda{background:#f3e5f5;color:#7b1fa2}
+.tag-legacy{background:#fff3e0;color:#e65100}
+.tag-critical{background:#ffebee;color:#c62828}
+.tag-warning{background:#fff3e0;color:#e65100}
+.tag-ok{background:#e8f5e9;color:#2e7d32}
+.grid-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem;margin-top:1rem}
+.grid-card{background:var(--sb-gray-50);border-radius:var(--sb-radius-sm);padding:1.2rem;border-left:4px solid var(--sb-teal);transition:transform .2s,box-shadow .2s}
+.grid-card:hover{transform:translateY(-2px);box-shadow:var(--sb-shadow)}
+.grid-card h4{font-size:.92rem;margin-bottom:.4rem;color:var(--sb-navy);font-weight:600}
+.grid-card p{font-size:.82rem;color:var(--sb-gray-600);line-height:1.5}
+.flow-block{background:var(--sb-navy);color:#a5d6a7;border-radius:var(--sb-radius-sm);padding:1.5rem;margin:1rem 0;overflow-x:auto;font-family:'JetBrains Mono','Fira Code','Courier New',monospace;font-size:.78rem;line-height:1.7;white-space:pre;border:1px solid rgba(0,137,123,.2)}
+.findings-list{list-style:none;padding:0}
+.findings-list li{padding:.8rem 1rem;margin:.5rem 0;background:var(--sb-gray-50);border-radius:var(--sb-radius-sm);border-left:3px solid var(--sb-teal);font-size:.85rem;line-height:1.5;transition:background .2s}
+.findings-list li:hover{background:var(--sb-teal-light)}
+.findings-list li strong{color:var(--sb-navy)}
+.findings-list li.critical{border-left-color:var(--sb-red)}
+.findings-list li.warning{border-left-color:var(--sb-orange)}
+.findings-list li.ok{border-left-color:var(--sb-green)}
+.nav-drawer{position:fixed;top:0;left:-320px;width:300px;max-width:85vw;height:100%;background:var(--sb-white);z-index:1000;overflow-y:auto;transition:left .3s ease;box-shadow:4px 0 24px rgba(0,0,0,.12);padding:0}
+.nav-drawer.active{left:0}
+.nav-drawer-header{background:linear-gradient(135deg,var(--sb-navy),var(--sb-teal));color:#fff;padding:1.5rem 1.2rem;position:sticky;top:0;z-index:1}
+.nav-drawer-header h3{font-size:1rem;font-weight:600;margin:0}
+.nav-drawer-header p{font-size:.75rem;opacity:.7;margin-top:.2rem}
+.nav-drawer ul{list-style:none;padding:.5rem 0;margin:0}
+.nav-drawer li a{display:flex;align-items:center;gap:.75rem;padding:.85rem 1.2rem;color:var(--sb-gray-800);text-decoration:none;font-size:.88rem;font-weight:500;border-left:3px solid transparent;transition:all .2s}
+.nav-drawer li a:hover,.nav-drawer li a.active{background:var(--sb-teal-light);border-left-color:var(--sb-teal);color:var(--sb-navy)}
+.nav-group{border-bottom:1px solid var(--sb-gray-200)}
+.nav-group summary{padding:.7rem 1.2rem;font-size:.72rem;font-weight:700;color:var(--sb-gray-600);text-transform:uppercase;letter-spacing:.05em;cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between}
+.nav-group summary::after{content:'';width:6px;height:6px;border-right:2px solid var(--sb-gray-600);border-bottom:2px solid var(--sb-gray-600);transform:rotate(-45deg);transition:transform .2s;flex-shrink:0}
+.nav-group[open] summary::after{transform:rotate(45deg)}
+.nav-group summary::-webkit-details-marker{display:none}
+.nav-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:999;opacity:0;transition:opacity .3s}
+.nav-overlay.active{display:block;opacity:1}
+.hamburger{display:flex;position:fixed;top:12px;left:16px;z-index:1001;background:var(--sb-teal);border:none;border-radius:8px;width:44px;height:44px;cursor:pointer;flex-direction:column;align-items:center;justify-content:center;gap:5px;box-shadow:0 4px 12px rgba(0,137,123,.3);transition:transform .2s,left .3s}
+.hamburger:hover{transform:scale(1.05)}
+.hamburger span{display:block;width:22px;height:2.5px;background:#fff;border-radius:2px;transition:all .3s}
+.hamburger.active span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}
+.hamburger.active span:nth-child(2){opacity:0}
+.hamburger.active span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px)}
+.hamburger.active{left:248px}
+.arch-diagram{background:linear-gradient(135deg,#1a237e,#283593);border-radius:var(--sb-radius-sm);padding:1.5rem;margin:1rem 0;overflow-x:auto}
+.arch-layer{margin:1rem 0;padding:1rem;border-radius:8px;border:1px solid rgba(255,255,255,.15)}
+.arch-layer h4{color:#fff;font-size:.85rem;margin-bottom:.75rem;opacity:.9}
+.arch-boxes{display:flex;flex-wrap:wrap;gap:.5rem}
+.arch-box{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:6px;padding:.5rem .8rem;font-size:.75rem;color:#e0f2f1;font-weight:500}
+footer{text-align:center;padding:2rem;color:var(--sb-gray-600);font-size:.8rem;border-top:1px solid var(--sb-gray-200);margin-top:2rem;background:var(--sb-white)}
+footer a{color:var(--sb-teal);text-decoration:none;font-weight:500}
+@media(max-width:768px){.header h1{font-size:1.5rem}.stats{gap:.5rem}.stat-card{min-width:100px;padding:.7rem}.stat-card .num{font-size:1.3rem}.content{padding:0 1rem}.grid-cards{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<button class="hamburger" id="hamburgerBtn" aria-label="Abrir menu de navegacion">
+<span></span><span></span><span></span>
+</button>
+<div class="nav-overlay" id="navOverlay"></div>
+<nav class="nav-drawer" id="navDrawer">
+<div class="nav-drawer-header"><h3>Indemnizaciones</h3><p>Navegaci&oacute;n r&aacute;pida</p></div>
+<div>
+<details class="nav-group" open>
+<summary>Visi&oacute;n General</summary>
+<ul>
+<li><a href="#negocio" data-section="negocio">&#128188; Negocio</a></li>
+<li><a href="#coberturas" data-section="coberturas">&#128203; Coberturas</a></li>
+<li><a href="#flujos" data-section="flujos">&#128260; Flujos</a></li>
+</ul>
+</details>
+<details class="nav-group" open>
+<summary>Arquitectura</summary>
+<ul>
+<li><a href="#stack" data-section="stack">&#128295; Tech Stack</a></li>
+<li><a href="#repos" data-section="repos">&#128187; Repositorios</a></li>
+<li><a href="#apis" data-section="apis">&#128279; APIs</a></li>
+<li><a href="#infra" data-section="infra">&#9729;&#65039; Infraestructura</a></li>
+</ul>
+</details>
+<details class="nav-group" open>
+<summary>Calidad</summary>
+<ul>
+<li><a href="#hallazgos" data-section="hallazgos">&#128270; Hallazgos</a></li>
+<li><a href="#escenarios" data-section="escenarios">&#127919; Escenarios</a></li>
+<li><a href="#gantt" data-section="gantt">&#128197; Gantt</a></li>
+<li><a href="#seguridad" data-section="seguridad">&#128274; Seguridad</a></li>
+<li><a href="#deuda" data-section="deuda">&#9888;&#65039; Deuda T&eacute;cnica</a></li>
+<li><a href="#pendientes" data-section="pendientes">&#128203; Pendientes</a></li>
+</ul>
+</details>
+</div>
+</nav>
+
+<div class="header"><div class="header-inner">
+<div class="header-brand"><div class="header-logo">SB</div><div><strong style="font-size:1.1rem;letter-spacing:-.01em">Seguros Bol&iacute;var</strong><br><span>Tribu Servicios &amp; Operaciones &middot; Squad Operaciones</span></div></div>
+<h1>Inventario Funcional &mdash; Plataforma Indemnizaciones</h1>
+<p>Sistema digital de radicaci&oacute;n de solicitudes de indemnizaci&oacute;n &middot; Angular + Java/Spring Boot &middot; AWS</p>
+<div class="stats">
+<div class="stat-card"><div class="num">6</div><div class="label">Ramos</div></div>
+<div class="stat-card"><div class="num">14+</div><div class="label">Coberturas</div></div>
+<div class="stat-card"><div class="num">13</div><div class="label">Operaciones API</div></div>
+<div class="stat-card"><div class="num">5</div><div class="label">APIs Formulario</div></div>
+<div class="stat-card"><div class="num">4</div><div class="label">Pasos Formulario</div></div>
+<div class="stat-card"><div class="num">3</div><div class="label">Repos</div></div>
+<div class="stat-card"><div class="num">9</div><div class="label">Screenshots</div></div>
+<div class="stat-card"><div class="num">8</div><div class="label">Hallazgos</div></div>
+</div></div></div>
+
+<div class="content">
+
+<section id="negocio">
+<div class="card"><h2>Resumen Ejecutivo</h2>
+<p style="line-height:1.7;font-size:.9rem">
+<strong>Indemnizaciones</strong> es la plataforma digital de Seguros Bol&iacute;var para la <strong>radicaci&oacute;n de solicitudes de indemnizaci&oacute;n</strong> por parte de asegurados, beneficiarios, apoderados e intermediarios.<br><br>
+<strong>URL DEV:</strong> <a href="https://dev-sbindemnizaciones.segurosbolivar.com" target="_blank">dev-sbindemnizaciones.segurosbolivar.com</a><br>
+<strong>Frontend:</strong> Angular 16.2.12 (SPA con lazy loading)<br>
+<strong>Backend:</strong> Java 11 + Spring Boot 2.3.4 + MyBatis + Oracle DB<br>
+<strong>Infraestructura:</strong> AWS (S3 + CloudFront + API Gateway + VPC Link + Lambda)<br>
+<strong>CI/CD:</strong> GitHub Actions + SonarQube + JFrog Artifactory<br>
+<strong>Acceso:</strong> P&uacute;blico (sin autenticaci&oacute;n para radicar solicitud)<br>
+<strong>Organizaci&oacute;n:</strong> Tribu Servicios &amp; Operaciones / Squad Operaciones
+</p></div>
+
+<div class="card"><h2>Tipos de Persona</h2>
+<div class="grid-cards">
+<div class="grid-card"><h4>&#128100; Persona Natural</h4><p>Asegurados individuales que solicitan indemnizaci&oacute;n por coberturas de vida, salud, hogar, movilidad o protecci&oacute;n de pagos.</p></div>
+<div class="grid-card"><h4>&#127970; Persona Jur&iacute;dica</h4><p>Empresas aseguradas que solicitan indemnizaci&oacute;n por coberturas empresariales, patrimoniales y de cumplimiento.</p></div>
+</div></div>
+
+<div class="card"><h2>Roles del Solicitante</h2>
+<div class="grid-cards">
+<div class="grid-card"><h4>&#128100; Asegurado</h4><p>Titular de la p&oacute;liza que solicita directamente.</p></div>
+<div class="grid-card"><h4>&#128101; Beneficiario</h4><p>Persona designada como beneficiaria en la p&oacute;liza.</p></div>
+<div class="grid-card"><h4>&#128188; Apoderado</h4><p>Representante legal con poder para actuar en nombre del asegurado.</p></div>
+<div class="grid-card"><h4>&#129309; Intermediario</h4><p>Corredor o agente de seguros que gestiona la solicitud.</p></div>
+</div></div>
+</section>
+
+<section id="coberturas">
+<div class="card"><h2>Ramos y Coberturas</h2>
+<div style="overflow-x:auto"><table>
+<thead><tr><th>Ramo</th><th>Coberturas Disponibles</th><th>Tipo</th></tr></thead>
+<tbody>
+<tr><td><strong>&#128154; Vida</strong></td><td>Muerte natural, Muerte accidental, Incapacidad total y permanente, Rentas por hospitalizaci&oacute;n/incapacidad/cirug&iacute;a, Gastos m&eacute;dicos, Enfermedades graves, Diagn&oacute;stico de c&aacute;ncer, Desmembraci&oacute;n, Bonos/auxilios, Auxilio paternidad/maternidad, Exoneraci&oacute;n pago de primas, Fracturas, Seguro de vida Davivienda, Seguro de vida otros Bancos</td><td><span class="tag tag-ok">Natural</span></td></tr>
+<tr><td><strong>&#128153; Salud</strong></td><td>Coberturas de salud (requiere navegaci&oacute;n en carousel)</td><td><span class="tag tag-ok">Natural</span></td></tr>
+<tr><td><strong>&#127968; Hogar</strong></td><td>Coberturas de hogar y arrendamiento</td><td><span class="tag tag-ok">Natural</span></td></tr>
+<tr><td><strong>&#128663; Movilidad</strong></td><td>Coberturas vehiculares, SOAT</td><td><span class="tag tag-ok">Natural</span></td></tr>
+<tr><td><strong>&#128179; Protecci&oacute;n de Pagos</strong></td><td>Coberturas financieras y de cr&eacute;dito</td><td><span class="tag tag-ok">Natural</span></td></tr>
+<tr><td><strong>&#127970; Empresas</strong></td><td>Coberturas empresariales y patrimoniales</td><td><span class="tag tag-backend">Jur&iacute;dica</span></td></tr>
+</tbody></table></div></div>
+</section>
+
+<section id="flujos">
+<div class="card"><h2>Flujo Principal del Usuario (con evidencias)</h2>
+<p style="font-size:.85rem;color:var(--sb-gray-600);margin-bottom:1rem">Prueba E2E ejecutada en ambiente DEV con datos mockeados. Cada paso incluye screenshot de evidencia y los datos utilizados.</p>
+<div class="flow-block">Usuario ──▶ /natural-legal-personal-carousel
+   │
+   ├── Paso 0: Seleccionar tipo de persona (Natural) ✅ [screenshot]
+   │       └─ Navegar por ramos → Click en cobertura "Gastos M&eacute;dicos"
+   │
+   └──▶ /formulario-de-solicitud/live (Stepper 4 pasos)
+          │
+          ├── Paso 1: Detalles de la solicitud ✅ [screenshot + datos mock]
+          │     ├─ Fecha: 15/05/2026 │ Ciudad: Bogot&aacute; D.C.
+          │     ├─ Solicitante: Asegurado │ Nombres: Mar&iacute;a Alejandra
+          │     ├─ Apellidos: Gonz&aacute;lez Torres │ Celular: 3159876543
+          │     ├─ Email: maria.gonzalez@prueba.com
+          │     ├─ Documento: CC 52987654 │ T&amp;C: Aceptados
+          │     └─ API: PUT /incident-details/update → 200 OK
+          │
+          ├── Paso 2: Inscripci&oacute;n de cuenta bancaria ✅ [screenshot + datos mock]
+          │     ├─ CC 52987654 │ Mar&iacute;a Alejandra Gonz&aacute;lez Torres
+          │     ├─ Banco: BANCOLOMBIA │ Tipo: Ahorros │ Cuenta: 23456789012
+          │     ├─ Cuenta a nombre del reclamante: S&iacute;
+          │     └─ Autorizaci&oacute;n irrevocable: Aceptada
+          │
+          ├── Paso 3: Adjuntar documentos ✅ [screenshot + archivos mock]
+          │     ├─ cedula-ciudadania.pdf (simulado) ✅
+          │     ├─ documento-acreditacion-evento.pdf (simulado) ✅
+          │     ├─ formulario-b114.pdf (simulado) ✅
+          │     ├─ historia-clinica.pdf (simulado) ✅
+          │     └─ 4/4 obligatorios cargados → Bot&oacute;n "Continuar" habilitado
+          │
+          └── Paso 4: Resumen y radicaci&oacute;n ❌ [screenshot error]
+                └─ Error 504 Gateway Timeout en POST /step-form/{caseId}/radication</div></div>
+
+<div class="card"><h2>Paso 0 &mdash; Selecci&oacute;n de Cobertura</h2>
+<p style="font-size:.85rem;color:var(--sb-gray-600);margin-bottom:.8rem">Carousel de ramos &rarr; Selecci&oacute;n de cobertura espec&iacute;fica antes de iniciar el formulario.</p>
+<img src="https://raw.githubusercontent.com/CARLOSPATINOVELEZ19/squad-ia-reports/main/evidencias/indemnizaciones-paso0-cobertura.png" alt="Paso 0 - Selecci&oacute;n de cobertura Gastos M&eacute;dicos" style="width:100%;border-radius:8px;margin:1rem 0;border:1px solid var(--sb-gray-200)">
+<div style="overflow-x:auto"><table>
+<thead><tr><th>Par&aacute;metro</th><th>Valor utilizado</th></tr></thead>
+<tbody>
+<tr><td>Tipo de persona</td><td>Natural</td></tr>
+<tr><td>Ramo seleccionado</td><td>Vida</td></tr>
+<tr><td>Cobertura</td><td>Gastos M&eacute;dicos</td></tr>
+</tbody></table></div></div>
+
+<div class="card"><h2>Paso 1 &mdash; Detalles de la Solicitud</h2>
+<p style="font-size:.85rem;color:var(--sb-gray-600);margin-bottom:.8rem">Componentes: PrimeNG Calendar, Dropdown, RadioButton, Checkbox. Datos mockeados ingresados exitosamente.</p>
+<img src="https://raw.githubusercontent.com/CARLOSPATINOVELEZ19/squad-ia-reports/main/evidencias/indemnizaciones-paso1-datos.png" alt="Paso 1 - Formulario de detalles con datos mockeados" style="width:100%;border-radius:8px;margin:1rem 0;border:1px solid var(--sb-gray-200)">
+<h3>Datos mockeados utilizados</h3>
+<div style="overflow-x:auto"><table>
+<thead><tr><th>Campo</th><th>Valor mock</th></tr></thead>
+<tbody>
+<tr><td>Fecha del evento</td><td>15/05/2026</td></tr>
+<tr><td>Ciudad del evento</td><td>Bogot&aacute; D.C.</td></tr>
+<tr><td>Qui&eacute;n hace la solicitud</td><td>Asegurado</td></tr>
+<tr><td>Nombres</td><td>Mar&iacute;a Alejandra</td></tr>
+<tr><td>Apellidos</td><td>Gonz&aacute;lez Torres</td></tr>
+<tr><td>N&uacute;mero de celular</td><td>3159876543</td></tr>
+<tr><td>Correo electr&oacute;nico</td><td>maria.gonzalez@prueba.com</td></tr>
+<tr><td>Tipo de documento</td><td>C&eacute;dula de Ciudadan&iacute;a</td></tr>
+<tr><td>N&uacute;mero de documento</td><td>52987654</td></tr>
+<tr><td>T&eacute;rminos y condiciones</td><td>Aceptados (todos los checkbox)</td></tr>
+</tbody></table></div></div>
+
+<div class="card"><h2>Paso 2 &mdash; Inscripci&oacute;n de Cuenta Bancaria</h2>
+<p style="font-size:.85rem;color:var(--sb-gray-600);margin-bottom:.8rem">Cuenta donde se recibir&aacute; el pago. Validaci&oacute;n en 2 d&iacute;as h&aacute;biles. Datos mockeados ingresados exitosamente.</p>
+<img src="https://raw.githubusercontent.com/CARLOSPATINOVELEZ19/squad-ia-reports/main/evidencias/indemnizaciones-paso2-cuenta.png" alt="Paso 2 - Inscripci&oacute;n de cuenta bancaria con datos mockeados" style="width:100%;border-radius:8px;margin:1rem 0;border:1px solid var(--sb-gray-200)">
+<h3>Datos mockeados utilizados</h3>
+<div style="overflow-x:auto"><table>
+<thead><tr><th>Campo</th><th>Valor mock</th></tr></thead>
+<tbody>
+<tr><td>Tipo de documento</td><td>CC (pre-llenado)</td></tr>
+<tr><td>N&uacute;mero de documento</td><td>52987654 (pre-llenado)</td></tr>
+<tr><td>Nombres</td><td>Mar&iacute;a Alejandra</td></tr>
+<tr><td>Apellidos</td><td>Gonz&aacute;lez Torres</td></tr>
+<tr><td>Banco</td><td>BANCOLOMBIA</td></tr>
+<tr><td>Tipo de cuenta</td><td>Ahorros</td></tr>
+<tr><td>N&uacute;mero de cuenta</td><td>23456789012</td></tr>
+<tr><td>&iquest;Cuenta a nombre del reclamante?</td><td>S&iacute;</td></tr>
+<tr><td>Autorizaci&oacute;n irrevocable</td><td>Aceptada</td></tr>
+</tbody></table></div></div>
+
+<div class="card"><h2>Paso 3 &mdash; Adjuntar Documentos</h2>
+<p style="font-size:.85rem;color:var(--sb-gray-600);margin-bottom:.8rem">Cobertura &quot;Gastos M&eacute;dicos&quot;. Restricciones: m&aacute;x 30MB, formatos .jpg/.png/.pdf, sin contrase&ntilde;as. Archivos PDF simulados cargados exitosamente.</p>
+<img src="https://raw.githubusercontent.com/CARLOSPATINOVELEZ19/squad-ia-reports/main/evidencias/indemnizaciones-paso3-docs-cargados.png" alt="Paso 3 - Documentos adjuntos cargados exitosamente" style="width:100%;border-radius:8px;margin:1rem 0;border:1px solid var(--sb-gray-200)">
+<h3>Archivos PDF adjuntados (simulados)</h3>
+<div style="overflow-x:auto"><table>
+<thead><tr><th>#</th><th>Archivo</th><th>Documento requerido</th><th>Estado</th></tr></thead>
+<tbody>
+<tr><td>1</td><td><code>cedula-ciudadania.pdf</code></td><td>Documento de identidad del asegurado</td><td><span class="tag tag-ok">&#10004; Cargado</span></td></tr>
+<tr><td>2</td><td><code>documento-acreditacion-evento.pdf</code></td><td>Documento que acredite el evento</td><td><span class="tag tag-ok">&#10004; Cargado</span></td></tr>
+<tr><td>3</td><td><code>formulario-b114.pdf</code></td><td>Formulario B-114 conocimiento del cliente</td><td><span class="tag tag-ok">&#10004; Cargado</span></td></tr>
+<tr><td>4</td><td><code>historia-clinica.pdf</code></td><td>Historia cl&iacute;nica del asegurado</td><td><span class="tag tag-ok">&#10004; Cargado</span></td></tr>
+</tbody></table></div>
+<p style="margin-top:.8rem;font-size:.82rem;color:var(--sb-green)"><strong>&#10004; Resultado:</strong> Los 4 documentos obligatorios fueron cargados exitosamente. El bot&oacute;n &quot;Continuar&quot; se habilit&oacute; correctamente.</p>
+<p style="margin-top:.5rem;font-size:.82rem;color:var(--sb-orange)"><strong>&#9888;&#65039; Hallazgo:</strong> El documento #2 ofrece opciones (Matrimonio, Nacimiento, Divorcio) que no aplican a &quot;Gastos M&eacute;dicos&quot;. Posible desalineaci&oacute;n de configuraci&oacute;n por cobertura.</p>
+</div>
+
+<div class="card"><h2>Paso 4 &mdash; Resumen y Radicaci&oacute;n</h2>
+<p style="font-size:.85rem;color:var(--sb-gray-600);margin-bottom:.8rem">Probado exitosamente con cobertura RENTAS (Vida). Radicaci&oacute;n completada.</p>
+<img src="https://raw.githubusercontent.com/CARLOSPATINOVELEZ19/squad-ia-reports/main/evidencias/indemnizaciones-paso4-resumen.png" alt="Paso 4 - Radicaci&oacute;n exitosa" style="width:100%;border-radius:8px;margin:1rem 0;border:1px solid var(--sb-gray-200)">
+<h3>Radicaci&oacute;n Exitosa &mdash; Renta por Hospitalizaci&oacute;n</h3>
+<div style="background:var(--sb-green-light);border-radius:8px;padding:1.2rem;margin:1rem 0;border-left:4px solid var(--sb-green)">
+<strong style="font-size:1.1rem;color:var(--sb-green)">&#10004; N&uacute;mero de radicado: CL-186717743</strong><br>
+<span style="font-size:.85rem;color:var(--sb-gray-600)">Case ID: 37877 &middot; API: 200 OK &middot; ~15s</span>
+</div>
+<div style="overflow-x:auto"><table>
+<thead><tr><th>Campo</th><th>Valor</th></tr></thead>
+<tbody>
+<tr><td>Producto</td><td>RENTA DIARIA POR HOSPITALIZACI&Oacute;N/INCAPACIDAD</td></tr>
+<tr><td>Radicado</td><td><strong>CL-186717743</strong></td></tr>
+<tr><td>Asegurado</td><td>Diego Alejandro Vargas Restrepo</td></tr>
+<tr><td>Documento</td><td>CC 16987654</td></tr>
+<tr><td>Ciudad</td><td>Cali</td></tr>
+<tr><td>Banco</td><td>NEQUI, Ahorros, 3125551234</td></tr>
+<tr><td>Tiempo respuesta</td><td>21 d&iacute;as calendario</td></tr>
+<tr><td>Mensaje</td><td>&quot;Su solicitud ha sido enviada. Su caso entrar&aacute; en an&aacute;lisis.&quot;</td></tr>
+</tbody></table></div>
+<h3 style="margin-top:1rem">Comparativa por Cobertura</h3>
+<div style="overflow-x:auto"><table>
+<thead><tr><th>Cobertura</th><th>Radicaci&oacute;n</th><th>Timing</th><th>Resultado</th></tr></thead>
+<tbody>
+<tr><td><strong>Rentas hospitalizaci&oacute;n</strong></td><td><span class="tag tag-ok">&#10004; 200 OK</span></td><td>~15s</td><td>CL-186717743</td></tr>
+<tr><td><strong>Gastos m&eacute;dicos</strong></td><td><span class="tag tag-critical">&#10060; 504</span></td><td>29.2s</td><td>Timeout</td></tr>
+</tbody></table></div>
+<p style="margin-top:.8rem;font-size:.82rem;color:var(--sb-orange)"><strong>&#9888;&#65039;</strong> El 504 es espec&iacute;fico de &quot;Gastos M&eacute;dicos&quot;, no de infraestructura. La misma API funciona para Rentas.</p>
+</div>
+</section>
+
+<section id="stack">
+<div class="card"><h2>Tech Stack</h2>
+<div class="arch-diagram">
+<div class="arch-layer" style="border-color:rgba(76,175,80,.4)">
+<h4>&#127760; Frontend</h4>
+<div class="arch-boxes">
+<div class="arch-box">Angular 15.2.10</div>
+<div class="arch-box">TypeScript</div>
+<div class="arch-box">PrimeNG (UI Library)</div>
+<div class="arch-box">Lazy Loading</div>
+<div class="arch-box">Angular Router</div>
+<div class="arch-box">Web Components (Header/Footer)</div>
+<div class="arch-box">Google Tag Manager</div>
+</div>
+</div>
+<div class="arch-layer" style="border-color:rgba(33,150,243,.4)">
+<h4>&#9881;&#65039; Backend (Microservicios)</h4>
+<div class="arch-boxes">
+<div class="arch-box">Java 11</div>
+<div class="arch-box">Spring Boot 2.3.4</div>
+<div class="arch-box">MyBatis 2.2.2</div>
+<div class="arch-box">OkHttp 4.10</div>
+<div class="arch-box">Reactor/WebFlux</div>
+<div class="arch-box">Lombok</div>
+<div class="arch-box">Gson 2.10.1</div>
+<div class="arch-box">Log4j2 2.17.1</div>
+<div class="arch-box">Swagger/OpenAPI</div>
+<div class="arch-box">Spring Actuator</div>
+</div>
+</div>
+<div class="arch-layer" style="border-color:rgba(156,39,176,.4)">
+<h4>&#128451;&#65039; Persistencia</h4>
+<div class="arch-boxes">
+<div class="arch-box">Oracle DB (ojdbc8 19.6)</div>
+<div class="arch-box">MyBatis ORM</div>
+<div class="arch-box">AWS SSM Parameter Store</div>
+</div>
+</div>
+<div class="arch-layer" style="border-color:rgba(255,152,0,.4)">
+<h4>&#9729;&#65039; Cloud (AWS us-east-1)</h4>
+<div class="arch-boxes">
+<div class="arch-box">S3</div>
+<div class="arch-box">CloudFront CDN</div>
+<div class="arch-box">API Gateway</div>
+<div class="arch-box">VPC Link</div>
+<div class="arch-box">Lambda</div>
+<div class="arch-box">AWS SDK v1+v2</div>
+</div>
+</div>
+<div class="arch-layer" style="border-color:rgba(244,67,54,.4)">
+<h4>&#128736;&#65039; CI/CD</h4>
+<div class="arch-boxes">
+<div class="arch-box">GitHub Actions</div>
+<div class="arch-box">SonarQube</div>
+<div class="arch-box">JaCoCo</div>
+<div class="arch-box">JFrog Artifactory</div>
+<div class="arch-box">Gradle</div>
+</div>
+</div>
+</div></div>
+</section>
+
+<section id="repos">
+<div class="card"><h2>Repositorios</h2>
+<div style="overflow-x:auto"><table>
+<thead><tr><th>Repositorio</th><th>Tipo</th><th>Descripci&oacute;n</th><th>Stack</th></tr></thead>
+<tbody>
+<tr><td><code>comunes-poliza-siniestros-ms</code></td><td><span class="tag tag-backend">Microservicio</span></td><td>API REST de p&oacute;lizas y siniestros. 13 operaciones (consultas, creaci&oacute;n siniestro express, aprobaciones).</td><td>Java 11 + Spring Boot + Gradle</td></tr>
+<tr><td><code>comunes-middleware-indemnizacion-lambda</code></td><td><span class="tag tag-lambda">Lambda</span></td><td>Middleware serverless para el flujo de indemnizaci&oacute;n. Push: 2026-05-10.</td><td>AWS Lambda</td></tr>
+<tr><td><code>comunes-poliza-siniestros-lambda</code></td><td><span class="tag tag-lambda">Lambda</span></td><td>Funciones serverless complementarias (event-driven).</td><td>AWS Lambda</td></tr>
+<tr><td><em>Frontend (nombre por confirmar)</em></td><td><span class="tag tag-frontend">Frontend</span></td><td>SPA Angular 16 en S3+CloudFront.</td><td>Angular 16 + TypeScript</td></tr>
+</tbody></table></div>
+<p style="margin-top:1rem;font-size:.82rem;color:var(--sb-gray-600)"><strong>Nota:</strong> Los repos <code>clever-*</code> proporcionados no existen en la org <code>segurosbolivar</code> (432 repos). Los nombres reales usan el prefijo <code>comunes-</code>.</p>
+</div>
+</section>
+
+<section id="apis">
+<div class="card"><h2>Operaciones del Microservicio</h2>
+<p style="font-size:.85rem;margin-bottom:1rem;color:var(--sb-gray-600)">Repo: <code>comunes-poliza-siniestros-ms</code> &mdash; Patr&oacute;n: Controller &rarr; Service &rarr; Repository</p>
+<div style="overflow-x:auto"><table>
+<thead><tr><th>Operaci&oacute;n</th><th>Paquete</th><th>Descripci&oacute;n</th></tr></thead>
+<tbody>
+<tr><td>Aprobar Certificado</td><td><code>aprobarcertificado</code></td><td>Aprobaci&oacute;n de certificados de siniestro</td></tr>
+<tr><td>Consultar C&oacute;digo Codazzi</td><td><code>consultarcodigocodazzi</code></td><td>Consulta de c&oacute;digos DANE/Codazzi (municipios)</td></tr>
+<tr><td>Consultar Cruce Reintegros</td><td><code>consultarcrucereintegros</code></td><td>Cruce de reintegros en siniestros</td></tr>
+<tr><td>Consultar Detalle</td><td><code>consultardetalle</code></td><td>Detalle completo de un siniestro</td></tr>
+<tr><td>Consultar Hist&oacute;rico</td><td><code>consultarhistorico</code></td><td>Hist&oacute;rico de movimientos</td></tr>
+<tr><td>Consultar Info B&aacute;sica</td><td><code>consultarinfobasicasiniestro</code></td><td>Informaci&oacute;n b&aacute;sica resumida</td></tr>
+<tr><td>Consultar P&oacute;liza por Asegurado</td><td><code>consultarpolizaporasegurado</code></td><td>B&uacute;squeda de p&oacute;liza por asegurado</td></tr>
+<tr><td>Consultar por NIT</td><td><code>consultarpornit</code></td><td>B&uacute;squeda por NIT de empresa</td></tr>
+<tr><td>Consultar Siniestros por Asegurado</td><td><code>consultarsiniestrosporasegurado</code></td><td>Listado de siniestros de un asegurado</td></tr>
+<tr><td>Variables Siniestro Express</td><td><code>consultarvariablessiniestroexpress</code></td><td>Variables para creaci&oacute;n r&aacute;pida</td></tr>
+<tr><td>Crear Siniestro Express</td><td><code>crearsiniestroexpress</code></td><td>Radicaci&oacute;n r&aacute;pida de siniestro</td></tr>
+<tr><td>Listar Aprobaciones</td><td><code>listaraprobaciones</code></td><td>Aprobaciones pendientes/completadas</td></tr>
+<tr><td>Propiedades Caso Tradicional</td><td><code>obtenerpropiedadescasotradicional</code></td><td>Propiedades para flujo tradicional</td></tr>
+</tbody></table></div>
+<h3 style="margin-top:1.5rem">APIs del Formulario (indem-service)</h3>
+<p style="font-size:.85rem;margin-bottom:.8rem;color:var(--sb-gray-600)">Descubiertas v&iacute;a network requests durante prueba E2E. Base: API Gateway AWS <code>/dev/indem-service/api/v1/</code></p>
+<div style="overflow-x:auto"><table>
+<thead><tr><th>M&eacute;todo</th><th>Endpoint</th><th>Status</th><th>Funci&oacute;n</th></tr></thead>
+<tbody>
+<tr><td><span class="tag tag-backend">POST</span></td><td><code>/api/v1/cases/voidCase</code></td><td>201</td><td>Crea/inicializa caso de indemnizaci&oacute;n</td></tr>
+<tr><td><span class="tag tag-ok">GET</span></td><td><code>/api/v1/reference-data?commands=ciudades</code></td><td>200</td><td>Cat&aacute;logo de ciudades/municipios</td></tr>
+<tr><td><span class="tag tag-ok">GET</span></td><td><code>/api/v1/reference-data?commands=bancos</code></td><td>200</td><td>Cat&aacute;logo de bancos y billeteras (~47)</td></tr>
+<tr><td><span class="tag tag-lambda">PUT</span></td><td><code>/api/v1/incident-details/update</code></td><td>200</td><td>Guarda detalles del paso 1</td></tr>
+<tr><td><span class="tag tag-backend">POST</span></td><td><code>/api/v1/step-form</code></td><td>200</td><td>Avance entre pasos del formulario</td></tr>
+</tbody></table></div>
+<p style="margin-top:1rem;font-size:.82rem;color:var(--sb-gray-600)"><strong>Seguridad:</strong> API Key (<code>x-api-key</code> header) + VPC Link. Patr&oacute;n de datos maestros: <code>/reference-data?commands={entidad}</code></p>
+</div>
+</section>
+
+<section id="infra">
+<div class="card"><h2>Arquitectura de Infraestructura</h2>
+<div class="flow-block">                    ┌─────────────────────────────────────────────────┐
+                    │              AWS Cloud (us-east-1)               │
+                    └─────────────────────────────────────────────────┘
+
+  ┌───────────┐     ┌──────────────┐     ┌───────────────┐     ┌──────────────┐
+  │  Browser  │────▶│  CloudFront  │────▶│   S3 Bucket   │     │   Oracle DB  │
+  │  (User)   │     │    (CDN)     │     │  (Angular SPA)│     │  (ojdbc8)    │
+  └───────────┘     └──────────────┘     └───────────────┘     └──────────────┘
+        │                                                              ▲
+        │           ┌──────────────┐     ┌───────────────┐            │
+        └──────────▶│ API Gateway  │────▶│   VPC Link    │────▶┌─────────────┐
+                    │ (x-api-key)  │     │               │     │  Spring Boot│
+                    └──────────────┘     └───────────────┘     │     MS      │
+                                                               └─────────────┘
+                    ┌──────────────┐                                   ▲
+                    │   Lambda     │───────────────────────────────────┘
+                    │ (middleware) │
+                    └──────────────┘
+
+Librer&iacute;as internas (JFrog):
+  ├── bolivar-centralizador-logs 1.0.0
+  ├── commons-gradle-error-handling-java 1.0.0
+  ├── bolivar-core-mybatis-utils 1.0.0
+  ├── commons-gradle-parameter-store-java 1.0.0
+  └── commons-gradle-swagger-documentation-java 1.0.1</div></div>
+</section>
+
+<section id="escenarios">
+<div class="card"><h2>Validaci&oacute;n Multi-Escenario</h2>
+<p style="font-size:.85rem;color:var(--sb-gray-600);margin-bottom:1rem">Pruebas E2E ejecutadas con diferentes tipos de persona, ramos y coberturas para mapear el comportamiento completo de la plataforma.</p>
+<div style="overflow-x:auto"><table>
+<thead><tr><th>Ramo</th><th>Persona Natural</th><th>Persona Jur&iacute;dica</th><th>&iquest;Formulario web?</th><th>Canal alternativo</th></tr></thead>
+<tbody>
+<tr><td><strong>&#128154; Vida</strong></td><td>14 coberturas</td><td>&#10060; No disponible</td><td><span class="tag tag-ok">&#10004; 4 pasos</span></td><td>&mdash;</td></tr>
+<tr><td><strong>&#128153; Salud</strong></td><td>Existe ramo</td><td>Salud Colectiva</td><td><span class="tag tag-critical">&#10060; Redirige</span></td><td>Portal imaginex-oficina-virtual</td></tr>
+<tr><td><strong>&#127968; Hogar</strong></td><td>Existe ramo</td><td>&#10060; No disponible</td><td><span class="tag tag-critical">&#10060; Modal</span></td><td>WhatsApp 3223322322</td></tr>
+<tr><td><strong>&#128663; Movilidad</strong></td><td>4 coberturas</td><td>&#10060; No disponible</td><td><span class="tag tag-critical">&#10060; Modal</span></td><td>WhatsApp + #322 opci&oacute;n 2</td></tr>
+<tr><td><strong>&#128179; Protecci&oacute;n de Pagos</strong></td><td>Existe ramo</td><td>&#10060; No disponible</td><td><span class="tag tag-warning">Pendiente</span></td><td>&mdash;</td></tr>
+<tr><td><strong>&#127970; Empresas</strong></td><td>Existe ramo</td><td>10 coberturas</td><td><span class="tag tag-ok">&#10004; Solo Jur&iacute;dica</span></td><td>&mdash;</td></tr>
+</tbody></table></div>
+<h3 style="margin-top:1.5rem">Coberturas Persona Jur&iacute;dica &mdash; Ramo Empresas</h3>
+<div class="grid-cards">
+<div class="grid-card"><h4>&#127970; Da&ntilde;o edificio</h4><p>Da&ntilde;os al inmueble de la empresa</p></div>
+<div class="grid-card"><h4>&#128230; Da&ntilde;o contenidos</h4><p>Da&ntilde;os a bienes dentro del inmueble</p></div>
+<div class="grid-card"><h4>&#128274; Hurto</h4><p>Hurto de bienes empresariales</p></div>
+<div class="grid-card"><h4>&#128200; Lucro cesante</h4><p>P&eacute;rdida de ingresos por siniestro</p></div>
+<div class="grid-card"><h4>&#128101; Manejo de empleados</h4><p>Cobertura de manejo de personal</p></div>
+<div class="grid-card"><h4>&#128736;&#65039; Maquinaria amarilla</h4><p>Da&ntilde;o y hurto de maquinaria pesada</p></div>
+<div class="grid-card"><h4>&#9878;&#65039; RC da&ntilde;o</h4><p>Responsabilidad civil por da&ntilde;os</p></div>
+<div class="grid-card"><h4>&#9878;&#65039; RC hurto</h4><p>Responsabilidad civil por hurto</p></div>
+<div class="grid-card"><h4>&#128187; Tecnolog&iacute;a</h4><p>Da&ntilde;o a equipos tecnol&oacute;gicos</p></div>
+<div class="grid-card"><h4>&#128187; Hurto tecnolog&iacute;a</h4><p>Hurto de equipos tecnol&oacute;gicos</p></div>
+</div></div>
+
+<div class="card"><h2>Escenarios Adicionales Validados</h2>
+<p style="font-size:.85rem;color:var(--sb-gray-600);margin-bottom:1rem">Validaci&oacute;n de los 3 escenarios pendientes, ejecutados con datos ficticios.</p>
+<div style="overflow-x:auto"><table>
+<thead><tr><th>Escenario</th><th>Resultado</th><th>Hallazgo</th></tr></thead>
+<tbody>
+<tr><td><strong>Rol Beneficiario</strong> (Vida/Muerte natural)</td><td><span class="tag tag-ok">&#10004; Validado</span></td><td>Formulario <strong>id&eacute;ntico</strong> al de Asegurado. No pide datos del fallecido ni relaci&oacute;n familiar.</td></tr>
+<tr><td><strong>Persona Jur&iacute;dica</strong> (Empresas)</td><td><span class="tag tag-critical">&#10060; Sin formulario</span></td><td>Modal redirige a email: <code>indemnizacionessegurosgenerales@segurosbolivar.com</code></td></tr>
+<tr><td><strong>Protecci&oacute;n de Pagos</strong> (Natural)</td><td><span class="tag tag-ok">&#10004; Con formulario</span></td><td>S&Iacute; tiene formulario web funcional con 7 coberturas propias.</td></tr>
+</tbody></table></div>
+
+<h3 style="margin-top:1.5rem">Coberturas &mdash; Protecci&oacute;n de Pagos (7)</h3>
+<div class="grid-cards">
+<div class="grid-card"><h4>&#128188; Desempleo involuntario</h4><p>P&eacute;rdida del empleo de manera involuntaria</p></div>
+<div class="grid-card"><h4>&#127973; Hospitalizaci&oacute;n</h4><p>Asegurado independiente hospitalizado</p></div>
+<div class="grid-card"><h4>&#129657; Incapacidad temporal</h4><p>No puede trabajar por incapacidad</p></div>
+<div class="grid-card"><h4>&#9760;&#65039; Muerte accidental</h4><p>Fallecimiento derivado de accidente</p></div>
+<div class="grid-card"><h4>&#129658; Enfermedades graves</h4><p>Diagn&oacute;stico inicial de enfermedad grave</p></div>
+<div class="grid-card"><h4>&#127881; Momentos de vida</h4><p>Matrimonio, nacimiento, adopci&oacute;n, t&iacute;tulo, divorcio, fallecimiento</p></div>
+<div class="grid-card"><h4>&#129460; Fractura accidental</h4><p>Fractura como consecuencia de accidente</p></div>
+</div>
+
+<h3 style="margin-top:1.5rem">Mapa completo de canales por ramo</h3>
+<div style="overflow-x:auto"><table>
+<thead><tr><th>Canal</th><th>Ramos</th></tr></thead>
+<tbody>
+<tr><td><span class="tag tag-ok">Formulario web (4 pasos)</span></td><td>Vida (Natural), Protecci&oacute;n de Pagos (Natural)</td></tr>
+<tr><td><span class="tag tag-backend">Portal externo (IMAGINEX)</span></td><td>Salud (Natural + Jur&iacute;dica/Colectiva)</td></tr>
+<tr><td><span class="tag tag-lambda">Email</span></td><td>Empresas (Jur&iacute;dica)</td></tr>
+<tr><td><span class="tag tag-warning">WhatsApp / #322</span></td><td>Hogar (Natural), Movilidad (Natural)</td></tr>
+</tbody></table></div>
+</div>
+
+<div class="card"><h2>Inconsistencias UX detectadas</h2>
+<ul class="findings-list">
+<li class="critical"><strong>&#128308; Salud redirige sin aviso:</strong> Al clic en &quot;Salud&quot;, navega a otro dominio sin modal ni aviso. Diferente a Hogar/Movilidad que muestran modal.</li>
+<li class="warning"><strong>&#128992; Movilidad muestra coberturas inutilizables:</strong> Lista 4 coberturas que al clic muestran modal de redirecci&oacute;n. Confuso para el usuario.</li>
+<li class="warning"><strong>&#128992; Hogar vac&iacute;a las coberturas:</strong> Tras cerrar el modal, la secci&oacute;n queda vac&iacute;a sin forma de regresar.</li>
+<li class="warning"><strong>&#128992; Sin indicador visual de canal:</strong> Los iconos del menubar no distinguen entre ramos con formulario y ramos que redirigen.</li>
+<li class="ok"><strong>&#128994; Persona Jur&iacute;dica funcional:</strong> Las 10 coberturas de Empresas se muestran correctamente.</li>
+</ul></div>
+</section>
+
+<section id="hallazgos">
+<div class="card"><h2>Hallazgos de la Exploraci&oacute;n</h2>
+<ul class="findings-list">
+<li class="critical"><strong>&#128308; CORS bloqueado en fuente corporativa:</strong> La fuente <code>bolivar.ttf</code> desde CloudFront est&aacute; bloqueada por CORS. La tipograf&iacute;a corporativa no se muestra en DEV.</li>
+<li class="critical"><strong>&#128308; Fuentes Roboto corruptas:</strong> Todas las variantes (WOFF2, WOFF, TTF) fallan con &quot;invalid sfntVersion&quot;. Archivos corruptos o mal servidos.</li>
+<li class="critical"><strong>&#128308; Configuraci&oacute;n de documentos por cobertura:</strong> El paso 3 para &quot;Gastos M&eacute;dicos&quot; pide documentos gen&eacute;ricos (Matrimonio, Nacimiento, Divorcio) que no aplican a esa cobertura. Posible error de configuraci&oacute;n backend.</li>
+<li class="warning"><strong>&#128992; Repos &quot;clever-*&quot; inexistentes:</strong> Los 4 repos proporcionados no existen en GitHub. Los repos reales usan prefijo <code>comunes-</code>.</li>
+<li class="warning"><strong>&#128992; GTM bloqueado por ORB:</strong> Google Tag Manager bloqueado por Cross-Origin Read Blocking en DEV.</li>
+<li class="warning"><strong>&#128992; Im&aacute;genes footer SFC no cargan:</strong> <code>vigilado_desktop.png</code> y <code>vigilado_mobile.png</code> generan m&uacute;ltiples errores ERR_ABORTED.</li>
+<li class="warning"><strong>&#128992; Checkboxes PrimeNG interceptan clicks:</strong> Los <code>.p-checkbox-box</code> interceptan pointer events, dificultando automatizaci&oacute;n E2E y accesibilidad.</li>
+<li class="warning"><strong>&#128992; Date picker no acepta input manual:</strong> Solo funciona v&iacute;a calendario visual, no como input editable.</li>
+<li class="ok"><strong>&#128994; Formulario pasos 1-2 funcionales:</strong> Validaciones estrictas correctas. Bot&oacute;n &quot;Continuar&quot; condicional.</li>
+<li class="ok"><strong>&#128994; Carousel de coberturas operativo:</strong> 6 categor&iacute;as con 14+ coberturas.</li>
+<li class="ok"><strong>&#128994; APIs versionadas:</strong> <code>/api/v1/</code> cumple est&aacute;ndar org. Patr&oacute;n reference-data limpio.</li>
+<li class="ok"><strong>&#128994; Sin captchas ni bloqueos:</strong> DEV sin restricciones adicionales para testing.</li>
+</ul></div>
+</section>
+
+<section id="deuda">
+<div class="card"><h2>Deuda T&eacute;cnica Identificada</h2>
+<div style="overflow-x:auto"><table>
+<thead><tr><th>Item</th><th>Estado Actual</th><th>Est&aacute;ndar Org</th><th>Severidad</th></tr></thead>
+<tbody>
+<tr><td>Java Runtime</td><td>Java 11</td><td>JDK 21 (LTS)</td><td><span class="tag tag-critical">Cr&iacute;tica</span></td></tr>
+<tr><td>Spring Boot</td><td>2.3.4 (EOL)</td><td>3.x</td><td><span class="tag tag-critical">Cr&iacute;tica</span></td></tr>
+<tr><td>Base de datos</td><td>Oracle (ojdbc8)</td><td>PostgreSQL 15+</td><td><span class="tag tag-legacy">Legacy</span></td></tr>
+<tr><td>Angular</td><td>16.2.12</td><td>17+ (LTS)</td><td><span class="tag tag-warning">Media</span></td></tr>
+<tr><td>CORS API Gateway</td><td><code>Allow-Origin: *</code></td><td>Or&iacute;genes espec&iacute;ficos</td><td><span class="tag tag-critical">Seguridad</span></td></tr>
+<tr><td>SonarQube token</td><td>Hardcodeado en build.gradle</td><td>Secret Manager / env var</td><td><span class="tag tag-critical">Seguridad</span></td></tr>
+<tr><td>AWS SDK</td><td>v1 + v2 mezclados</td><td>Solo v2</td><td><span class="tag tag-warning">Media</span></td></tr>
+<tr><td>Fuentes web</td><td>Corruptas + CORS</td><td>CDN configurado</td><td><span class="tag tag-warning">Media</span></td></tr>
+</tbody></table></div></div>
+</section>
+
+<section id="gantt">
+<div class="card"><h2>Entregables del Proyecto &mdash; Gantt V1</h2>
+<p style="font-size:.85rem;color:var(--sb-gray-600);margin-bottom:.5rem">Fuente: Google Sheet &quot;Plan de trabajo Indenmizaciones&quot; &middot; Avance total: <strong>72.92%</strong> &middot; Fecha objetivo producci&oacute;n: <strong>16/06/2026</strong></p>
+<div style="display:flex;gap:1rem;flex-wrap:wrap;margin:1rem 0">
+<div style="background:var(--sb-green-light);border-radius:8px;padding:.8rem 1.2rem;flex:1;min-width:150px;border-left:4px solid var(--sb-green)"><strong style="font-size:1.3rem;color:var(--sb-green)">72.92%</strong><br><span style="font-size:.78rem;color:var(--sb-gray-600)">Avance total DEV</span></div>
+<div style="background:var(--sb-yellow-light);border-radius:8px;padding:.8rem 1.2rem;flex:1;min-width:150px;border-left:4px solid var(--sb-yellow)"><strong style="font-size:1.3rem;color:var(--sb-yellow)">16/06/26</strong><br><span style="font-size:.78rem;color:var(--sb-gray-600)">Fecha objetivo PROD</span></div>
+<div style="background:var(--sb-teal-light);border-radius:8px;padding:.8rem 1.2rem;flex:1;min-width:150px;border-left:4px solid var(--sb-teal)"><strong style="font-size:1.3rem;color:var(--sb-teal)">10-12 Jun</strong><br><span style="font-size:.78rem;color:var(--sb-gray-600)">Pruebas del Negocio</span></div>
+</div>
+<div style="overflow-x:auto"><table>
+<thead><tr><th>#</th><th>&Eacute;pica / M&oacute;dulo</th><th>Avance</th><th>Responsable(s)</th><th>Stage</th><th>PROD</th><th>Estado</th></tr></thead>
+<tbody>
+<tr><td>1</td><td><strong>Aprovisionamiento migraci&oacute;n</strong></td><td><span class="tag tag-ok">75%</span></td><td>Daniel Aponte, Samuel Murillo</td><td>28/05</td><td>16/06</td><td>3/4 finalizados, PROD 20%</td></tr>
+<tr><td>2</td><td><strong>Login transversal</strong></td><td><span class="tag tag-critical">0%</span></td><td>Weimar, Samuel, Christian</td><td>28/05</td><td>16/06</td><td>Cognito 100%, interno 60%, front 0%</td></tr>
+<tr><td>3</td><td><strong>Crear caso</strong></td><td><span class="tag tag-ok">70%</span></td><td>Christian, Daniel, Luis, David</td><td>28/05</td><td>16/06</td><td>.com desplegado en stage</td></tr>
+<tr><td>4</td><td><strong>Verificaci&oacute;n documentos</strong></td><td><span class="tag tag-ok">70%</span></td><td>Jorge, Daniel, Hossein, Jimmy</td><td>28/05</td><td>16/06</td><td>L&oacute;gica doc no definida</td></tr>
+<tr><td>5</td><td><strong>Radicaci&oacute;n</strong></td><td><span class="tag tag-ok">70%</span></td><td>Victor, Jorge</td><td>28/05</td><td>16/06</td><td>APIs reservas seccionadas</td></tr>
+<tr><td>6</td><td><strong>Mesa perfeccionamiento</strong></td><td><span class="tag tag-warning">20%</span></td><td>Jimmy</td><td>28/05</td><td>16/06</td><td>Pendiente validar con Laura</td></tr>
+<tr><td>7</td><td><strong>An&aacute;lisis</strong></td><td><span class="tag tag-ok">70%</span></td><td>Jorge</td><td>28/05</td><td>16/06</td><td>Front, perfiles, cartas, Rentech</td></tr>
+<tr><td>8</td><td><strong>Autorizaci&oacute;n</strong></td><td><span class="tag tag-warning">20%</span></td><td>Hossein, Luis ca</td><td>&mdash;</td><td>16/06</td><td>Front + input pago por iniciar</td></tr>
+<tr><td>9</td><td><strong>Pagos</strong></td><td><span class="tag tag-warning">&mdash;</span></td><td>Luis ca</td><td>28/05</td><td>16/06</td><td>Front excepci&oacute;n + orden pago</td></tr>
+<tr><td>10</td><td><strong>Proveedores</strong></td><td><span class="tag tag-ok">60%</span></td><td>Hossein, Luis ca</td><td>28/05</td><td>16/06</td><td>UIFA, investigador, m&eacute;dico</td></tr>
+<tr><td>11</td><td><strong>M&oacute;dulo administrativo</strong></td><td><span class="tag tag-ok">60%</span></td><td>Fabi&aacute;n</td><td>28/05</td><td>16/06</td><td>Asignaci&oacute;n/reasignaci&oacute;n</td></tr>
+<tr><td>12</td><td><strong>Notificador transversal</strong></td><td><span class="tag tag-ok">80%</span></td><td>Carolina, Daniel</td><td>28/05</td><td>16/06</td><td>URL dominio + correos</td></tr>
+<tr><td>13</td><td><strong>Paso a producci&oacute;n</strong></td><td><span class="tag tag-critical">0%</span></td><td>Daniel, Equipo</td><td>&mdash;</td><td>16/06</td><td>Infra BD + tickets</td></tr>
+<tr><td>14</td><td><strong>Migrar informaci&oacute;n</strong></td><td><span class="tag tag-critical">0%</span></td><td>Daniel</td><td>&mdash;</td><td>16/06</td><td>BD Clever viejo</td></tr>
+</tbody></table></div></div>
+
+<div class="card"><h2>Flujo Correos (60%) + OCR (80%)</h2>
+<div class="grid-cards">
+<div class="grid-card"><h4>&#128233; Migraci&oacute;n N8N</h4><p>Interprise &rarr; N8N. Subflujos, lotes, optimizaci&oacute;n. Danilo y Luis.</p></div>
+<div class="grid-card"><h4>&#129302; OCR 46 docs</h4><p>Clasificar, extraer info asegurado, identificar cobertura. Mateo.</p></div>
+<div class="grid-card"><h4>&#128279; APIs externas</h4><p>Bizagi, Emasivo, tablero IA, performance. Cristian.</p></div>
+<div class="grid-card"><h4>&#128201; Crear caso flujo</h4><p>Nuevo/complemento, Bizagi/Clever, Filenet. Cristian.</p></div>
+</div></div>
+
+<div class="card"><h2>Bloqueos y Riesgos del Proyecto</h2>
+<ul class="findings-list">
+<li class="critical"><strong>&#128308; L&oacute;gica documentos no definida:</strong> Bloquea m&oacute;dulo 4 (verificaci&oacute;n). Sin definici&oacute;n funcional del front.</li>
+<li class="critical"><strong>&#128308; Login transversal 0% front:</strong> Cognito listo pero integraci&oacute;n FCA sin iniciar.</li>
+<li class="critical"><strong>&#128308; Paso a producci&oacute;n 0%:</strong> Infra BD y tickets sin generar a 8 d&iacute;as del objetivo.</li>
+<li class="warning"><strong>&#128992; Persistencia BD pendiente:</strong> Estrategia no definida.</li>
+<li class="warning"><strong>&#128992; WebSocket por eliminar:</strong> Debe removerse del front-back.</li>
+<li class="warning"><strong>&#128992; Mesa perfeccionamiento bloqueada:</strong> Validaci&oacute;n con Laura pendiente.</li>
+</ul></div>
+
+<div class="card"><h2>Temas Transversales (Sin iniciar)</h2>
+<div class="grid-cards">
+<div class="grid-card" style="border-left-color:var(--sb-orange)"><h4>&#128202; Datadog</h4><p>Monitoreo servicios</p></div>
+<div class="grid-card" style="border-left-color:var(--sb-orange)"><h4>&#128200; Grafana</h4><p>Dashboards operativos</p></div>
+<div class="grid-card" style="border-left-color:var(--sb-orange)"><h4>&#129302; Observabilidad IA</h4><p>Trazabilidad modelos</p></div>
+<div class="grid-card" style="border-left-color:var(--sb-orange)"><h4>&#127919; Precisi&oacute;n IA</h4><p>M&eacute;tricas accuracy</p></div>
+<div class="grid-card" style="border-left-color:var(--sb-orange)"><h4>&#9889; Pruebas carga</h4><p>Performance bajo volumen</p></div>
+<div class="grid-card" style="border-left-color:var(--sb-orange)"><h4>&#128736;&#65039; Procesos op</h4><p>Definici&oacute;n operativa</p></div>
+</div></div>
+</section>
+
+<section id="seguridad">
+<div class="card"><h2>Pruebas de Seguridad (XSS / SQL Injection)</h2>
+<p style="font-size:.85rem;color:var(--sb-gray-600);margin-bottom:1rem">Payloads probados en campos del formulario paso 1. Fecha: 8 junio 2026.</p>
+<div style="overflow-x:auto"><table>
+<thead><tr><th>Campo</th><th>Payload</th><th>Resultado</th><th>Severidad</th></tr></thead>
+<tbody>
+<tr><td><strong>Nombres</strong></td><td><code>&lt;script&gt;alert('XSS')&lt;/script&gt;</code></td><td><span class="tag tag-critical">ACEPTADO</span></td><td>&#128308; ALTA</td></tr>
+<tr><td><strong>Apellidos</strong></td><td><code>'; DROP TABLE users; --</code></td><td><span class="tag tag-critical">ACEPTADO</span></td><td>&#128308; ALTA</td></tr>
+<tr><td>Email</td><td>XSS en email</td><td><span class="tag tag-warning">Validaci&oacute;n parcial</span></td><td>&#128992; Media</td></tr>
+<tr><td>Celular</td><td>SQL injection</td><td><span class="tag tag-ok">Solo d&iacute;gitos</span></td><td>&#128994; Bajo</td></tr>
+<tr><td>N&uacute;mero doc</td><td>SQL injection</td><td><span class="tag tag-warning">Parcial</span></td><td>&#128992; Media</td></tr>
+</tbody></table></div>
+<p style="margin-top:1rem;font-size:.85rem;color:var(--sb-red)"><strong>&#128308; Acci&oacute;n urgente:</strong> Nombres y Apellidos aceptan HTML/SQL. Agregar validaci&oacute;n regex en frontend (solo letras, espacios, ap&oacute;strofes).</p>
+</div>
+
+<div class="card"><h2>Responsive Mobile (375&times;812)</h2>
+<div style="overflow-x:auto"><table>
+<thead><tr><th>Criterio</th><th>Estado</th><th>Detalle</th></tr></thead>
+<tbody>
+<tr><td>Cards coberturas</td><td><span class="tag tag-ok">OK</span></td><td>Apilamiento vertical correcto</td></tr>
+<tr><td>Campos formulario</td><td><span class="tag tag-ok">OK</span></td><td>Width 100% adaptado</td></tr>
+<tr><td>Texto legible</td><td><span class="tag tag-ok">OK</span></td><td>Sin overflow horizontal</td></tr>
+<tr><td>Header sticky</td><td><span class="tag tag-critical">BUG</span></td><td>Intercepta pointer events en radio buttons</td></tr>
+<tr><td>Dropdowns PrimeNG</td><td><span class="tag tag-warning">Verificar</span></td><td>Panel puede salir del viewport</td></tr>
+<tr><td>Stepper</td><td><span class="tag tag-ok">OK</span></td><td>4 pasos visibles</td></tr>
+</tbody></table></div>
+</div>
+</section>
+
+<section id="pendientes">
+<div class="card"><h2>Estado de Exploraci&oacute;n</h2>
+<ul class="findings-list">
+<li class="ok"><strong>&#128994; Completado:</strong> Pasos 1-3 del formulario (datos mock + documentos simulados + upload a GCS).</li>
+<li class="ok"><strong>&#128994; Completado:</strong> Validaci&oacute;n multi-escenario: 6 ramos &times; 2 tipos persona.</li>
+<li class="ok"><strong>&#128994; Completado:</strong> 8 endpoints API documentados (formulario + upload + radicaci&oacute;n).</li>
+<li class="ok"><strong>&#128994; Completado:</strong> Escenario Beneficiario &mdash; formulario id&eacute;ntico al de Asegurado (sin campos adicionales).</li>
+<li class="ok"><strong>&#128994; Completado:</strong> Persona Jur&iacute;dica/Empresas &mdash; NO tiene formulario web, redirige a email.</li>
+<li class="ok"><strong>&#128994; Completado:</strong> Ramo Protecci&oacute;n de Pagos &mdash; S&Iacute; tiene formulario web con 7 coberturas.</li>
+<li class="critical"><strong>&#128308; Bug activo:</strong> Error 504 en API de radicaci&oacute;n (<code>POST /step-form/{caseId}/radication</code>). Paso 4 no alcanzable.</li>
+<li><strong>&#128203; Google Sheet:</strong> Compartir archivo con la cuenta de servicio del MCP Google Drive.</li>
+<li><strong>&#128203; Repo del frontend:</strong> Confirmar nombre real del repo Angular.</li>
+<li><strong>&#128203; Lambda middleware:</strong> Explorar <code>comunes-middleware-indemnizacion-lambda</code> en detalle.</li>
+<li><strong>&#128203; Ambiente productivo:</strong> Verificar URL de producci&oacute;n y comparar con DEV.</li>
+<li><strong>&#128203; Integraciones:</strong> Mapear conexiones con sistemas externos (Davivienda, IMAGINEX Salud).</li>
+</ul></div>
+</section>
+
+</div>
+
+<footer>
+<p>Inventario generado por <strong>Squad Agentes IA</strong> &middot; 7 de junio de 2026<br>
+Fuentes: GitHub (<code>segurosbolivar</code>), exploraci&oacute;n URLs DEV, an&aacute;lisis de consola<br>
+<a href="https://dev-sbindemnizaciones.segurosbolivar.com" target="_blank">dev-sbindemnizaciones.segurosbolivar.com</a></p>
+</footer>
+
+<script>
+const hamburger=document.getElementById('hamburgerBtn'),drawer=document.getElementById('navDrawer'),overlay=document.getElementById('navOverlay');
+function toggleNav(){hamburger.classList.toggle('active');drawer.classList.toggle('active');overlay.classList.toggle('active')}
+hamburger.addEventListener('click',toggleNav);
+overlay.addEventListener('click',toggleNav);
+document.querySelectorAll('.nav-drawer a').forEach(a=>{a.addEventListener('click',e=>{e.preventDefault();const t=a.getAttribute('data-section');const el=document.getElementById(t);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});toggleNav()}})});
+</script>
+</body>
+</html>

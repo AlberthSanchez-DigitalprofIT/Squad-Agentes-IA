@@ -1,0 +1,29 @@
+---
+trigger: preToolUse
+tools:
+  - shell
+description: Valida comandos shell contra allowlist por agente. Bloquea comandos destructivos o no autorizados.
+action: |
+  COMANDOS SIEMPRE PROHIBIDOS (para todos los agentes):
+  - rm -rf /
+  - rm -rf ~
+  - rm -rf .
+  - git push --force (sin confirmación explícita)
+  - git reset --hard (sin confirmación explícita)
+  - git clean -f (sin confirmación explícita)
+  - DROP TABLE, DROP DATABASE, DELETE FROM (sin WHERE)
+  - chmod 777
+  - curl | sh, curl | bash
+  - eval(), exec() con input no sanitizado
+  
+  ALLOWLIST POR AGENTE:
+  - Test Engineer: npx playwright test, npm test, npm run test:*, npx playwright install, git status, git diff, git log
+  - Harness Engineer: npm test, npm run test:unit, npm run lint, npm run format, node scripts/*, git status, git diff
+  - Doc Updater: npm run diagrams:*, git status
+  - Angular Developer: ng build, ng test, ng generate, npm install (con confirmación), git status
+  - Cloud SRE: (no ejecuta shell, usa MCP aws-api)
+  - Cloud Infra: (no ejecuta shell, usa MCP aws-api)
+  
+  Si el comando no está en la allowlist del agente activo: BLOQUEAR y explicar por qué.
+  Si el comando es destructivo: BLOQUEAR siempre, ofrecer alternativa segura.
+---

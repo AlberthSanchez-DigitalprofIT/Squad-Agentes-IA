@@ -1,0 +1,26 @@
+{
+  "enabled": true,
+  "name": "Google Drive MCP Guard",
+  "description": "Restringe el uso del MCP de Google Drive al agente Knowledge Scout. Alineado con 00-swarm-orchestrator.md.",
+  "version": "1",
+  "when": {
+    "type": "preToolUse",
+    "toolTypes": [
+      ".*google_drive.*",
+      ".*gdrive.*",
+      "search_files",
+      "read_file_content",
+      "list_recent_files",
+      "get_file_metadata",
+      "get_file_permissions",
+      "create_file",
+      "download_file_content",
+      "copy_file"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "CONTROL DE ACCESO — Google Drive MCP Guard.\n\nEl MCP de Google Drive está RESTRINGIDO al agente Knowledge Scout.\n\nEvalúa si la herramienta de Google Drive es invocada en el contexto correcto:\n\n- Si el contexto actual es Knowledge Scout (extracción de documentación de Drive): ACCESO PERMITIDO.\n- Si el contexto es cualquier otro agente: ACCESO DENEGADO. Las consultas a Google Drive deben delegarse al Knowledge Scout.\n\nExcepción: Si el usuario ordena explícitamente usar Google Drive sin delegación en ese mensaje."
+  },
+  "shortName": "google-drive-guard"
+}

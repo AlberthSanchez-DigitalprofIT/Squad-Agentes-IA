@@ -1,0 +1,15 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Langfuse MCP Guard",
+      "description": "Restringe el uso del MCP de Langfuse exclusivamente al agente Prompt Ops. Otros agentes del enjambre no deben invocar herramientas de Langfuse. Alineado con 00-swarm-orchestrator.md.",
+      "trigger": "PreToolUse",
+      "action": {
+        "type": "agent",
+        "prompt": "CONTROL DE ACCESO — Langfuse MCP Guard.\n\nEl MCP de Langfuse está RESTRINGIDO exclusivamente al agente Prompt Ops.\n\nEvalúa si la herramienta que se está invocando pertenece al MCP langfuse (get-prompts, get-prompt).\n\n- Si el contexto actual es el agente Prompt Ops (delegado por el Orquestador para consultar/auditar prompts de producción en Langfuse): ACCESO PERMITIDO. Procede con la invocación.\n- Si el contexto es cualquier otro agente (Orquestador, Scout, Historian, Guardian, Platform Analyst, PO-Agile, Cloud SRE, Cloud Infra, Doc Updater, Clarity Behavior, Prompt Engineer, Angular Developer): ACCESO DENEGADO. No invoques la herramienta. Informa al usuario que Langfuse MCP solo puede ser usado por el agente Prompt Ops."
+      },
+      "enabled": false
+    }
+  ]
+}

@@ -1,0 +1,73 @@
+{
+  "name": "knowledge-scout",
+  "description": "Knowledge Scout — Explorador de fuentes documentales: Jira, Confluence, Google Drive y AWS Docs. Extrae requisitos y conocimiento citable.",
+  "prompt": "file://../steering/agent-scout.md",
+  "model": "claude-sonnet-4",
+  "tools": [
+    "read",
+    "@atlassian",
+    "@google-drive",
+    "@aws-docs"
+  ],
+  "allowedTools": [
+    "read",
+    "@atlassian/getJiraIssue",
+    "@atlassian/searchJiraIssuesUsingJql",
+    "@atlassian/getVisibleJiraProjects",
+    "@atlassian/getJiraProjectIssueTypesMetadata",
+    "@atlassian/searchConfluenceUsingCql",
+    "@atlassian/getConfluencePage",
+    "@atlassian/searchAtlassian",
+    "@atlassian/getAccessibleAtlassianResources",
+    "@google-drive/search_files",
+    "@google-drive/read_file_content",
+    "@google-drive/list_recent_files",
+    "@google-drive/get_file_metadata",
+    "@google-drive/get_file_permissions",
+    "@aws-docs/search_documentation",
+    "@aws-docs/read_documentation",
+    "@aws-docs/read_sections"
+  ],
+  "resources": [
+    "file://../steering/agent-scout.md",
+    "file://../steering/05-jira-writing-guidelines.md",
+    "file://../steering/06-platform-context.md",
+    "file://../../Workspace/config/platforms.json"
+  ],
+  "hooks": {
+    "agentSpawn": [
+      {
+        "command": "echo 'Knowledge Scout activado — Exploración de fuentes documentales (Jira, Confluence, Drive, AWS Docs)'"
+      }
+    ]
+  },
+  "includeMcpJson": false,
+  "mcpServers": {
+    "atlassian": {
+      "command": "npx",
+      "args": ["-y", "mcp-remote@latest", "https://mcp.atlassian.com/v1/mcp"]
+    },
+    "google-drive": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-remote@latest",
+        "https://drivemcp.googleapis.com/mcp/v1",
+        "--static-oauth-client-info",
+        "{\"client_id\":\"${GOOGLE_CLIENT_ID}\",\"client_secret\":\"${GOOGLE_CLIENT_SECRET}\"}"
+      ],
+      "env": {
+        "NODE_EXTRA_CA_CERTS": "${HOME}/.ssl/corporate-ca-bundle.pem"
+      }
+    },
+    "aws-docs": {
+      "command": "uvx",
+      "args": ["awslabs.aws-documentation-mcp-server@latest"],
+      "env": {
+        "FASTMCP_LOG_LEVEL": "ERROR"
+      }
+    }
+  },
+  "keyboardShortcut": "ctrl+1",
+  "welcomeMessage": "Knowledge Scout activo. ¿Qué necesitas explorar? (Jira, Confluence, Google Drive, AWS Docs)"
+}

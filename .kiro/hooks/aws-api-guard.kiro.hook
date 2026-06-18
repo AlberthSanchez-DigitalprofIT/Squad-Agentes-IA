@@ -1,0 +1,18 @@
+{
+  "enabled": true,
+  "name": "AWS API MCP Guard",
+  "description": "Restringe el uso del MCP de AWS API a los agentes Cloud SRE y Cloud Infra. Otros agentes del enjambre no deben ejecutar comandos AWS directamente. Alineado con 00-swarm-orchestrator.md.",
+  "version": "1",
+  "when": {
+    "type": "preToolUse",
+    "toolTypes": [
+      ".*aws_api.*",
+      ".*aws.*call_aws.*"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "CONTROL DE ACCESO — AWS API MCP Guard.\n\nEl MCP de AWS API (call_aws, suggest_aws_commands) está RESTRINGIDO a:\n- Cloud SRE: diagnóstico de infraestructura vinculado a alertas de Datadog (solo lectura)\n- Cloud Infra: auditorías de costos, seguridad, inventario y optimización de recursos (solo lectura)\n\nEvalúa si la herramienta AWS API es invocada por un agente autorizado.\n\n- Si el contexto actual es Cloud SRE o Cloud Infra: ACCESO PERMITIDO. Procede con la invocación.\n- Si el contexto es cualquier otro agente (Orquestador, Scout, Historian, Guardian, GitHub Repos, PO-Agile, Doc Updater, Clarity Behavior): ACCESO DENEGADO. No invoques la herramienta. Informa al usuario que las consultas a AWS deben delegarse al Cloud SRE (para diagnóstico de alertas) o al Cloud Infra (para auditorías).\n\nRESTRICCIÓN CRÍTICA: Ambos agentes operan en SOLO LECTURA. No se permite crear, eliminar ni modificar recursos AWS. Si el comando intenta una operación de escritura (create, delete, update, put, terminate, stop, start, modify, run-task), ACCESO DENEGADO.\n\nExcepción: Si el usuario pide EXPLÍCITAMENTE ejecutar un comando AWS fuera del flujo de estos agentes, se permite como excepción puntual."
+  },
+  "shortName": "aws-api-guard"
+}

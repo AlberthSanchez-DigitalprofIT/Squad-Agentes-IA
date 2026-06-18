@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Roadmap Iniciativas — Proyectiva</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    @font-face {
+      font-family: 'BrandBookMETC';
+      src: local('BrandBookMETC'), local('BrandbookMETC'), local('Brandbook METC');
+      font-weight: normal;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: 'BrandBookMETC';
+      src: local('BrandBookMETC Bold'), local('BrandbookMETC-Bold');
+      font-weight: bold;
+      font-style: normal;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; }
+    body {
+      font-family: 'BrandBookMETC', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #ffffff;
+      color: #2d2d2d;
+      overflow-x: hidden;
+    }
+
+    :root {
+      --primary: #E8612D;
+      --primary-light: #F07B4A;
+      --primary-gradient: linear-gradient(135deg, #E8612D 0%, #E8612D 100%);
+      --accent-blue: #3B82F6;
+      --accent-green: #25D366;
+      --accent-yellow: #F59E0B;
+      --accent-purple: #8B5CF6;
+      --text: #2d2d2d;
+      --text-light: #6b7280;
+      --bg: #ffffff;
+      --bg-light: #f8f9fc;
+      --border: #e5e7eb;
+      --radius: 12px;
+      --shadow: 0 4px 16px rgba(0,0,0,0.08);
+    }
+
+    /* SLIDE SYSTEM */
+    .presentation { width: 100vw; height: 100vh; position: relative; }
+
+    .slide {
+      width: 100%; height: 100%;
+      display: none; flex-direction: column;
+      position: absolute; top: 0; left: 0;
+      animation: fadeIn 0.4s ease;
+    }
+    .slide.active { display: flex; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* SLIDE HEADER (orange banner) */
+    .slide-banner {
+      background: #E8612D;
+      padding: 40px 60px 32px;
+      color: #fff;
+      border-radius: 0 0 24px 24px;
+    }
+    .slide-banner__title {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .slide-banner__sub {
+      font-size: 0.95rem;
+      opacity: 0.9;
+    }
+
+    /* SLIDE BODY */
+    .slide-body {
+      flex: 1;
+      padding: 40px 60px;
+      overflow-y: auto;
+    }
+
+    .slide-body::-webkit-scrollbar { width: 4px; }
+    .slide-body::-webkit-scrollbar-track { background: transparent; }
+    .slide-body::-webkit-scrollbar-thumb { background: #ddd; border-radius: 4px; }
+
+    /* TITLE SLIDE */
+    .slide--title {
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 60px;
+      background: var(--bg);
+    }
+    .title-logo { font-size: 2rem; font-weight: 700; color: var(--primary); margin-bottom: 24px; }
+    .title-main { font-size: 3rem; font-weight: 700; line-height: 1.15; color: var(--text); margin-bottom: 16px; }
+    .title-sub { font-size: 1.1rem; color: var(--text-light); max-width: 600px; line-height: 1.6; }
+    .title-date { margin-top: 32px; font-size: 0.85rem; color: var(--text-light); padding: 8px 20px; border: 1px solid var(--border); border-radius: 50px; }
+
+    /* PRIORITY COLUMNS */
+    .priority-columns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      width: 100%;
+    }
+
+    .priority-col {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      box-shadow: var(--shadow);
+    }
+
+    .priority-col__title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--border);
+    }
+
+    .priority-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+    .priority-item:last-child { margin-bottom: 0; }
+
+    .priority-item__number {
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.8rem; font-weight: 700; color: #fff;
+      flex-shrink: 0;
+    }
+    .num--red { background: #E53E3E; }
+    .num--orange { background: #E8612D; }
+    .num--yellow { background: #F59E0B; }
+    .num--green { background: #25D366; }
+    .num--blue { background: #3B82F6; }
+    .num--purple { background: #8B5CF6; }
+    .num--teal { background: #14B8A6; }
+
+    .priority-item__content { flex: 1; }
+    .priority-item__title { font-size: 0.9rem; font-weight: 700; color: var(--text); margin-bottom: 3px; }
+    .priority-item__desc { font-size: 0.82rem; color: var(--text-light); line-height: 1.5; }
+    .priority-item__team { font-size: 0.78rem; color: var(--primary); font-weight: 600; margin-top: 4px; }
+
+    /* DATA TABLE */
+    .data-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+    .data-table thead { background: #E8612D; color: #fff; }
+    .data-table thead th {
+      text-align: left; padding: 14px 16px;
+      font-weight: 700; font-size: 0.78rem;
+      text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    .data-table thead th:first-child { border-radius: 8px 0 0 0; }
+    .data-table thead th:last-child { border-radius: 0 8px 0 0; }
+    .data-table tbody tr { border-bottom: 1px solid var(--border); transition: background 0.2s; }
+    .data-table tbody tr:hover { background: #fef7f4; }
+    .data-table td { padding: 14px 16px; vertical-align: top; color: var(--text); }
+    .data-table td:nth-child(1) { font-weight: 600; min-width: 260px; }
+    .data-table td:nth-child(2) { color: var(--text-light); }
+    .data-table td:nth-child(3) { color: var(--primary); font-weight: 600; white-space: nowrap; }
+
+    .team-badge {
+      display: inline-block; padding: 3px 10px; border-radius: 50px;
+      font-size: 0.72rem; font-weight: 600;
+    }
+    .team--squad { background: rgba(59,130,246,0.1); color: #3B82F6; }
+    .team--auto { background: rgba(232,97,45,0.1); color: #E8612D; }
+    .team--mixed { background: rgba(139,92,246,0.1); color: #8B5CF6; }
+
+    /* BACKLOG CARDS */
+    .backlog-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 16px;
+      width: 100%;
+    }
+
+    .backlog-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      border-left: 4px solid transparent;
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+    .backlog-card:hover {
+      box-shadow: var(--shadow);
+      transform: translateY(-2px);
+    }
+    .backlog-card--squad { border-left-color: #3B82F6; }
+    .backlog-card--auto { border-left-color: #E8612D; }
+    .backlog-card--squad-mixed { border-left-color: #8B5CF6; }
+
+    .backlog-card__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .backlog-card__num {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: #E8612D;
+      color: #fff;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 0.75rem; font-weight: 700;
+    }
+
+    .backlog-card__team-badge {
+      display: inline-block; padding: 3px 10px; border-radius: 50px;
+      font-size: 0.68rem; font-weight: 600;
+    }
+    .backlog-card__team-badge.team--squad { background: rgba(59,130,246,0.1); color: #3B82F6; }
+    .backlog-card__team-badge.team--auto { background: rgba(232,97,45,0.1); color: #E8612D; }
+    .backlog-card__team-badge.team--mixed { background: rgba(139,92,246,0.1); color: #8B5CF6; }
+
+    .backlog-card__title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 6px;
+      line-height: 1.3;
+    }
+
+    .backlog-card__desc {
+      font-size: 0.8rem;
+      color: var(--text-light);
+      line-height: 1.5;
+    }
+
+    .prio-badge {
+      display: inline-block; padding: 4px 12px; border-radius: 50px;
+      font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+    }
+    .prio--alta { background: rgba(229,62,62,0.1); color: #E53E3E; }
+    .prio--media { background: rgba(245,158,11,0.1); color: #D97706; }
+    .prio--baja { background: rgba(59,130,246,0.1); color: #3B82F6; }
+
+    /* TEAM DISTRIBUTION */
+    .team-distribution {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      width: 100%;
+    }
+
+    .team-panel {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .team-panel__header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .team-panel--squad .team-panel__header { border-left: 4px solid #3B82F6; }
+    .team-panel--auto .team-panel__header { border-left: 4px solid #E8612D; }
+
+    .team-panel__icon { font-size: 1.8rem; }
+    .team-panel__name { font-size: 1.05rem; font-weight: 700; color: var(--text); }
+    .team-panel__count { font-size: 0.8rem; color: var(--text-light); margin-top: 2px; }
+
+    .team-panel__items { padding: 8px 0; }
+
+    .team-panel__item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 24px;
+      border-bottom: 1px solid #f3f4f6;
+      font-size: 0.88rem;
+      color: var(--text);
+      line-height: 1.4;
+    }
+    .team-panel__item:last-child { border-bottom: none; }
+    .team-panel__item strong { font-weight: 700; }
+
+    .team-panel__num {
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      background: #E8612D;
+      color: #fff;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 0.75rem; font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    @media (max-width: 768px) {
+      .team-distribution { grid-template-columns: 1fr; }
+    }
+
+    /* MOCKUP SHOWCASE */
+    .mockup-showcase {
+      display: flex;
+      gap: 32px;
+      align-items: flex-start;
+      justify-content: center;
+      width: 100%;
+      height: calc(100vh - 220px);
+    }
+
+    /* Desktop mockup */
+    .mockup-desktop {
+      flex: 1;
+      max-width: 720px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: #fff;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .mockup-desktop__viewport {
+      width: 100%;
+      height: 400px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .mockup-iframe-desktop {
+      width: 1280px;
+      height: 900px;
+      border: none;
+      transform: scale(0.56);
+      transform-origin: top left;
+      pointer-events: none;
+    }
+
+    /* Mobile mockup */
+    .mockup-mobile {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .mockup-mobile__frame {
+      width: 200px;
+      border: 3px solid #2d2d2d;
+      border-radius: 28px;
+      overflow: hidden;
+      background: #fff;
+      box-shadow: var(--shadow);
+      position: relative;
+    }
+
+    .mockup-mobile__notch {
+      width: 80px;
+      height: 6px;
+      background: #2d2d2d;
+      border-radius: 0 0 4px 4px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+    }
+
+    .mockup-mobile__viewport {
+      width: 100%;
+      height: 400px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .mockup-iframe-mobile {
+      width: 480px;
+      height: 960px;
+      border: none;
+      transform: scale(0.416);
+      transform-origin: top left;
+      pointer-events: none;
+    }
+
+    .mockup-frame__bar {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 8px 12px;
+      background: #f3f4f6;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .mockup-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: #d1d5db;
+    }
+    .mockup-dot:first-child { background: #ef4444; }
+    .mockup-dot:nth-child(2) { background: #f59e0b; }
+    .mockup-dot:nth-child(3) { background: #22c55e; }
+
+    .mockup-url {
+      margin-left: 8px;
+      font-size: 0.65rem;
+      color: var(--text-light);
+      background: #fff;
+      padding: 2px 10px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+    }
+
+    .mockup-frame__label {
+      padding: 10px 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text);
+      text-align: center;
+      background: #f9fafb;
+      border-top: 1px solid var(--border);
+    }
+
+    @media (max-width: 1024px) {
+      .mockup-showcase { flex-direction: column; align-items: center; }
+      .mockup-desktop { max-width: 100%; }
+    }
+    @media (max-width: 768px) {
+      .mockup-desktop__viewport { height: 250px; }
+      .mockup-iframe-desktop { transform: scale(0.4); }
+      .mockup-mobile__frame { width: 160px; }
+      .mockup-mobile__viewport { height: 300px; }
+    }
+
+    /* NAVIGATION */
+    .nav-controls { position: fixed; bottom: 28px; right: 36px; display: flex; gap: 10px; z-index: 100; }
+    .nav-btn {
+      width: 44px; height: 44px; border-radius: 50%;
+      border: 1px solid var(--border); background: #fff; color: var(--text);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: all 0.3s; font-size: 1.1rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .nav-btn:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+    .slide-counter { position: fixed; bottom: 36px; left: 36px; font-size: 0.8rem; color: var(--text-light); z-index: 100; }
+
+    .progress-bar {
+      position: fixed; top: 0; left: 0; height: 3px;
+      background: #E8612D; transition: width 0.5s ease; z-index: 200;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 1024px) {
+      .slide-banner { padding: 32px 32px 24px; }
+      .slide-body { padding: 28px 32px; }
+      .priority-columns { grid-template-columns: 1fr; }
+      .title-main { font-size: 2.2rem; }
+    }
+    @media (max-width: 768px) {
+      .slide-banner { padding: 24px 20px 20px; border-radius: 0 0 16px 16px; }
+      .slide-banner__title { font-size: 1.5rem; }
+      .slide-body { padding: 20px; }
+      .title-main { font-size: 1.8rem; }
+      .nav-controls { bottom: 16px; right: 16px; }
+      .slide-counter { bottom: 20px; left: 16px; }
+      .data-table { font-size: 0.8rem; }
+      .data-table td { padding: 10px 8px; }
+    }
+
+    @media print {
+      .slide { page-break-after: always; display: flex !important; position: relative; height: auto; min-height: 100vh; }
+      .nav-controls, .slide-counter, .progress-bar { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<div class="presentation" id="presentation">
+
+  <!-- SLIDE 1: PORTADA -->
+  <div class="slide slide--title active" data-slide="1">
+    <div class="title-logo">Proyectiva</div>
+    <h1 class="title-main">Roadmap de Iniciativas<br>Estratégicas 2025</h1>
+    <p class="title-sub">13 iniciativas priorizadas por objetivo estratégico</p>
+    <div class="title-date">Junio 2025 — Presentación Ejecutiva</div>
+  </div>
+
+  <!-- SLIDE 2: BACKLOG PARTE 1 (1-7) -->
+  <div class="slide" data-slide="2">
+    <div class="slide-banner">
+      <h2 class="slide-banner__title">Backlog Consolidado</h2>
+      <p class="slide-banner__sub">13 iniciativas priorizadas por objetivo estratégico</p>
+    </div>
+    <div class="slide-body">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Iniciativa</th>
+            <th>Objetivo Estratégico</th>
+            <th>Equipo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1. Rediseño Landing + Estudio Digital + Motor + Emisión</td>
+            <td>Venta Digital Seguro de Arrendamiento individual "E2E". Autogestión completa vía APIs + Modular.</td>
+            <td>Squad Proyectiva y Squad Línea de negocio</td>
+          </tr>
+          <tr>
+            <td>2. Rediseño Landing Cotización (Brokers/Aliados)</td>
+            <td>Ajuste de captura de leads y optimización integral de la experiencia UX.</td>
+            <td>Autogestión</td>
+          </tr>
+          <tr>
+            <td>3. Capítulo Cotización Renovación (Canales)</td>
+            <td>Proceso adaptado para Brokers, Propietarios e Inmobiliarias.</td>
+            <td>Autogestión</td>
+          </tr>
+          <tr>
+            <td>4. Integración Tienda Digital Salud</td>
+            <td>Generar ventas inmediatas apalancando la clave de Proyectiva.</td>
+            <td>Squad Proyectiva</td>
+          </tr>
+          <tr>
+            <td>5. Cotizador Autos + Tienda Digital Autos</td>
+            <td>Pendiente por confirmar alcance estratégico.</td>
+            <td>Squad Proyectiva</td>
+          </tr>
+          <tr>
+            <td>6. Rediseño Web Proyectiva + SEO</td>
+            <td>Mejorar la tasa de conversión y escalar sustancialmente el tráfico orgánico.</td>
+            <td>Squad Proyectiva</td>
+          </tr>
+          <tr>
+            <td>7. Venta dirigida SOAT - Flujo táctico</td>
+            <td>Fase inicial de monitoreo activo y periodo de Marcha Blanca.</td>
+            <td>Squad Proyectiva</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: BACKLOG PARTE 2 (8-13) -->
+  <div class="slide" data-slide="3">
+    <div class="slide-banner">
+      <h2 class="slide-banner__title">Backlog Consolidado</h2>
+      <p class="slide-banner__sub">13 iniciativas priorizadas por objetivo estratégico (continuación)</p>
+    </div>
+    <div class="slide-body">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Iniciativa</th>
+            <th>Objetivo Estratégico</th>
+            <th>Equipo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>8. Venta dirigida SOAT - Flujo Estratégico</td>
+            <td>Escalar la venta digital integrando Jelpit Pagos, nuevos medios y Agente Dapta.</td>
+            <td>Squad Proyectiva y Autogestión</td>
+          </tr>
+          <tr>
+            <td>9. Venta SOAT - Punto de emisión</td>
+            <td>Habilitar e implementar el modelo comercial de venta delegada.</td>
+            <td>Squad Proyectiva</td>
+          </tr>
+          <tr>
+            <td>10. Agente IA: Perfilamiento de Texto</td>
+            <td>Perfilamiento, cotización y emisión. Genera links de pago para Web/WhatsApp y sincroniza con CRM.</td>
+            <td>Autogestión</td>
+          </tr>
+          <tr>
+            <td>11. Agente IA: Renovación Automatizada</td>
+            <td>Recordatorios dinámicos, recepción de documentos, validación Sarlaft y emisión de pólizas.</td>
+            <td>Autogestión</td>
+          </tr>
+          <tr>
+            <td>12. Agente Copiloto comercial (Cliente 360)</td>
+            <td>Copiloto comercial en vivo con sugerencias personalizadas de venta cruzada e insights.</td>
+            <td>Autogestión</td>
+          </tr>
+          <tr>
+            <td>13. Unificación CRM para Proyectiva</td>
+            <td>Espacio de objetivo abierto orientado a la automatización comercial de procesos.</td>
+            <td>Autogestión</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- SLIDE 4: PRIORIZACIÓN PROPUESTA (por equipo) -->
+  <div class="slide" data-slide="4">
+    <div class="slide-banner">
+      <h2 class="slide-banner__title">Priorización Propuesta</h2>
+      <p class="slide-banner__sub">Criterio: Impacto de negocio × Dependencias × Capacidad disponible</p>
+    </div>
+    <div class="slide-body">
+      <div class="priority-columns">
+        <!-- LEFT: Squad Proyectiva -->
+        <div class="priority-col">
+          <h3 class="priority-col__title">Squad Proyectiva</h3>
+          <div class="priority-item">
+            <div class="priority-item__number num--red">1</div>
+            <div class="priority-item__content">
+              <div class="priority-item__title">Venta dirigida SOAT - Flujo táctico</div>
+              <div class="priority-item__desc">Monitoreo y Marcha Blanca</div>
+            </div>
+          </div>
+          <div class="priority-item">
+            <div class="priority-item__number num--orange">2</div>
+            <div class="priority-item__content">
+              <div class="priority-item__title">Rediseño Web Proyectiva + SEO</div>
+              <div class="priority-item__desc">Mejorar conversión e incrementar tráfico orgánico</div>
+            </div>
+          </div>
+          <div class="priority-item">
+            <div class="priority-item__number num--blue">3</div>
+            <div class="priority-item__content">
+              <div class="priority-item__title">Integración Tienda Digital Salud</div>
+              <div class="priority-item__desc">Generar ventas inmediatas con la clave de Proyectiva</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: Autogestión -->
+        <div class="priority-col">
+          <h3 class="priority-col__title">Autogestión — Cristian Mosquera</h3>
+          <div class="priority-item">
+            <div class="priority-item__number num--red">1</div>
+            <div class="priority-item__content">
+              <div class="priority-item__title">Rediseño Landing Cotización Póliza individual Arrendamiento (Brokers, Propietarios, Inmobiliarias)</div>
+              <div class="priority-item__desc">Ajuste Captura de Leads Seguro de Arrendamiento Póliza individual (Cotizador arrendamiento) + Mejora UX</div>
+            </div>
+          </div>
+          <div class="priority-item">
+            <div class="priority-item__number num--orange">2</div>
+            <div class="priority-item__content">
+              <div class="priority-item__title">Capítulo Cotización Renovación (Incluye Brokers, Propietarios, Inmobiliarias)</div>
+              <div class="priority-item__desc">Proceso adaptado para Brokers, Propietarios e Inmobiliarias</div>
+            </div>
+          </div>
+          <div class="priority-item">
+            <div class="priority-item__number num--blue">3</div>
+            <div class="priority-item__content">
+              <div class="priority-item__title">Unificación CRM para Proyectiva</div>
+              <div class="priority-item__desc">(Espacio de objetivo abierto para automatización)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 5: SIGUIENTE OLA (no priorizadas) -->
+  <div class="slide" data-slide="5">
+    <div class="slide-banner">
+      <h2 class="slide-banner__title">Siguiente Ola</h2>
+      <p class="slide-banner__sub">Iniciativas no priorizadas — pendientes de capacidad y dependencias</p>
+    </div>
+    <div class="slide-body">
+      <div class="priority-columns">
+        <!-- LEFT: Squad Proyectiva -->
+        <div class="priority-col">
+          <h3 class="priority-col__title">Squad Proyectiva</h3>
+          <div class="priority-item">
+            <div class="priority-item__number num--orange">1</div>
+            <div class="priority-item__content">
+              <div class="priority-item__title">Rediseño Landing + Estudio Digital + Motor + Emisión</div>
+              <div class="priority-item__desc">Venta Digital Seguro de Arrendamiento individual "E2E". Autogestión completa vía APIs + Modular</div>
+            </div>
+          </div>
+          <div class="priority-item">
+            <div class="priority-item__number num--orange">2</div>
+            <div class="priority-item__content">
+              <div class="priority-item__title">Cotizador Autos + Tienda Digital Autos</div>
+              <div class="priority-item__desc">Pendiente por confirmar alcance estratégico</div>
+            </div>
+          </div>
+          <div class="priority-item">
+            <div class="priority-item__number num--orange">3</div>
+            <div class="priority-item__content">
+              <div class="priority-item__title">Venta dirigida SOAT - Flujo Estratégico</div>
+              <div class="priority-item__desc">Escalar venta digital integrando Jelpit Pagos, nuevos medios y Agente Dapta</div>
+            </div>
+          </div>
+          <div class="priority-item">
+            <div class="priority-item__number num--orange">4</div>
+            <div class="priority-item__content">
+              <div class="priority-item__title">Venta SOAT - Punto de emisión</div>
+              <div class="priority-item__desc">Habilitar e implementar el modelo comercial de venta delegada</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: Autogestión -->
+        <div class="priority-col">
+          <h3 class="priority-col__title">Autogestión — Cristian Mosquera</h3>
+          <div class="priority-item">
+            <div class="priority-item__number num--orange">1</div>
+            <div class="priority-item__content">
+              <div class="priority-item__title">Agente IA: Perfilamiento de Texto</div>
+              <div class="priority-item__desc">Perfila, Cotiza y Emite, Genera Link de Pago para Landing y WhatsApp, Envío a CRM</div>
+            </div>
+          </div>
+          <div class="priority-item">
+            <div class="priority-item__number num--orange">2</div>
+            <div class="priority-item__content">
+              <div class="priority-item__title">Agente IA: Renovación Automatizada</div>
+              <div class="priority-item__desc">Recibe documentación, Journey comunicación para recordar renovación. Válida Sarlaft, Solicita Documentos y Emite Póliza</div>
+            </div>
+          </div>
+          <div class="priority-item">
+            <div class="priority-item__number num--orange">3</div>
+            <div class="priority-item__content">
+              <div class="priority-item__title">Agente Recomendador / Copiloto Comercial (Cliente 360)</div>
+              <div class="priority-item__desc">Para recomendar productos en vivo. Copiloto de Negociación, recomendación de venta cruzada e insight</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: PROPUESTA REDISEÑO WEB -->
+  <div class="slide" data-slide="6">
+    <div class="slide-banner">
+      <h2 class="slide-banner__title">6. Rediseño Web Proyectiva + SEO</h2>
+      <p class="slide-banner__sub">Propuesta de diseño — Mejorar conversión y escalar tráfico orgánico</p>
+    </div>
+    <div class="slide-body" style="padding: 24px 40px;">
+      <div class="mockup-showcase">
+        <!-- Desktop mockup -->
+        <div class="mockup-desktop">
+          <div class="mockup-frame__bar">
+            <span class="mockup-dot"></span><span class="mockup-dot"></span><span class="mockup-dot"></span>
+            <span class="mockup-url">proyectivaseguros.com</span>
+          </div>
+          <div class="mockup-desktop__viewport">
+            <iframe src="../../Webproyectiva/index.html" class="mockup-iframe-desktop" loading="lazy"></iframe>
+          </div>
+          <div class="mockup-frame__label">Desktop — Home</div>
+        </div>
+        <!-- Mobile mockup -->
+        <div class="mockup-mobile">
+          <div class="mockup-mobile__frame">
+            <div class="mockup-mobile__notch"></div>
+            <div class="mockup-mobile__viewport">
+              <iframe src="../../Webproyectiva/index.html" class="mockup-iframe-mobile" loading="lazy"></iframe>
+            </div>
+          </div>
+          <div class="mockup-frame__label">Mobile First</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 7: DISTRIBUCIÓN POR EQUIPO -->
+  <div class="slide" data-slide="7">
+    <div class="slide-banner">
+      <h2 class="slide-banner__title">Distribución por Equipo</h2>
+      <p class="slide-banner__sub">Asignación de capacidad y ownership por iniciativa</p>
+    </div>
+    <div class="slide-body">
+      <div class="team-distribution">
+        <!-- Squad Proyectiva -->
+        <div class="team-panel team-panel--squad">
+          <div class="team-panel__header">
+            <div class="team-panel__icon">👥</div>
+            <div>
+              <h3 class="team-panel__name">Squad Proyectiva</h3>
+              <p class="team-panel__count">6 iniciativas</p>
+            </div>
+          </div>
+          <div class="team-panel__items">
+            <div class="team-panel__item">
+              <span class="team-panel__num">7</span>
+              <div><strong>Venta dirigida SOAT - Flujo táctico</strong> — Marcha Blanca</div>
+            </div>
+            <div class="team-panel__item">
+              <span class="team-panel__num">6</span>
+              <div><strong>Rediseño Web + SEO</strong> — Tráfico orgánico</div>
+            </div>
+            <div class="team-panel__item">
+              <span class="team-panel__num">8</span>
+              <div><strong>Venta dirigida SOAT - Flujo Estratégico</strong> — Jelpit + Dapta</div>
+            </div>
+            <div class="team-panel__item">
+              <span class="team-panel__num">4</span>
+              <div><strong>Tienda Digital Salud</strong> — Ventas inmediatas</div>
+            </div>
+            <div class="team-panel__item">
+              <span class="team-panel__num">5</span>
+              <div><strong>Cotizador Autos</strong> — Pendiente alcance</div>
+            </div>
+            <div class="team-panel__item">
+              <span class="team-panel__num">9</span>
+              <div><strong>Venta SOAT - Punto de emisión</strong> — Venta delegada</div>
+            </div>
+          </div>
+        </div>
+        <!-- Autogestión -->
+        <div class="team-panel team-panel--auto">
+          <div class="team-panel__header">
+            <div class="team-panel__icon">🚀</div>
+            <div>
+              <h3 class="team-panel__name">Autogestión — Cristian Mosquera</h3>
+              <p class="team-panel__count">6 iniciativas</p>
+            </div>
+          </div>
+          <div class="team-panel__items">
+            <div class="team-panel__item">
+              <span class="team-panel__num">2</span>
+              <div><strong>Landing Cotización Brokers</strong> — UX leads</div>
+            </div>
+            <div class="team-panel__item">
+              <span class="team-panel__num">3</span>
+              <div><strong>Cotización Renovación</strong> — Canales</div>
+            </div>
+            <div class="team-panel__item">
+              <span class="team-panel__num">13</span>
+              <div><strong>Unificación CRM</strong> — Automatización comercial</div>
+            </div>
+            <div class="team-panel__item">
+              <span class="team-panel__num">10</span>
+              <div><strong>Agente IA Perfilamiento</strong> — Cotización + emisión</div>
+            </div>
+            <div class="team-panel__item">
+              <span class="team-panel__num">11</span>
+              <div><strong>Agente IA Renovación</strong> — Automatización</div>
+            </div>
+            <div class="team-panel__item">
+              <span class="team-panel__num">12</span>
+              <div><strong>Copiloto Comercial</strong> — Cliente 360</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 5: CIERRE -->
+  <div class="slide slide--title" data-slide="8">
+    <div class="title-logo">Proyectiva</div>
+    <h1 class="title-main" style="font-size: 2.4rem;">Transformando la venta<br>de seguros en Colombia</h1>
+    <p class="title-sub">13 iniciativas. 2 equipos.<br>Un solo objetivo: escalar la protección digital.</p>
+    <div class="title-date" style="margin-top: 32px; border-color: var(--primary); color: var(--primary);">¿Preguntas?</div>
+  </div>
+
+</div>
+
+<!-- NAVIGATION -->
+<div class="nav-controls">
+  <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)" disabled>&#8592;</button>
+  <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">&#8594;</button>
+</div>
+
+<div class="slide-counter" id="slideCounter">1 / 8</div>
+
+<script>
+  let currentSlide = 1;
+  const totalSlides = 8;
+
+  function changeSlide(direction) {
+    const newSlide = currentSlide + direction;
+    if (newSlide < 1 || newSlide > totalSlides) return;
+    document.querySelector('.slide.active').classList.remove('active');
+    currentSlide = newSlide;
+    document.querySelector(`[data-slide="${currentSlide}"]`).classList.add('active');
+    updateControls();
+  }
+
+  function updateControls() {
+    document.getElementById('prevBtn').disabled = currentSlide === 1;
+    document.getElementById('nextBtn').disabled = currentSlide === totalSlides;
+    document.getElementById('slideCounter').textContent = `${currentSlide} / ${totalSlides}`;
+    document.getElementById('progressBar').style.width = `${(currentSlide / totalSlides) * 100}%`;
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); changeSlide(1); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); changeSlide(-1); }
+  });
+
+  let touchStartX = 0;
+  document.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; });
+  document.addEventListener('touchend', (e) => {
+    const diff = touchStartX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) { changeSlide(diff > 0 ? 1 : -1); }
+  });
+
+  updateControls();
+</script>
+
+</body>
+</html>

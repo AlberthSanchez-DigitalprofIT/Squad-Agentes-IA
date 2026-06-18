@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Agentes del Enjambre — MCPs, CLIs, Skills y Actividades</title>
+  <style>
+    :root {
+      --bg: #0f1419;
+      --surface: #1a2332;
+      --surface2: #243044;
+      --text: #e8edf4;
+      --muted: #8b9bb4;
+      --accent: #3d9cfd;
+      --mcp: #7c3aed;
+      --cli: #059669;
+      --skill: #ea580c;
+      --border: rgba(255, 255, 255, 0.08);
+      --active: #22c55e;
+      --manual: #eab308;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding: clamp(1.25rem, 4vw, 3rem);
+    }
+    h1 {
+      font-size: clamp(1.5rem, 4vw, 2.25rem);
+      font-weight: 700;
+      margin: 0 0 0.25rem;
+      letter-spacing: -0.02em;
+    }
+    .subtitle { color: var(--muted); font-size: 0.95rem; max-width: 60ch; margin-bottom: 1.5rem; }
+    .orchestrator-row { display: flex; justify-content: center; margin: 1rem 0 1.5rem; }
+    .orchestrator {
+      padding: 1rem 1.5rem;
+      background: linear-gradient(135deg, var(--surface2), var(--surface));
+      border: 2px solid var(--accent);
+      border-radius: 16px;
+      text-align: center;
+      max-width: 520px;
+    }
+    .orchestrator strong { display: block; font-size: 1.1rem; margin-bottom: 0.35rem; }
+    .orchestrator span { font-size: 0.85rem; color: var(--muted); }
+    .legend {
+      display: flex; flex-wrap: wrap; gap: 0.75rem 1.25rem;
+      padding: 1rem 1.25rem; background: var(--surface);
+      border: 1px solid var(--border); border-radius: 12px; margin-bottom: 1.5rem;
+    }
+    .legend h2 { width: 100%; margin: 0 0 0.25rem; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 600; }
+    .chip {
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      padding: 0.3rem 0.6rem; border-radius: 8px; font-size: 0.75rem;
+      font-family: ui-monospace, monospace;
+    }
+    .chip--mcp { background: rgba(124, 58, 237, 0.2); color: #c4b5fd; border: 1px solid rgba(124, 58, 237, 0.35); }
+    .chip--cli { background: rgba(5, 150, 105, 0.2); color: #6ee7b7; border: 1px solid rgba(5, 150, 105, 0.35); }
+    .chip--skill { background: rgba(234, 88, 12, 0.2); color: #fdba74; border: 1px solid rgba(234, 88, 12, 0.35); }
+    .chip--tool { background: rgba(61, 156, 253, 0.15); color: #93c5fd; border: 1px solid rgba(61, 156, 253, 0.3); }
+    .badge-status { font-size: 0.65rem; padding: 0.2rem 0.5rem; border-radius: 999px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+    .badge-active { background: rgba(34,197,94,0.2); color: #86efac; border: 1px solid rgba(34,197,94,0.4); }
+    .badge-manual { background: rgba(234,179,8,0.2); color: #fde047; border: 1px solid rgba(234,179,8,0.4); }
+    .agent-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1rem;
+    }
+    .agent-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 14px; padding: 1rem 1.1rem;
+      display: flex; flex-direction: column; gap: 0.55rem;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .agent-card:hover { border-color: rgba(61, 156, 253, 0.35); transform: translateY(-2px); }
+    .agent-card__header { display: flex; align-items: center; gap: 0.5rem; }
+    .agent-card__title { font-weight: 600; font-size: 0.95rem; }
+    .agent-card__role { font-size: 0.78rem; color: var(--muted); margin: 0; }
+    .agent-card__links { display: flex; flex-direction: column; gap: 0.45rem; margin-top: auto; }
+    .agent-card__links label { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+    .badges { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+    footer.note { font-size: 0.8rem; color: var(--muted); margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--border); }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Agentes del Enjambre — MCPs, CLIs, Skills</h1>
+    <p class="subtitle">
+      Vista basada en <code>docs/architecture/6-inventario-agentes.md</code>.
+      El Orquestador coordina y solo delega con subagentes; MCPs, CLI, skills y tools los ejecutan los especialistas.
+    </p>
+  </header>
+
+  <div class="orchestrator-row">
+    <div class="orchestrator">
+      <strong>1. Orquestador (The Architect)</strong>
+      <span>Coordina al enjambre. Decide qué agente actúa. Gestiona budget de tools MCP (&#8804; 50). No ejecuta MCPs ni CLI directamente.</span>
+    </div>
+  </div>
+
+  <div class="legend">
+    <h2>MCPs y CLIs del enjambre</h2>
+    <span class="chip chip--mcp">atlassian</span>
+    <span class="chip chip--mcp">github</span>
+    <span class="chip chip--mcp">datadog</span>
+    <span class="chip chip--mcp">aws-api</span>
+    <span class="chip chip--mcp">aws-docs</span>
+    <span class="chip chip--mcp">google-drive</span>
+    <span class="chip chip--mcp">playwright</span>
+    <span class="chip chip--mcp">chrome-devtools</span>
+    <span class="chip chip--mcp">clarity-server</span>
+    <span class="chip chip--mcp">drawio-mcp</span>
+    <span class="chip chip--mcp">langfuse</span>
+    <span class="chip chip--mcp">Figma (Power)</span>
+    <span class="chip chip--cli">gh</span>
+    <span class="chip chip--cli">node / npm / npx</span>
+    <span class="chip chip--cli">npx playwright test</span>
+    <span class="chip chip--cli">git</span>
+    <span class="chip chip--cli">agents-cli</span>
+    <span class="chip chip--skill">construir</span>
+    <span class="chip chip--skill">prueba</span>
+    <span class="chip chip--skill">diagramas-drawio</span>
+  </div>
+
+  <div class="agent-grid">
+
+    <article class="agent-card">
+      <div class="agent-card__header">
+        <span class="agent-card__title">Knowledge Scout</span>
+        <span class="badge-status badge-active">ACTIVO</span>
+      </div>
+      <p class="agent-card__role">Leer y extraer info de Jira, Confluence, Google Drive, AWS Docs.</p>
+      <div class="agent-card__links">
+        <div><label>MCPs</label><div class="badges"><span class="chip chip--mcp">atlassian</span><span class="chip chip--mcp">google-drive</span><span class="chip chip--mcp">aws-docs</span></div></div>
+        <div><label>Tools</label><div class="badges"><span class="chip chip--tool">searchJiraIssuesUsingJql</span><span class="chip chip--tool">getConfluencePage</span><span class="chip chip--tool">read_file_content</span><span class="chip chip--tool">search_documentation</span></div></div>
+      </div>
+    </article>
+
+    <article class="agent-card">
+      <div class="agent-card__header">
+        <span class="agent-card__title">Historian</span>
+        <span class="badge-status badge-active">ACTIVO</span>
+      </div>
+      <p class="agent-card__role">Explorar el repo actual: impacto, patrones, historial de cambios.</p>
+      <div class="agent-card__links">
+        <div><label>Tools / CLI</label><div class="badges"><span class="chip chip--tool">readCode</span><span class="chip chip--tool">grepSearch</span><span class="chip chip--cli">git log</span><span class="chip chip--cli">git diff</span><span class="chip chip--cli">gh pr list</span></div></div>
+      </div>
+    </article>
+
+    <article class="agent-card">
+      <div class="agent-card__header">
+        <span class="agent-card__title">Test Engineer</span>
+        <span class="badge-status badge-active">ACTIVO</span>
+      </div>
+      <p class="agent-card__role">Tests E2E, self-healing, cobertura, validaci&#243;n de calidad.</p>
+      <div class="agent-card__links">
+        <div><label>Skill</label><div class="badges"><span class="chip chip--skill">prueba</span></div></div>
+        <div><label>MCPs</label><div class="badges"><span class="chip chip--mcp">chrome-devtools</span><span class="chip chip--mcp">playwright</span></div></div>
+        <div><label>CLI</label><div class="badges"><span class="chip chip--cli">npx playwright test</span><span class="chip chip--cli">npm test</span></div></div>
+      </div>
+    </article>
+
+    <article class="agent-card">
+      <div class="agent-card__header">
+        <span class="agent-card__title">Platform Analyst</span>
+        <span class="badge-status badge-active">ACTIVO</span>
+      </div>
+      <p class="agent-card__role">Repos externos de plataforma (platforms.json &#8594; github.repos).</p>
+      <div class="agent-card__links">
+        <div><label>MCP</label><div class="badges"><span class="chip chip--mcp">github</span></div></div>
+        <div><label>CLI</label><div class="badges"><span class="chip chip--cli">gh</span></div></div>
+      </div>
+    </article>
+
+    <article class="agent-card">
+      <div class="agent-card__header">
+        <span class="agent-card__title">PO-Agile</span>
+        <span class="badge-status badge-active">ACTIVO</span>
+      </div>
+      <p class="agent-card__role">Historias de Usuario INVEST, criterios Dado-Cuando-Entonces.</p>
+      <div class="agent-card__links">
+        <div><label>MCP</label><div class="badges"><span class="chip chip--mcp">atlassian</span></div></div>
+        <div><label>Tools</label><div class="badges"><span class="chip chip--tool">createJiraIssue</span><span class="chip chip--tool">getJiraIssueTypeMetaWithFields</span></div></div>
+      </div>
+    </article>
+
+    <article class="agent-card">
+      <div class="agent-card__header">
+        <span class="agent-card__title">Doc Updater</span>
+        <span class="badge-status badge-active">ACTIVO</span>
+      </div>
+      <p class="agent-card__role">Documentaci&#243;n viva en docs/ cuando el c&#243;digo cambia.</p>
+      <div class="agent-card__links">
+        <div><label>Skill</label><div class="badges"><span class="chip chip--skill">diagramas-drawio</span></div></div>
+        <div><label>MCP</label><div class="badges"><span class="chip chip--mcp">drawio-mcp</span></div></div>
+      </div>
+    </article>
+
+    <article class="agent-card">
+      <div class="agent-card__header">
+        <span class="agent-card__title">Cloud SRE</span>
+        <span class="badge-status badge-active">ACTIVO</span>
+      </div>
+      <p class="agent-card__role">Respuesta a incidentes: Datadog &#8594; AWS &#8594; GitHub &#8594; Jira.</p>
+      <div class="agent-card__links">
+        <div><label>MCPs</label><div class="badges"><span class="chip chip--mcp">datadog</span><span class="chip chip--mcp">aws-api</span><span class="chip chip--mcp">aws-docs</span><span class="chip chip--mcp">github</span><span class="chip chip--mcp">atlassian</span></div></div>
+      </div>
+    </article>
+
+    <article class="agent-card">
+      <div class="agent-card__header">
+        <span class="agent-card__title">Clarity Behavior</span>
+        <span class="badge-status badge-active">ACTIVO</span>
+      </div>
+      <p class="agent-card__role">Comportamiento de usuarios reales con Microsoft Clarity.</p>
+      <div class="agent-card__links">
+        <div><label>MCP</label><div class="badges"><span class="chip chip--mcp">clarity-server</span></div></div>
+        <div><label>Tools</label><div class="badges"><span class="chip chip--tool">query_analytics_dashboard</span><span class="chip chip--tool">list_session_recordings</span></div></div>
+      </div>
+    </article>
+
+    <article class="agent-card">
+      <div class="agent-card__header">
+        <span class="agent-card__title">Prompt Engineer</span>
+        <span class="badge-status badge-manual">MANUAL</span>
+      </div>
+      <p class="agent-card__role">Dise&#241;ar prompts avanzados para agentes del enjambre.</p>
+      <div class="agent-card__links">
+        <div><label>Tools</label><div class="badges"><span class="chip chip--tool">Razonamiento + texto</span><span class="chip chip--tool">Web search (benchmarks)</span></div></div>
+      </div>
+    </article>
+
+    <article class="agent-card">
+      <div class="agent-card__header">
+        <span class="agent-card__title">Angular Developer</span>
+        <span class="badge-status badge-active">ACTIVO</span>
+      </div>
+      <p class="agent-card__role">Revisi&#243;n, construcci&#243;n y refactorizaci&#243;n de c&#243;digo Angular + Figma.</p>
+      <div class="agent-card__links">
+        <div><label>MCP</label><div class="badges"><span class="chip chip--mcp">Figma (Power)</span></div></div>
+        <div><label>Tools</label><div class="badges"><span class="chip chip--tool">readCode</span><span class="chip chip--tool">fsWrite</span><span class="chip chip--tool">getDiagnostics</span></div></div>
+      </div>
+    </article>
+
+    <article class="agent-card">
+      <div class="agent-card__header">
+        <span class="agent-card__title">Cloud Infra</span>
+        <span class="badge-status badge-active">ACTIVO</span>
+      </div>
+      <p class="agent-card__role">Auditor&#237;a AWS: costos, seguridad, inventario, optimizaci&#243;n, tagging.</p>
+      <div class="agent-card__links">
+        <div><label>MCPs</label><div class="badges"><span class="chip chip--mcp">aws-api</span><span class="chip chip--mcp">aws-docs</span><span class="chip chip--mcp">atlassian</span></div></div>
+        <div><label>Tools</label><div class="badges"><span class="chip chip--tool">call_aws</span><span class="chip chip--tool">search_documentation</span></div></div>
+      </div>
+    </article>
+
+    <article class="agent-card">
+      <div class="agent-card__header">
+        <span class="agent-card__title">AI Agent Ops</span>
+        <span class="badge-status badge-active">ACTIVO</span>
+      </div>
+      <p class="agent-card__role">Prompts en producci&#243;n (Langfuse) + lifecycle agentes ADK (agents-cli).</p>
+      <div class="agent-card__links">
+        <div><label>MCP</label><div class="badges"><span class="chip chip--mcp">langfuse</span></div></div>
+        <div><label>CLI</label><div class="badges"><span class="chip chip--cli">agents-cli</span></div></div>
+        <div><label>Tools</label><div class="badges"><span class="chip chip--tool">get-prompts</span><span class="chip chip--tool">get-prompt</span><span class="chip chip--tool">create / eval / deploy</span></div></div>
+      </div>
+    </article>
+
+    <article class="agent-card">
+      <div class="agent-card__header">
+        <span class="agent-card__title">BI Strategist</span>
+        <span class="badge-status badge-active">ACTIVO</span>
+      </div>
+      <p class="agent-card__role">An&#225;lisis estrat&#233;gico: KPIs, Power BI, Looker, res&#250;menes ejecutivos.</p>
+      <div class="agent-card__links">
+        <div><label>MCPs</label><div class="badges"><span class="chip chip--mcp">powerbi</span><span class="chip chip--mcp">looker</span><span class="chip chip--mcp">google-drive</span></div></div>
+      </div>
+    </article>
+
+    <article class="agent-card">
+      <div class="agent-card__header">
+        <span class="agent-card__title">Report Builder</span>
+        <span class="badge-status badge-active">ACTIVO</span>
+      </div>
+      <p class="agent-card__role">Reportes HTML, dashboards ejecutivos, inventarios funcionales.</p>
+      <div class="agent-card__links">
+        <div><label>Tools</label><div class="badges"><span class="chip chip--tool">readFile</span><span class="chip chip--tool">fsWrite</span><span class="chip chip--tool">listDirectory</span></div></div>
+        <div><label>Assets</label><div class="badges"><span class="chip chip--skill">docs/Asset/</span></div></div>
+      </div>
+    </article>
+
+    <article class="agent-card">
+      <div class="agent-card__header">
+        <span class="agent-card__title">Comms Analyst</span>
+        <span class="badge-status badge-active">ACTIVO</span>
+      </div>
+      <p class="agent-card__role">An&#225;lisis de comunicaciones: Infobip, templates, logs, m&#233;tricas.</p>
+      <div class="agent-card__links">
+        <div><label>Tools</label><div class="badges"><span class="chip chip--tool">explore (infobip-docs)</span><span class="chip chip--tool">templates</span><span class="chip chip--tool">logs</span></div></div>
+      </div>
+    </article>
+
+  </div>
+
+  <footer class="note">
+    Fuente de verdad: <code>docs/architecture/6-inventario-agentes.md</code> &#183; Actualizado: 2 junio 2026 &#183; 15 agentes + Orquestador.
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,53 @@
+{
+  "mcpServers": {
+    "playwright": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@playwright/mcp@latest"
+      ],
+      "disabled": false,
+      "autoApprove": [
+        "browser_navigate",
+        "browser_wait_for"
+      ]
+    },
+    "drawio-mcp": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "drawio-mcp"
+      ],
+      "env": {
+        "NODE_OPTIONS": "--no-experimental-global-navigator"
+      },
+      "disabled": false,
+      "autoApprove": [
+        "open_drawio_mermaid",
+        "open_drawio_csv",
+        "open_drawio_xml",
+        "new_diagram",
+        "add_nodes",
+        "link_nodes"
+      ]
+    },
+    "chrome-devtools-mcp": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "chrome-devtools-mcp@latest"
+      ],
+      "disabled": false,
+      "autoApprove": []
+    },
+    "clarity-server": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@microsoft/clarity-mcp-server"
+      ],
+      "disabled": false,
+      "autoApprove": []
+    }
+  }
+}

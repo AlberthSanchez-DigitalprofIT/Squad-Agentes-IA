@@ -1,0 +1,66 @@
+---
+trigger: postTaskExecution
+description: Obliga a los agentes a escribir en su memoria al completar una tarea significativa. Complementa al steering 10-memory-audit-protocol.md con enforcement real.
+action: |
+  Al completar una tarea, evaluar si fue **significativa**. Una tarea es significativa si cumple AL MENOS UNO de estos criterios:
+  
+  - Se crearon o modificaron archivos (código, docs, config, planes)
+  - Se ejecutaron comandos con side effects (deploy, build, git push)
+  - Se generó un plan, diagnóstico o análisis accionable
+  - Se crearon tickets en Jira o se actualizó documentación en Confluence
+  - Se ejecutaron tests y se reportaron resultados
+  - Se identificó un hallazgo de seguridad, rendimiento o UX
+  - Se resolvió un incidente o alerta
+  
+  **Tareas NO significativas** (no requieren memoria):
+  - Responder una pregunta simple sin generar artefactos
+  - Lecturas de archivos sin análisis ni entregable
+  - Saludos o conversación meta
+  
+  Si la tarea FUE significativa, el agente DEBE escribir un archivo de memoria ANTES de finalizar:
+  
+  **Ruta:** `Workspace/memory/{carpeta-del-agente}/{YYYY-MM-DD}-{tarea-corta}.md`
+  
+  **Formato obligatorio:**
+  ```markdown
+  ---
+  fecha: YYYY-MM-DD
+  tarea: Nombre descriptivo de la tarea
+  tipo: decision | hallazgo | resultado | error | corrección
+  agente: nombre-del-agente
+  ---
+  # [Título descriptivo]
+  
+  ## Contexto
+  Qué se hizo y por qué (2-3 líneas).
+  
+  ## Resultado
+  - Entregable o conclusión principal
+  
+  ## Artefactos
+  - Ruta a archivos creados/modificados
+  
+  ## Pendientes
+  - Lo que queda por hacer (si aplica)
+  ```
+  
+  **Mapeo agente → carpeta:**
+  - Knowledge Scout → scout/
+  - Historian → historian/
+  - Test Engineer → test-engineer/
+  - Platform Analyst → platform-analyst/
+  - PO-Agile → po-agile/
+  - Doc Updater → doc-updater/
+  - Cloud SRE → cloud-sre/
+  - Clarity Behavior → clarity-behavior/
+  - Angular Developer → angular-developer/
+  - Cloud Infra → cloud-infra/
+  - AI Agent Ops → ai-agent-ops/
+  - BI Strategist → bi-strategist/
+  - Report Builder → report-builder/
+  - Comms Analyst → comms-analyst/
+  - Harness Engineer → harness-engineer/
+  - Auditor → auditor/
+  
+  Si el agente no escribe memoria tras una tarea significativa, el Orquestador debe instruirlo a hacerlo antes de sintetizar la respuesta al usuario.
+---

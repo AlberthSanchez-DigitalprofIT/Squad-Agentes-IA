@@ -1,0 +1,12 @@
+---
+trigger: postToolUse
+tools:
+  - shell
+  - call_aws
+  - suggest_aws_commands
+  - browser_navigate
+  - browser_click
+  - browser_snapshot
+description: Monitorea stop conditions - detecta loops, errores consecutivos y falta de progreso
+action: Si se detectan 3+ errores consecutivos del mismo tipo, o el agente repite la misma acción sin progreso, INSERTAR un mensaje recordando las reglas de 08-stop-conditions.md y pidiendo al agente cambiar de estrategia o escalar al usuario.
+---

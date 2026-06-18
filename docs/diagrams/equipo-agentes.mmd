@@ -1,0 +1,58 @@
+flowchart TB
+    subgraph metadata ["📋 Metadatos"]
+        M1["Título: Equipo de agentes v2"]
+        M2["Inventario: 12 roles (docs/architecture/6-inventario-agentes.md)"]
+        M3["Fuente: docs/diagrams/equipo-agentes.mmd"]
+    end
+
+    subgraph equipo ["Equipo de agentes — referencia 6-inventario-agentes.md"]
+        direction TB
+        O["🎯 Orquestador — Arquitecto del enjambre<br/>Objetivo: Coordinar Análisis → Contexto → Planificación → Validación"]
+        O --> KS["🔍 Knowledge Scout<br/>Objetivo: ¿Qué dice la documentación?<br/>MCPs: atlassian, google-drive, aws-docs"]
+        O --> H["📚 Historian<br/>Objetivo: ¿Qué impacto tendrá este cambio?<br/>Tools: git, gh, readCode"]
+        O --> PA["📂 Platform Analyst<br/>Objetivo: ¿Cómo está el código de la plataforma?<br/>MCP: github"]
+        O --> P["📋 PO-Agile<br/>Objetivo: HU INVEST + Dado-Cuando-Entonces<br/>MCP: atlassian"]
+        O --> D["📝 Doc Updater<br/>Objetivo: Documentación viva en docs/<br/>MCP: draw.io"]
+        O --> G["🛡️ Guardian<br/>Objetivo: Tests E2E en verde<br/>MCPs: playwright, chrome-devtools"]
+        O --> AD["🅰️ Angular Developer<br/>Objetivo: Código Angular + diseños Figma<br/>Power: figma"]
+    end
+
+    subgraph cloud ["Agentes Cloud"]
+        SRE["☁️ Cloud SRE<br/>Incidentes: Datadog → AWS → GitHub → Jira<br/>MCPs: datadog, aws-api, aws-docs, github, atlassian"]
+        CI["🏗️ Cloud Infra<br/>Auditoría AWS: costos, seguridad, inventario<br/>MCPs: aws-api, aws-docs, atlassian"]
+    end
+
+    subgraph analytics ["Analítica"]
+        CL["📊 Clarity Behavior<br/>UX en producción<br/>MCP: clarity"]
+    end
+
+    subgraph fuentes ["Fuentes de información"]
+        J[Jira / Confluence]
+        GD[Google Drive]
+        C[Código repo]
+        GH[Repos GitHub]
+        T[Tests]
+        DD[Datadog]
+        AWS[AWS]
+        FIG[Figma]
+        CLY[Clarity]
+        AWSD[AWS Docs]
+    end
+
+    KS --> J
+    KS --> GD
+    KS --> AWSD
+    H --> C
+    PA --> GH
+    P --> J
+    D --> C
+    G --> T
+    AD --> FIG
+    SRE --> DD
+    SRE --> AWS
+    SRE --> GH
+    SRE --> J
+    SRE --> AWSD
+    CI --> AWS
+    CI --> AWSD
+    CL --> CLY

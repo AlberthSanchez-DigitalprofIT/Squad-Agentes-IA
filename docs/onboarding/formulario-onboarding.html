@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Onboarding de Plataforma — Squad Agentes IA</title>
+  <style>
+    :root { --primary: #2563eb; --primary-hover: #1d4ed8; --success: #16a34a; --bg: #f8fafc; --card: #ffffff; --border: #e2e8f0; --text: #1e293b; --muted: #64748b; --radius: 8px; --warning: #f59e0b; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; padding: 2rem 1rem; }
+    .container { max-width: 860px; margin: 0 auto; }
+    h1 { font-size: 1.75rem; margin-bottom: 0.5rem; color: var(--primary); }
+    .subtitle { color: var(--muted); margin-bottom: 2rem; }
+    .progress { display: flex; gap: 4px; margin-bottom: 2rem; }
+    .progress-step { flex: 1; height: 6px; background: var(--border); border-radius: 3px; transition: background 0.3s; }
+    .progress-step.active { background: var(--primary); }
+    .progress-step.done { background: var(--success); }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 2rem; margin-bottom: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    .card h2 { font-size: 1.25rem; margin-bottom: 0.25rem; }
+    .card .step-desc { color: var(--muted); font-size: 0.875rem; margin-bottom: 1.5rem; }
+    .form-group { margin-bottom: 1.25rem; }
+    .form-group label { display: block; font-weight: 500; margin-bottom: 0.375rem; font-size: 0.875rem; }
+    .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.625rem 0.75rem; border: 1px solid var(--border); border-radius: var(--radius); font-size: 0.9rem; transition: border-color 0.2s; }
+    .form-group input:focus, .form-group select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+    .form-group .hint { font-size: 0.75rem; color: var(--muted); margin-top: 0.25rem; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+    .btn-row { display: flex; justify-content: space-between; margin-top: 1.5rem; }
+    .btn { padding: 0.625rem 1.5rem; border: none; border-radius: var(--radius); font-size: 0.9rem; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-primary:hover { background: var(--primary-hover); }
+    .btn-secondary { background: transparent; color: var(--muted); border: 1px solid var(--border); }
+    .btn-secondary:hover { background: var(--bg); }
+    .btn-success { background: var(--success); color: white; }
+    .btn-success:hover { background: #15803d; }
+    .btn-sm { padding: 0.375rem 0.75rem; font-size: 0.8rem; }
+    .hidden { display: none; }
+    .tag { display: inline-flex; align-items: center; gap: 0.25rem; background: #e0e7ff; color: var(--primary); padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.8rem; margin: 0.25rem; }
+    .tag button { background: none; border: none; color: var(--primary); cursor: pointer; font-size: 1rem; line-height: 1; }
+    .result-box { background: #f1f5f9; border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.8rem; max-height: 400px; overflow-y: auto; white-space: pre-wrap; word-break: break-all; }
+    .checklist { list-style: none; padding: 0; }
+    .checklist li { padding: 0.5rem 0; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 0.5rem; }
+    .checklist li:last-child { border-bottom: none; }
+    .check-icon { color: var(--success); font-weight: bold; }
+    .platform-card { background: #f8fafc; border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; margin-bottom: 1rem; }
+    .platform-card h3 { font-size: 1rem; margin-bottom: 0.75rem; color: var(--primary); }
+    .apps-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 0.5rem; margin-top: 0.5rem; }
+    .app-checkbox { display: flex; align-items: center; gap: 0.5rem; padding: 0.375rem 0.5rem; background: white; border: 1px solid var(--border); border-radius: 4px; font-size: 0.8rem; cursor: pointer; }
+    .app-checkbox:hover { border-color: var(--primary); }
+    .app-checkbox input { margin: 0; }
+    .info-box { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: var(--radius); padding: 0.75rem 1rem; margin-bottom: 1rem; font-size: 0.85rem; color: #1e40af; }
+    @media (max-width: 640px) { .form-row, .form-row-3 { grid-template-columns: 1fr; } .btn-row { flex-direction: column; gap: 0.75rem; } .apps-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Onboarding de Plataforma</h1>
+    <p class="subtitle">Registra plataformas de un Squad para el enjambre de agentes IA</p>
+    <div class="progress" id="progress"></div>
+
+    <!-- Step 1: Squad -->
+    <div class="card step" id="step-1">
+      <h2>Paso 1: Squad y Equipo</h2>
+      <p class="step-desc">Selecciona el squad. Los roles se auto-completan con la informaci&oacute;n conocida.</p>
+      <div class="form-group">
+        <label for="squad">Squad</label>
+        <select id="squad" onchange="onSquadChange()">
+          <option value="">— Seleccionar —</option>
+          <option value="ciencuadras-mia-ecosistema-home">Ciencuadras - MIA - Ecosistema Home</option>
+          <option value="mercadeo-y-rc">Mercadeo y RC</option>
+          <option value="proyectiva-el-libertador">Proyectiva &amp; El Libertador (Empresa)</option>
+          <option value="facilities-bolivar">Facilities Bol&iacute;var</option>
+          <option value="banca-servicios">Banca Servicios</option>
+          <option value="jelpit-conjuntos-jelpit-pagos">Jelpit Conjuntos - Jelpit Pagos</option>
+          <option value="otro">Otro...</option>
+        </select>
+      </div>
+      <div class="form-group hidden" id="squad-custom-group">
+        <label for="squad-custom">Nombre del Squad</label>
+        <input type="text" id="squad-custom" placeholder="Nombre del squad">
+      </div>
+      <div class="form-row-3">
+        <div class="form-group">
+          <label for="po">PO del Squad</label>
+          <input type="text" id="po" placeholder="Nombre">
+        </div>
+        <div class="form-group">
+          <label for="bo">BO del Squad</label>
+          <input type="text" id="bo" placeholder="Nombre">
+        </div>
+        <div class="form-group">
+          <label for="lt">LT del Squad</label>
+          <input type="text" id="lt" placeholder="Nombre">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="po-transversal">PO Transversal</label>
+          <input type="text" id="po-transversal" value="Carlos Pati&ntilde;o">
+        </div>
+        <div class="form-group">
+          <label for="ltt">L&iacute;der T&eacute;cnico Transversal (LTT)</label>
+          <input type="text" id="ltt" value="Ricardo Gomez">
+        </div>
+      </div>
+      <div class="btn-row">
+        <span></span>
+        <button class="btn btn-primary" onclick="nextStep(1)">Siguiente &rarr;</button>
+      </div>
+    </div>
+
+    <!-- Step 2: Plataformas del Squad -->
+    <div class="card step hidden" id="step-2">
+      <h2>Paso 2: Plataformas del Squad</h2>
+      <p class="step-desc">Selecciona las aplicaciones/plataformas a onboardear. Un squad puede tener m&uacute;ltiples plataformas.</p>
+      <div class="info-box" id="apps-info">Selecciona un squad en el paso anterior para ver sus aplicaciones conocidas.</div>
+      <div id="apps-container"></div>
+      <div class="form-group" style="margin-top:1rem;">
+        <label>Agregar plataforma adicional (no listada)</label>
+        <div style="display:flex;gap:0.5rem;">
+          <input type="text" id="custom-app-input" placeholder="Nombre de la plataforma">
+          <button class="btn btn-sm btn-primary" onclick="addCustomApp()">+ Agregar</button>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-secondary" onclick="prevStep(2)">&larr; Anterior</button>
+        <button class="btn btn-primary" onclick="nextStep(2)">Siguiente &rarr;</button>
+      </div>
+    </div>
+
+    <!-- Step 3: Configuración por plataforma -->
+    <div class="card step hidden" id="step-3">
+      <h2>Paso 3: Configuraci&oacute;n por Plataforma</h2>
+      <p class="step-desc">Completa los recursos conectados de cada plataforma seleccionada.</p>
+      <div id="platforms-config"></div>
+      <div class="btn-row">
+        <button class="btn btn-secondary" onclick="prevStep(3)">&larr; Anterior</button>
+        <button class="btn btn-primary" onclick="nextStep(3)">Siguiente &rarr;</button>
+      </div>
+    </div>
+
+    <!-- Step 4: Observabilidad -->
+    <div class="card step hidden" id="step-4">
+      <h2>Paso 4: Observabilidad (nivel Squad)</h2>
+      <p class="step-desc">Dashboards y monitores compartidos por el squad</p>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="dd-dashboard-id">Dashboard Datadog ID</label>
+          <input type="text" id="dd-dashboard-id" placeholder="Ej: wei-k9v-vkx">
+        </div>
+        <div class="form-group">
+          <label for="dd-dashboard-url">URL del Dashboard</label>
+          <input type="url" id="dd-dashboard-url" placeholder="https://app.datadoghq.com/dashboard/...">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="clarity-id">Microsoft Clarity Project ID (opcional)</label>
+        <input type="text" id="clarity-id" placeholder="Dejar vac&iacute;o si no aplica">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="jira-incident-id">Tablero Incidentes (ID)</label>
+          <input type="text" id="jira-incident-id" placeholder="Ej: 35754">
+        </div>
+        <div class="form-group">
+          <label for="jira-security-id">Tablero Seguridad (ID)</label>
+          <input type="text" id="jira-security-id" placeholder="Ej: 32394">
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-secondary" onclick="prevStep(4)">&larr; Anterior</button>
+        <button class="btn btn-success" onclick="generateResult()">Generar platforms.json &#10003;</button>
+      </div>
+    </div>
+
+    <!-- Result -->
+    <div class="card step hidden" id="step-result">
+      <h2>&#10003; Onboarding Completado</h2>
+      <p class="step-desc">Copia este JSON en <code>Workspace/{squad}/config/platforms.json</code></p>
+      <ul class="checklist">
+        <li><span class="check-icon">&#10003;</span> Squad y equipo definidos</li>
+        <li><span class="check-icon">&#10003;</span> Plataformas seleccionadas y configuradas</li>
+        <li><span class="check-icon">&#10003;</span> Recursos conectados (Jira, Datadog, Clarity, GitHub)</li>
+        <li><span class="check-icon">&#10003;</span> JSON listo para importar</li>
+      </ul>
+      <div class="result-box" id="result-json"></div>
+      <div class="btn-row" style="margin-top:1rem;">
+        <button class="btn btn-secondary" onclick="prevStep(5)">&larr; Editar</button>
+        <div style="display:flex;gap:0.5rem;">
+          <button class="btn btn-primary" onclick="copyToClipboard()">Copiar JSON</button>
+          <button class="btn btn-success" onclick="downloadJson()">Descargar .json</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    var TOTAL_STEPS = 4;
+    var currentStep = 1;
+    var selectedApps = [];
+
+    var SQUADS_DATA = {
+      'ciencuadras-mia-ecosistema-home': {
+        name: 'Ciencuadras - MIA - Ecosistema Home',
+        po: 'Camilo Solano', bo: 'Mauricio Torres', lt: 'Hernan Castano',
+        apps: ['Portal Ciencuadras','Gestor Ciencuadras','Componentes Ecosistema Home','Bitacora de Avaluos','Motor de Avaluos','Cuadra Precio','MIA (Voz + Whatsapp)','Prevalidacion Juridica','WS Publicacion','Simulador de Credito y Gastos Notariales'],
+        autogestion: ['Webapp Avaluos','Automatizacion Facturacion','Portal Brokers','MIA Agente Voz']
+      },
+      'mercadeo-y-rc': {
+        name: 'Mercadeo y RC',
+        po: 'Vacante', bo: 'Silvia Diaz', lt: 'Diego Munoz',
+        apps: ['Notificador Transversal','Salesforce','Portal Ley 2300'],
+        autogestion: ['CRM Seguros Bolivar (GH Corredores y Agencias)','Alejandria','Donaciones','Agencia del Futuro','Gestor de Leads (Mercadeo)','Centralizador de Leads (Mercadeo)','Motor de asignacion (Mercadeo)']
+      },
+      'proyectiva-el-libertador': {
+        name: 'Proyectiva & El Libertador (Empresa)',
+        po: 'Lina Sanchez', bo: 'Diana Maldonado', lt: 'Andres Tao',
+        apps: ['Vista del Analista','Tablero de gestion comercial','Boton de Pago','Huella','Modulo Juridico','Victoria','Portal El Libertador','Portal Proyectiva','Distribucion Cartera'],
+        autogestion: ['CRM Proyectiva (Por Producto)','Landing Cotizaciones','Portal Inmobiliarias','Portal Ejecutivos Comerciales','Ventanas cambios de inmuebles','Tableros Gestion Operacion','Agente Voz']
+      },
+      'facilities-bolivar': {
+        name: 'Facilities Bolivar',
+        po: 'Jesse Jones', bo: 'Andres Sanchez', lt: 'Juan Camilo Lopez',
+        apps: ['Facil - Pro Web','Facil - Pro App','Gestion en Linea','Portal Facilities'],
+        autogestion: ['Webapp Radicacion OTS','Modelo Automacion Asignacion','Salva tu Video','Webapp APGs','TOBIAS Whatsapp','TOBIAS Voz']
+      },
+      'banca-servicios': {
+        name: 'Banca Servicios',
+        po: 'Jesse Jones', bo: 'Norma P. Moreno', lt: 'Juan Camilo Lopez',
+        apps: ['Autogestion TC Davivienda','Admin TC Davivienda','Data Jelpit','Serviciosbolivar.com','Portal TC Davibank','Marketplace venta paquetes','Marca Blanca Autogestion'],
+        autogestion: ['CRM CENTRA','Modulo Gestion PQRS','Migracion Base de Datos Mongo','Automatizacion Facturacion','Automatizacion Logos negocios','Automatizacion Cargue Ventas','Ingesta Informacion Logo','Agente Voz']
+      },
+      'jelpit-conjuntos-jelpit-pagos': {
+        name: 'Jelpit Conjuntos - Jelpit Pagos',
+        po: 'Sonia Mora', bo: 'Yohana Sanchez', lt: 'Manuel Verjan',
+        apps: ['Jelpit Conjuntos','Herramientas Jelpit Conjuntos','Recaudador Davivienda'],
+        autogestion: ['Web App Vinculacion','LIA Agente Whatsapp','Modelo de Asignacion y Reasignacion','Webapp','LIA Agente Voz']
+      }
+    };
+
+    function initProgress() {
+      var bar = document.getElementById('progress');
+      bar.innerHTML = '';
+      for (var i = 1; i <= TOTAL_STEPS; i++) {
+        var el = document.createElement('div');
+        el.className = 'progress-step';
+        el.id = 'prog-' + i;
+        bar.appendChild(el);
+      }
+      updateProgress();
+    }
+
+    function updateProgress() {
+      for (var i = 1; i <= TOTAL_STEPS; i++) {
+        var el = document.getElementById('prog-' + i);
+        el.className = 'progress-step';
+        if (i < currentStep) el.classList.add('done');
+        else if (i === currentStep) el.classList.add('active');
+      }
+    }
+
+    function showStep(n) {
+      document.querySelectorAll('.step').forEach(function(s) { s.classList.add('hidden'); });
+      var target = n > TOTAL_STEPS ? 'step-result' : 'step-' + n;
+      document.getElementById(target).classList.remove('hidden');
+      currentStep = n;
+      updateProgress();
+      if (n === 3) renderPlatformConfigs();
+    }
+
+    function nextStep(from) { showStep(from + 1); }
+    function prevStep(from) { showStep(from - 1); }
+
+    function onSquadChange() {
+      var sel = document.getElementById('squad').value;
+      document.getElementById('squad-custom-group').classList.toggle('hidden', sel !== 'otro');
+      if (SQUADS_DATA[sel]) {
+        var d = SQUADS_DATA[sel];
+        document.getElementById('po').value = d.po;
+        document.getElementById('bo').value = d.bo;
+        document.getElementById('lt').value = d.lt;
+        renderApps(d);
+      } else {
+        document.getElementById('po').value = '';
+        document.getElementById('bo').value = '';
+        document.getElementById('lt').value = '';
+        document.getElementById('apps-container').innerHTML = '';
+        document.getElementById('apps-info').classList.remove('hidden');
+      }
+    }
+
+    function renderApps(data) {
+      document.getElementById('apps-info').classList.add('hidden');
+      selectedApps = [];
+      var container = document.getElementById('apps-container');
+      var html = '<h3 style="font-size:0.9rem;margin-bottom:0.5rem;">Aplicaciones del Squad</h3>';
+      html += '<div class="apps-grid">';
+      data.apps.forEach(function(app) {
+        html += '<label class="app-checkbox"><input type="checkbox" value="' + app + '" onchange="toggleApp(this)"> ' + app + '</label>';
+      });
+      html += '</div>';
+      if (data.autogestion && data.autogestion.length > 0) {
+        html += '<h3 style="font-size:0.9rem;margin:1rem 0 0.5rem;">Soluciones Autogestion</h3>';
+        html += '<div class="apps-grid">';
+        data.autogestion.forEach(function(app) {
+          html += '<label class="app-checkbox"><input type="checkbox" value="' + app + '" onchange="toggleApp(this)"> ' + app + '</label>';
+        });
+        html += '</div>';
+      }
+      container.innerHTML = html;
+    }
+
+    function toggleApp(checkbox) {
+      var app = checkbox.value;
+      if (checkbox.checked) {
+        if (selectedApps.indexOf(app) === -1) selectedApps.push(app);
+      } else {
+        selectedApps = selectedApps.filter(function(a) { return a !== app; });
+      }
+    }
+
+    function addCustomApp() {
+      var input = document.getElementById('custom-app-input');
+      var name = input.value.trim();
+      if (!name) return;
+      selectedApps.push(name);
+      input.value = '';
+      var container = document.getElementById('apps-container');
+      var tag = document.createElement('span');
+      tag.className = 'tag';
+      tag.innerHTML = name + ' <button onclick="removeCustomApp(this)">&times;</button>';
+      tag.dataset.app = name;
+      container.appendChild(tag);
+    }
+
+    function removeCustomApp(btn) {
+      var name = btn.parentElement.dataset.app;
+      selectedApps = selectedApps.filter(function(a) { return a !== name; });
+      btn.parentElement.remove();
+    }
+
+    function slugify(text) {
+      return text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    }
+
+    function val(id) { var el = document.getElementById(id); return el ? el.value.trim() : ''; }
+
+    function renderPlatformConfigs() {
+      var container = document.getElementById('platforms-config');
+      if (selectedApps.length === 0) {
+        container.innerHTML = '<div class="info-box">No seleccionaste plataformas. Vuelve al paso anterior.</div>';
+        return;
+      }
+      var html = '';
+      selectedApps.forEach(function(app, idx) {
+        html += '<div class="platform-card">';
+        html += '<h3>' + (idx + 1) + '. ' + app + '</h3>';
+        html += '<div class="form-row">';
+        html += '<div class="form-group"><label>URL Produccion</label><input type="url" id="p-url-' + idx + '" placeholder="https://..."></div>';
+        html += '<div class="form-group"><label>URL Pre-produccion</label><input type="url" id="p-pre-' + idx + '" placeholder="https://pre..."></div>';
+        html += '</div>';
+        html += '<div class="form-row">';
+        html += '<div class="form-group"><label>Jira Project Key</label><input type="text" id="p-jira-' + idx + '" placeholder="Ej: GD768"></div>';
+        html += '<div class="form-group"><label>GitHub Repos (separados por coma)</label><input type="text" id="p-repos-' + idx + '" placeholder="repo-1, repo-2"></div>';
+        html += '</div>';
+        html += '</div>';
+      });
+      container.innerHTML = html;
+    }
+
+    function generateResult() {
+      var squadId = val('squad');
+      var squadName = squadId === 'otro' ? val('squad-custom') : (SQUADS_DATA[squadId] ? SQUADS_DATA[squadId].name : squadId);
+      var clarityId = val('clarity-id');
+
+      var platforms = selectedApps.map(function(app, idx) {
+        var repos = val('p-repos-' + idx).split(',').map(function(r) { return r.trim(); }).filter(Boolean);
+        var jiraKey = val('p-jira-' + idx);
+        return {
+          id: slugify(app),
+          name: app,
+          urls: {
+            app: val('p-url-' + idx),
+            pre: val('p-pre-' + idx),
+            staging: val('p-pre-' + idx),
+            docs: ''
+          },
+          jira: {
+            cloudId: '',
+            projectKey: jiraKey,
+            projectUrl: '',
+            incidentBoardId: val('jira-incident-id'),
+            securityIncidentBoardId: val('jira-security-id')
+          },
+          datadog: {
+            site: 'us1',
+            dashboardId: val('dd-dashboard-id'),
+            dashboardUrl: val('dd-dashboard-url'),
+            dashboardIds: val('dd-dashboard-id') ? [val('dd-dashboard-id')] : [],
+            serviceToRepos: {}
+          },
+          clarity: clarityId ? {
+            projectId: clarityId,
+            dashboardUrl: 'https://clarity.microsoft.com/projects/view/' + clarityId + '/dashboard',
+            tokenEnvVar: 'CLARITY_API_TOKEN'
+          } : null,
+          github: {
+            org: '',
+            repos: repos
+          }
+        };
+      });
+
+      var result = {
+        tribu: 'Tribu Servicios Bolivar - Facilities - Proyectiva - El Libertador - Mercadeo',
+        squad: {
+          name: squadName,
+          po: val('po'),
+          bo: val('bo'),
+          lt: val('lt'),
+          poTransversal: val('po-transversal'),
+          ltt: val('ltt')
+        },
+        platforms: platforms,
+        defaultPlatformId: platforms.length > 0 ? platforms[0].id : '',
+        onboardedAt: new Date().toISOString(),
+        onboardedBy: 'formulario-onboarding v2.0'
+      };
+
+      document.getElementById('result-json').textContent = JSON.stringify(result, null, 2);
+      showStep(TOTAL_STEPS + 1);
+    }
+
+    function copyToClipboard() {
+      var text = document.getElementById('result-json').textContent;
+      navigator.clipboard.writeText(text).then(function() { alert('JSON copiado al portapapeles'); });
+    }
+
+    function downloadJson() {
+      var text = document.getElementById('result-json').textContent;
+      var data = JSON.parse(text);
+      var name = data.squad.name ? slugify(data.squad.name) : 'squad';
+      var blob = new Blob([text], { type: 'application/json' });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = 'platforms-' + name + '.json';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    initProgress();
+  </script>
+</body>
+</html>

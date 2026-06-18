@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Harness Health Dashboard</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#1a1a2e;color:#e0e0e0;font-family:system-ui,-apple-system,sans-serif;padding:2rem;line-height:1.6}
+h1{text-align:center;margin-bottom:2rem;font-size:2rem;color:#fff}
+h2{margin-bottom:1rem;color:#a0c4ff;font-size:1.3rem}
+section{margin-bottom:2rem}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin-bottom:2rem}
+.card{background:#16213e;border-radius:12px;padding:1.5rem;text-align:center}
+.card .big{display:block;font-size:2.5rem;font-weight:700;color:#4fc3f7}
+.card .label{display:block;margin-top:.5rem;font-size:.9rem;color:#90a4ae}
+table{width:100%;border-collapse:collapse;background:#16213e;border-radius:8px;overflow:hidden}
+th,td{padding:.75rem 1rem;text-align:left;border-bottom:1px solid #263238}
+th{background:#0f3460;color:#a0c4ff}
+ul{list-style:disc inside;padding-left:1rem}
+li{margin-bottom:.4rem}
+code{background:#263238;padding:2px 6px;border-radius:4px;font-size:.9em}
+footer{text-align:center;margin-top:3rem;color:#607d8b;font-size:.85rem}
+.empty-state{text-align:center;padding:4rem 2rem;background:#16213e;border-radius:12px}
+.empty-state h2{color:#ffab40;margin-bottom:1rem}
+</style>
+</head>
+<body>
+<h1>Harness Health Dashboard</h1>
+<section class="cards">
+    <div class="card"><span class="big">15</span><span class="label">Eventos totales</span></div>
+    <div class="card"><span class="big">93.3%</span><span class="label">Tasa de éxito</span></div>
+    <div class="card"><span class="big">1</span><span class="label">Errores</span></div>
+    <div class="card"><span class="big">0</span><span class="label">Bloqueados por hooks</span></div>
+    <div class="card"><span class="big">0</span><span class="label">Propuestas pendientes</span></div>
+  </section><section>
+    <h2>Actividad por agente</h2>
+    <table><thead><tr><th>Agente</th><th>Total</th><th>Éxito</th><th>Tasa</th></tr></thead>
+    <tbody><tr><td>Cloud Infra</td><td>8</td><td>8</td><td>100.0%</td></tr>
+<tr><td>Knowledge Scout</td><td>4</td><td>4</td><td>100.0%</td></tr>
+<tr><td>Platform Analyst</td><td>3</td><td>2</td><td>66.7%</td></tr></tbody></table>
+  </section><section>
+    <h2>Top 5 tools más usadas</h2>
+    <ul><li><strong>call_aws</strong>: 8</li>
+<li><strong>getJiraIssue</strong>: 3</li>
+<li><strong>search_code</strong>: 2</li>
+<li><strong>searchJiraIssuesUsingJql</strong>: 1</li>
+<li><strong>get_pull_request</strong>: 1</li></ul>
+  </section><section>
+    <h2>Enforcement — Hooks que bloquearon</h2>
+    <table><thead><tr><th>Agente</th><th>Tool</th><th>Acción</th><th>Timestamp</th></tr></thead>
+    <tbody><tr><td colspan="4">Ningún evento bloqueado</td></tr></tbody></table>
+  </section><section>
+    <h2>Propuestas de mejora pendientes</h2>
+    <ul><li>No hay propuestas pendientes</li></ul>
+    <p><em>0 propuestas aplicadas.</em></p>
+  </section>
+<footer>Generado: 2026-06-04 04:56:52 UTC</footer>
+</body>
+</html>

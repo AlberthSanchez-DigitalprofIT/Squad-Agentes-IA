@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sesión de Seguimiento — Venta Dirigida SOAT</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    @font-face {
+      font-family: 'BrandBookMETC';
+      src: local('BrandBookMETC'), local('BrandbookMETC'), local('Brandbook METC');
+      font-weight: normal;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: 'BrandBookMETC';
+      src: local('BrandBookMETC Bold'), local('BrandbookMETC-Bold');
+      font-weight: bold;
+      font-style: normal;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; }
+    body {
+      font-family: 'BrandBookMETC', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #ffffff;
+      color: #2d2d2d;
+      overflow-x: hidden;
+    }
+    :root {
+      --primary: #E8612D;
+      --primary-light: #F07B4A;
+      --accent-blue: #3B82F6;
+      --accent-green: #10B981;
+      --accent-yellow: #F59E0B;
+      --accent-purple: #8B5CF6;
+      --text: #2d2d2d;
+      --text-light: #6b7280;
+      --bg: #ffffff;
+      --bg-light: #f8f9fc;
+      --border: #e5e7eb;
+      --radius: 12px;
+      --shadow: 0 4px 16px rgba(0,0,0,0.08);
+    }
+    /* SLIDE SYSTEM */
+    .presentation { width: 100vw; height: 100vh; position: relative; }
+    .slide {
+      width: 100%; height: 100%;
+      display: none; flex-direction: column;
+      position: absolute; top: 0; left: 0;
+      animation: fadeIn 0.4s ease;
+    }
+    .slide.active { display: flex; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    /* SLIDE HEADER */
+    .slide-banner {
+      background: #E8612D;
+      padding: 36px 60px 28px;
+      color: #fff;
+      border-radius: 0 0 24px 24px;
+    }
+    .slide-banner__eyebrow {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      opacity: 0.85;
+      margin-bottom: 6px;
+    }
+    .slide-banner__title { font-size: 1.9rem; font-weight: 700; margin-bottom: 4px; }
+    .slide-banner__sub { font-size: 0.92rem; opacity: 0.9; }
+    /* SLIDE BODY */
+    .slide-body { flex: 1; padding: 36px 60px; overflow-y: auto; }
+    .slide-body::-webkit-scrollbar { width: 4px; }
+    .slide-body::-webkit-scrollbar-track { background: transparent; }
+    .slide-body::-webkit-scrollbar-thumb { background: #ddd; border-radius: 4px; }
+    /* TITLE SLIDE */
+    .slide--title {
+      justify-content: center; align-items: center; text-align: center;
+      padding: 60px; background: var(--bg);
+    }
+    .title-logo { font-size: 1.6rem; font-weight: 700; color: var(--primary); margin-bottom: 20px; }
+    .title-main { font-size: 2.8rem; font-weight: 700; line-height: 1.15; color: var(--text); margin-bottom: 16px; }
+    .title-sub { font-size: 1rem; color: var(--text-light); max-width: 560px; line-height: 1.6; }
+    .title-date {
+      margin-top: 32px; font-size: 0.82rem; color: var(--primary);
+      padding: 8px 22px; border: 1.5px solid var(--primary);
+      border-radius: 50px; display: inline-block; font-weight: 600;
+    }
+    .title-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      margin-top: 16px; font-size: 0.78rem; color: var(--text-light);
+      padding: 6px 18px; border: 1px solid var(--border);
+      border-radius: 50px;
+    }
+    /* DEPLOY CARD - Slide 2 */
+    .deploy-header {
+      display: flex; align-items: center; gap: 16px;
+      background: linear-gradient(135deg, #E8612D 0%, #c94e22 100%);
+      border-radius: var(--radius); padding: 24px 28px;
+      color: #fff; margin-bottom: 28px;
+    }
+    .deploy-header__icon { font-size: 2.2rem; }
+    .deploy-header__label { font-size: 0.72rem; letter-spacing: 1px; text-transform: uppercase; opacity: 0.8; margin-bottom: 4px; }
+    .deploy-header__title { font-size: 1.4rem; font-weight: 700; }
+    .deploy-header__meta { font-size: 0.85rem; opacity: 0.85; margin-top: 2px; }
+    /* CHANGE CARDS */
+    .changes-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .change-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px 22px;
+      border-top: 4px solid transparent;
+      box-shadow: var(--shadow);
+      display: flex; flex-direction: column; gap: 12px;
+    }
+    .change-card--copy { border-top-color: #3B82F6; }
+    .change-card--vigencia { border-top-color: #10B981; }
+    .change-card--notif { border-top-color: #8B5CF6; }
+    .change-card__num {
+      width: 36px; height: 36px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; font-weight: 700; color: #fff;
+      flex-shrink: 0;
+    }
+    .num--blue { background: #3B82F6; }
+    .num--green { background: #10B981; }
+    .num--purple { background: #8B5CF6; }
+    .change-card__icon { font-size: 1.8rem; }
+    .change-card__title { font-size: 0.95rem; font-weight: 700; color: var(--text); line-height: 1.3; }
+    .change-card__desc { font-size: 0.82rem; color: var(--text-light); line-height: 1.6; flex: 1; }
+    .change-card__tag {
+      display: inline-block; padding: 4px 12px; border-radius: 50px;
+      font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+      align-self: flex-start;
+    }
+    .tag--ux { background: rgba(59,130,246,0.1); color: #3B82F6; }
+    .tag--tech { background: rgba(16,185,129,0.1); color: #10B981; }
+    .tag--integ { background: rgba(139,92,246,0.1); color: #8B5CF6; }
+    /* DETAIL SLIDE */
+    .detail-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      height: 100%;
+    }
+    .detail-panel {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+    .detail-panel__header {
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 18px; padding-bottom: 14px;
+      border-bottom: 2px solid var(--border);
+    }
+    .detail-panel__icon { font-size: 1.6rem; }
+    .detail-panel__title { font-size: 1rem; font-weight: 700; color: var(--text); }
+    .detail-panel__sub { font-size: 0.78rem; color: var(--text-light); margin-top: 2px; }
+    .detail-item {
+      display: flex; align-items: flex-start; gap: 12px;
+      margin-bottom: 14px; padding-bottom: 14px;
+      border-bottom: 1px solid #f3f4f6;
+    }
+    .detail-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+    .detail-item__dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      margin-top: 6px; flex-shrink: 0;
+    }
+    .dot--blue { background: #3B82F6; }
+    .dot--green { background: #10B981; }
+    .dot--orange { background: #E8612D; }
+    .detail-item__label { font-size: 0.85rem; font-weight: 600; color: var(--text); margin-bottom: 2px; }
+    .detail-item__text { font-size: 0.8rem; color: var(--text-light); line-height: 1.5; }
+    /* HIGHLIGHT BOX */
+    .highlight-box {
+      background: linear-gradient(135deg, #fef7f4 0%, #fff5f0 100%);
+      border: 1.5px solid rgba(232,97,45,0.25);
+      border-radius: var(--radius);
+      padding: 18px 22px;
+      margin-bottom: 20px;
+    }
+    .highlight-box__label {
+      font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 1px; color: var(--primary); margin-bottom: 6px;
+    }
+    .highlight-box__text { font-size: 0.88rem; color: var(--text); line-height: 1.5; font-weight: 500; }
+    /* STATUS BADGE */
+    .status-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 5px 14px; border-radius: 50px;
+      font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+    }
+    .status--done { background: rgba(16,185,129,0.1); color: #059669; }
+    .status--marcha { background: rgba(245,158,11,0.1); color: #D97706; }
+    .status--pending { background: rgba(99,102,241,0.1); color: #4F46E5; }
+    .status-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+    /* TIMELINE */
+    .timeline { display: flex; flex-direction: column; gap: 0; }
+    .timeline-item {
+      display: flex; gap: 20px; position: relative;
+      padding-bottom: 24px;
+    }
+    .timeline-item:last-child { padding-bottom: 0; }
+    .timeline-item:last-child .timeline-line { display: none; }
+    .timeline-left { display: flex; flex-direction: column; align-items: center; width: 40px; flex-shrink: 0; }
+    .timeline-circle {
+      width: 40px; height: 40px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; font-weight: 700; color: #fff; flex-shrink: 0;
+    }
+    .circle--done { background: #10B981; }
+    .circle--active { background: #E8612D; }
+    .circle--next { background: #9CA3AF; }
+    .timeline-line { width: 2px; flex: 1; background: #e5e7eb; margin-top: 4px; }
+    .timeline-content { flex: 1; padding-top: 8px; }
+    .timeline-content__date { font-size: 0.72rem; color: var(--text-light); font-weight: 600; margin-bottom: 4px; }
+    .timeline-content__title { font-size: 0.92rem; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+    .timeline-content__desc { font-size: 0.8rem; color: var(--text-light); line-height: 1.5; }
+    /* NEXT STEPS */
+    .next-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .next-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      border-left: 4px solid var(--primary);
+      box-shadow: var(--shadow);
+    }
+    .next-card__label { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--primary); margin-bottom: 8px; }
+    .next-card__title { font-size: 0.9rem; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+    .next-card__desc { font-size: 0.8rem; color: var(--text-light); line-height: 1.5; }
+    /* NAVIGATION */
+    .nav-controls { position: fixed; bottom: 28px; right: 36px; display: flex; gap: 10px; z-index: 100; }
+    .nav-btn {
+      width: 44px; height: 44px; border-radius: 50%;
+      border: 1px solid var(--border); background: #fff; color: var(--text);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: all 0.3s; font-size: 1.1rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .nav-btn:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+    .slide-counter { position: fixed; bottom: 36px; left: 36px; font-size: 0.8rem; color: var(--text-light); z-index: 100; }
+    .progress-bar { position: fixed; top: 0; left: 0; height: 3px; background: #E8612D; transition: width 0.5s ease; z-index: 200; }
+    @media (max-width: 1024px) {
+      .slide-banner { padding: 28px 28px 22px; }
+      .slide-body { padding: 24px 28px; }
+      .changes-grid { grid-template-columns: 1fr; }
+      .detail-layout { grid-template-columns: 1fr; }
+      .next-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 768px) {
+      .slide-banner { padding: 20px 18px 18px; border-radius: 0 0 16px 16px; }
+      .slide-banner__title { font-size: 1.4rem; }
+      .slide-body { padding: 18px; }
+      .title-main { font-size: 1.8rem; }
+      .nav-controls { bottom: 16px; right: 16px; }
+      .slide-counter { bottom: 20px; left: 16px; }
+    }
+  </style>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+<div class="presentation" id="presentation">
+
+  <!-- ============================================================ -->
+  <!-- SLIDE 1: PORTADA -->
+  <!-- ============================================================ -->
+  <div class="slide slide--title active" data-slide="1">
+    <div class="title-logo">Proyectiva</div>
+    <h1 class="title-main">Sesión de Seguimiento<br>Venta Dirigida SOAT</h1>
+    <p class="title-sub">Avance del proyecto, último despliegue y hito del día:<br>inicio de la masificación con los vencimientos de hoy</p>
+    <div class="title-date">18 de junio de 2026</div>
+    <div class="title-badge">
+      <span>🚀</span>
+      <span>Masificación — Inicio de envíos al segmento real</span>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- SLIDE 2: FLUJO DEL CLIENTE -->
+  <!-- ============================================================ -->
+  <div class="slide" data-slide="2">
+    <div class="slide-banner">
+      <div class="slide-banner__eyebrow">Experiencia del cliente</div>
+      <h2 class="slide-banner__title">¿Cómo vive el flujo el cliente?</h2>
+      <p class="slide-banner__sub">De la notificación a la póliza en su correo</p>
+    </div>
+    <div class="slide-body" style="display:flex; align-items:center; justify-content:center; height:calc(100% - 120px);">
+
+      <div style="display:flex; align-items:flex-start; gap:0; width:100%; max-width:900px;">
+
+        <!-- Paso 1 -->
+        <div style="flex:1; display:flex; flex-direction:column; align-items:center; text-align:center; padding:0 12px; position:relative;">
+          <div style="width:56px; height:56px; border-radius:50%; background:#E8612D; color:#fff; display:flex; align-items:center; justify-content:center; font-size:1.4rem; margin-bottom:14px; box-shadow:0 4px 12px rgba(232,97,45,0.3);">📱</div>
+          <div style="font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:#E8612D; margin-bottom:6px;">Paso 1</div>
+          <div style="font-size:0.95rem; font-weight:700; color:var(--text); margin-bottom:8px;">Recibe la notificación</div>
+          <div style="font-size:0.8rem; color:var(--text-light); line-height:1.5;">El cliente recibe un SMS con un link personalizado informando que su SOAT vence hoy.</div>
+          <div style="position:absolute; right:-20px; top:18px; font-size:1.4rem; color:#e5e7eb;">→</div>
+        </div>
+
+        <!-- Paso 2 -->
+        <div style="flex:1; display:flex; flex-direction:column; align-items:center; text-align:center; padding:0 12px; position:relative;">
+          <div style="width:56px; height:56px; border-radius:50%; background:#3B82F6; color:#fff; display:flex; align-items:center; justify-content:center; font-size:1.4rem; margin-bottom:14px; box-shadow:0 4px 12px rgba(59,130,246,0.3);">🔗</div>
+          <div style="font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:#3B82F6; margin-bottom:6px;">Paso 2</div>
+          <div style="font-size:0.95rem; font-weight:700; color:var(--text); margin-bottom:8px;">Abre el link</div>
+          <div style="font-size:0.8rem; color:var(--text-light); line-height:1.5;">Accede a una landing personalizada con su información y la opción de comprar su nuevo SOAT.</div>
+          <div style="position:absolute; right:-20px; top:18px; font-size:1.4rem; color:#e5e7eb;">→</div>
+        </div>
+
+        <!-- Paso 3 -->
+        <div style="flex:1; display:flex; flex-direction:column; align-items:center; text-align:center; padding:0 12px; position:relative;">
+          <div style="width:56px; height:56px; border-radius:50%; background:#10B981; color:#fff; display:flex; align-items:center; justify-content:center; font-size:1.4rem; margin-bottom:14px; box-shadow:0 4px 12px rgba(16,185,129,0.3);">💳</div>
+          <div style="font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:#10B981; margin-bottom:6px;">Paso 3</div>
+          <div style="font-size:0.95rem; font-weight:700; color:var(--text); margin-bottom:8px;">Realiza la compra</div>
+          <div style="font-size:0.8rem; color:var(--text-light); line-height:1.5;">Completa el pago directamente en el flujo, sin necesidad de buscar la renovación por su cuenta.</div>
+          <div style="position:absolute; right:-20px; top:18px; font-size:1.4rem; color:#e5e7eb;">→</div>
+        </div>
+
+        <!-- Paso 4 -->
+        <div style="flex:1; display:flex; flex-direction:column; align-items:center; text-align:center; padding:0 12px;">
+          <div style="width:56px; height:56px; border-radius:50%; background:#8B5CF6; color:#fff; display:flex; align-items:center; justify-content:center; font-size:1.4rem; margin-bottom:14px; box-shadow:0 4px 12px rgba(139,92,246,0.3);">📧</div>
+          <div style="font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:#8B5CF6; margin-bottom:6px;">Paso 4</div>
+          <div style="font-size:0.95rem; font-weight:700; color:var(--text); margin-bottom:8px;">Recibe su póliza</div>
+          <div style="font-size:0.8rem; color:var(--text-light); line-height:1.5;">AXA envía el SMS con el link de descarga. Un correo de confirmación complementa la entrega de la póliza.</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- SLIDE 3: DEPLOY -->
+  <!-- ============================================================ -->
+  <div class="slide" data-slide="3">
+    <div class="slide-banner">
+      <div class="slide-banner__eyebrow">Despliegue · 17 de junio de 2026</div>
+      <h2 class="slide-banner__title">Último despliegue en producción</h2>
+      <p class="slide-banner__sub">3 ajustes clave para mejorar la experiencia del flujo de compra · Ambiente: Producción ✅</p>
+    </div>
+    <div class="slide-body">
+
+      <div class="deploy-header">
+        <div class="deploy-header__icon">📦</div>
+        <div>
+          <div class="deploy-header__label">Fecha de deploy</div>
+          <div class="deploy-header__title">Martes 17 de junio de 2026</div>
+          <div class="deploy-header__meta">Ambiente: Producción &nbsp;·&nbsp; Estado: <strong>Exitoso</strong> ✅</div>
+        </div>
+      </div>
+
+      <div class="changes-grid">
+
+        <div class="change-card change-card--copy">
+          <div class="change-card__title"><span class="change-card__num num--blue" style="display:inline-flex; width:24px; height:24px; font-size:0.75rem; margin-right:8px; vertical-align:middle;">1</span>Mensajes — Claridad en el flujo de compra</div>
+          <div class="change-card__desc">Se ajustaron los mensajes del flujo para que el cliente entienda con claridad cada paso del proceso de compra, reduciendo fricciones.</div>
+        </div>
+
+        <div class="change-card change-card--vigencia">
+          <div class="change-card__title"><span class="change-card__num num--green" style="display:inline-flex; width:24px; height:24px; font-size:0.75rem; margin-right:8px; vertical-align:middle;">2</span>Links de compra — Vigencia 90 días</div>
+          <div class="change-card__desc">Los links enviados para realizar la compra del SOAT ahora tienen vigencia de 90 días, evitando que expiren antes de que el cliente actúe.</div>
+        </div>
+
+        <div class="change-card change-card--notif">
+          <div class="change-card__title"><span class="change-card__num num--purple" style="display:inline-flex; width:24px; height:24px; font-size:0.75rem; margin-right:8px; vertical-align:middle;">3</span>Notificación de backup — Link de póliza</div>
+          <div class="change-card__desc">Se implementó una notificación vía correo electrónico que complementa el proceso de envío del SMS de AXA con el link de descarga de la póliza, garantizando que el cliente siempre reciba una confirmación de la emisión de la póliza y una forma de descargarla.</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ============================================================ -->
+  <!-- SLIDE 4: CAMPAÑA DEL DÍA -->
+  <!-- ============================================================ -->
+  <div class="slide" data-slide="4">
+    <div class="slide-banner">
+      <div class="slide-banner__eyebrow">Hoy · 18 de junio de 2026</div>
+      <h2 class="slide-banner__title">Campaña del día — ~1.490 clientes 🎯</h2>
+      <p class="slide-banner__sub">Envío a todos los clientes con SOAT que vence hoy · Marcha blanca continúa en operación</p>
+    </div>
+    <div class="slide-body">
+
+      <div class="detail-layout">
+
+        <!-- Panel izquierdo: qué pasa hoy -->
+        <div style="display:flex; flex-direction:column; gap:20px;">
+
+          <div class="detail-panel">
+            <div class="detail-panel__header">
+              <div class="detail-panel__icon">📤</div>
+              <div>
+                <div class="detail-panel__title">Envío de hoy — ~1.490 clientes</div>
+                <div class="detail-panel__sub">Clientes con vencimiento de SOAT: 18 de junio de 2026</div>
+              </div>
+            </div>
+            <div class="detail-item">
+              <div class="detail-item__dot dot--green"></div>
+              <div>
+                <div class="detail-item__label">¿A quiénes se envía?</div>
+                <div class="detail-item__text">Aproximadamente <strong>1.490 clientes</strong> cuyo SOAT vence el día de hoy, 18 de junio de 2026. Se envía el link para que puedan realizar la compra de su nuevo SOAT.</div>
+              </div>
+            </div>
+            <div class="detail-item">
+              <div class="detail-item__dot dot--blue"></div>
+              <div>
+                <div class="detail-item__label">¿Qué reciben?</div>
+                <div class="detail-item__text">Un link de compra con vigencia de 90 días para adquirir su SOAT directamente desde la notificación.</div>
+              </div>
+            </div>
+            <div class="detail-item">
+              <div class="detail-item__dot dot--orange"></div>
+              <div>
+                <div class="detail-item__label">Marcha blanca activa</div>
+                <div class="detail-item__text">Se prevé seguir con este esquema —enviando a los clientes con vencimiento del día— hasta el viernes 27 de junio.</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Panel derecho: qué se monitorea -->
+        <div style="display:flex; flex-direction:column; gap:20px;">
+
+          <div class="detail-panel">
+            <div class="detail-panel__header">
+              <div class="detail-panel__icon">📊</div>
+              <div>
+                <div class="detail-panel__title">Qué monitoreamos hoy</div>
+                <div class="detail-panel__sub">Métricas de seguimiento vía Salesforce</div>
+              </div>
+            </div>
+            <div class="detail-item">
+              <div class="detail-item__dot dot--blue"></div>
+              <div>
+                <div class="detail-item__label">Entrega y apertura</div>
+                <div class="detail-item__text">A través de Salesforce se monitorea la tasa de entrega de las notificaciones y cuántos clientes abren el link de compra recibido.</div>
+              </div>
+            </div>
+            <div class="detail-item">
+              <div class="detail-item__dot dot--blue"></div>
+              <div>
+                <div class="detail-item__label">Conversión — ¿Cuántos compraron?</div>
+                <div class="detail-item__text">De los clientes que recibieron el link, cuántos completaron la compra de su SOAT. Este es el indicador principal de éxito de la campaña.</div>
+              </div>
+            </div>
+            <div class="detail-item">
+              <div class="detail-item__dot dot--orange"></div>
+              <div>
+                <div class="detail-item__label">Fricciones en el flujo</div>
+                <div class="detail-item__text">Identificar posibles puntos de abandono o dificultad en el proceso de compra para optimizar antes de escalar el volumen de envíos.</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ============================================================ -->
+  <!-- SLIDE 5: TIMELINE Y PRÓXIMOS PASOS -->
+  <!-- ============================================================ -->
+  <div class="slide" data-slide="5">
+    <div class="slide-banner">
+      <div class="slide-banner__eyebrow">Hoja de ruta</div>
+      <h2 class="slide-banner__title">Próximos pasos</h2>
+      <p class="slide-banner__sub">Estado actual del proyecto y lo que viene</p>
+    </div>
+    <div class="slide-body">
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px;">
+
+        <!-- Timeline: hitos pasados -->
+        <div class="detail-panel">
+          <div class="detail-panel__header">
+            <div class="detail-panel__icon">✅</div>
+            <div>
+              <div class="detail-panel__title">Lo que ya hicimos</div>
+            </div>
+          </div>
+          <div class="timeline">
+            <div class="timeline-item">
+              <div class="timeline-left">
+                <div class="timeline-circle circle--done">✓</div>
+                <div class="timeline-line"></div>
+              </div>
+              <div class="timeline-content">
+                <div class="timeline-content__date">Fase inicial</div>
+                <div class="timeline-content__title">Construcción del flujo táctico</div>
+                <div class="timeline-content__desc">Motor de notificaciones y flujo de compra del SOAT.</div>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-left">
+                <div class="timeline-circle circle--done">✓</div>
+                <div class="timeline-line"></div>
+              </div>
+              <div class="timeline-content">
+                <div class="timeline-content__date">Días anteriores</div>
+                <div class="timeline-content__title">Pruebas con familia y amigos</div>
+                <div class="timeline-content__desc">Validación end-to-end del flujo completo en producción. Sin incidentes.</div>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-left">
+                <div class="timeline-circle circle--done">✓</div>
+                <div class="timeline-line"></div>
+              </div>
+              <div class="timeline-content">
+                <div class="timeline-content__date">17 de junio</div>
+                <div class="timeline-content__title">Deploy de ajustes finales</div>
+                <div class="timeline-content__desc">Mensajes mejorados, vigencia 90 días y notificación de backup por correo.</div>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-left">
+                <div class="timeline-circle circle--active">🔄</div>
+              </div>
+              <div class="timeline-content">
+                <div class="timeline-content__date">En curso — hasta el 27 de junio</div>
+                <div class="timeline-content__title">Marcha blanca</div>
+                <div class="timeline-content__desc">Envíos diarios al segmento con vencimiento del día. Monitoreo activo de resultados.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cards: lo que viene -->
+        <div style="display:flex; flex-direction:column; gap:14px;">
+          <div class="detail-panel__header" style="padding:0 0 12px 0; border-bottom:2px solid var(--border); margin-bottom:4px;">
+            <div class="detail-panel__icon">🚀</div>
+            <div><div class="detail-panel__title">Lo que viene</div></div>
+          </div>
+
+          <div class="next-card" style="border-left-color: #E8612D;">
+            <div class="next-card__label">Hoy — 18 de junio</div>
+            <div class="next-card__title">📤 Campaña a ~1.490 clientes</div>
+            <div class="next-card__desc">Envío a los clientes con SOAT que vence hoy. Monitoreo de entrega, apertura, conversión y posibles fricciones.</div>
+          </div>
+
+          <div class="next-card">
+            <div class="next-card__label">Hasta el viernes 27 de junio</div>
+            <div class="next-card__title">🔄 Continuación de marcha blanca</div>
+            <div class="next-card__desc">Envíos diarios al segmento con vencimiento del día, acumulando datos reales de conversión.</div>
+          </div>
+
+          <div class="next-card" style="border-left-color: #25D366;">
+            <div class="next-card__label" style="color:#25D366;">⚡ Alta prioridad — Próximo</div>
+            <div class="next-card__title">💬 Canal WhatsApp</div>
+            <div class="next-card__desc">Implementar WhatsApp como canal de atención al cliente.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- SLIDE 6: REPORTE DE PAGOS -->
+  <!-- ============================================================ -->
+  <div class="slide" data-slide="6">
+    <div class="slide-banner">
+      <div class="slide-banner__eyebrow">Resultados · Junio 2026</div>
+      <h2 class="slide-banner__title">Reporte de Pagos Realizados</h2>
+      <p class="slide-banner__sub">9 transacciones exitosas · Total recaudado: $6,156,600</p>
+    </div>
+    <div class="slide-body">
+      <style>
+        .payments-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+        .payments-table th {
+          background: #f8f9fc; color: var(--text); font-weight: 700;
+          padding: 12px 14px; text-align: left; border-bottom: 2px solid var(--border);
+          font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .payments-table td {
+          padding: 11px 14px; border-bottom: 1px solid #f3f4f6;
+          color: var(--text); vertical-align: middle;
+        }
+        .payments-table tr:hover td { background: #fef7f4; }
+        .payments-table .col-valor { font-weight: 600; color: #059669; text-align: right; }
+        .payments-table .col-fecha { color: var(--text-light); white-space: nowrap; }
+        .payments-table .col-poliza { font-family: 'Courier New', monospace; font-size: 0.8rem; }
+        .payments-total {
+          display: flex; align-items: center; justify-content: space-between;
+          background: linear-gradient(135deg, #fef7f4 0%, #fff5f0 100%);
+          border: 1.5px solid rgba(232,97,45,0.25);
+          border-radius: var(--radius); padding: 16px 22px; margin-top: 20px;
+        }
+        .payments-total__label { font-size: 0.82rem; font-weight: 700; color: var(--text); }
+        .payments-total__value { font-size: 1.3rem; font-weight: 800; color: #E8612D; }
+        .payments-total__count { font-size: 0.78rem; color: var(--text-light); margin-top: 2px; }
+      </style>
+
+      <table class="payments-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Cliente (Identificación)</th>
+            <th>Número de Póliza</th>
+            <th style="text-align:right;">Valor de la Póliza</th>
+            <th>Fecha de Transacción</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>CC 79791875</td>
+            <td class="col-poliza">4366890400</td>
+            <td class="col-valor">$ 343,300</td>
+            <td class="col-fecha">9 de junio de 2026</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>CC 1020744588</td>
+            <td class="col-poliza">4366895500</td>
+            <td class="col-valor">$ 946,600</td>
+            <td class="col-fecha">9 de junio de 2026</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>CC 1015449707</td>
+            <td class="col-poliza">4366944200</td>
+            <td class="col-valor">$ 677,400</td>
+            <td class="col-fecha">10 de junio de 2026</td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>CC 23561896</td>
+            <td class="col-poliza">4366958000</td>
+            <td class="col-valor">$ 544,700</td>
+            <td class="col-fecha">10 de junio de 2026</td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td>CC 52712721</td>
+            <td class="col-poliza">4367095500</td>
+            <td class="col-valor">$ 447,300</td>
+            <td class="col-fecha">10 de junio de 2026</td>
+          </tr>
+          <tr>
+            <td>6</td>
+            <td>CC 79683205</td>
+            <td class="col-poliza">4367637100</td>
+            <td class="col-valor">$ 792,800</td>
+            <td class="col-fecha">16 de junio de 2026</td>
+          </tr>
+          <tr>
+            <td>7</td>
+            <td>CC 52470696</td>
+            <td class="col-poliza">4367775700</td>
+            <td class="col-valor">$ 1,017,700</td>
+            <td class="col-fecha">17 de junio de 2026</td>
+          </tr>
+          <tr>
+            <td>8</td>
+            <td>CC 1127609912</td>
+            <td class="col-poliza">4367786600</td>
+            <td class="col-valor">$ 792,800</td>
+            <td class="col-fecha">17 de junio de 2026</td>
+          </tr>
+          <tr>
+            <td>9</td>
+            <td>CC 1024497967</td>
+            <td class="col-poliza">4367863000</td>
+            <td class="col-valor">$ 592,900</td>
+            <td class="col-fecha">17 de junio de 2026</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="payments-total">
+        <div>
+          <div class="payments-total__label">Total Recaudado</div>
+          <div class="payments-total__count">9 transacciones exitosas · HTTP 200 · Legalización confirmada</div>
+        </div>
+        <div class="payments-total__value">$ 6,156,600</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- SLIDE 7: CIERRE -->
+  <!-- ============================================================ -->
+  <div class="slide slide--title" data-slide="7">
+    <div class="title-logo">Proyectiva</div>
+    <h1 class="title-main" style="font-size: 2.4rem;">Venta Dirigida SOAT<br>en marcha 🚀</h1>
+    <p class="title-sub">9 pagos legalizados · $6.1M recaudados<br>Campaña enviada a ~1.490 clientes hoy · WhatsApp como próximo canal.</p>
+    <div class="title-date" style="margin-top: 32px;">¿Preguntas?</div>
+  </div>
+
+</div><!-- /presentation -->
+
+<!-- NAVIGATION -->
+<div class="nav-controls">
+  <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)" disabled>&#8592;</button>
+  <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">&#8594;</button>
+</div>
+<div class="slide-counter" id="slideCounter">1 / 7</div>
+
+<script>
+  let currentSlide = 1;
+  const totalSlides = 7;
+
+  function changeSlide(direction) {
+    const newSlide = currentSlide + direction;
+    if (newSlide < 1 || newSlide > totalSlides) return;
+    document.querySelector('.slide.active').classList.remove('active');
+    currentSlide = newSlide;
+    document.querySelector(`[data-slide="${currentSlide}"]`).classList.add('active');
+    updateControls();
+  }
+
+  function updateControls() {
+    document.getElementById('prevBtn').disabled = currentSlide === 1;
+    document.getElementById('nextBtn').disabled = currentSlide === totalSlides;
+    document.getElementById('slideCounter').textContent = `${currentSlide} / ${totalSlides}`;
+    document.getElementById('progressBar').style.width = `${(currentSlide / totalSlides) * 100}%`;
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); changeSlide(1); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); changeSlide(-1); }
+  });
+
+  let touchStartX = 0;
+  document.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; });
+  document.addEventListener('touchend', (e) => {
+    const diff = touchStartX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) changeSlide(diff > 0 ? 1 : -1);
+  });
+
+  updateControls();
+</script>
+</body>
+</html>

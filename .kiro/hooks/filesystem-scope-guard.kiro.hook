@@ -1,0 +1,34 @@
+---
+trigger: preToolUse
+tools:
+  - write
+  - shell
+description: Valida que cada agente solo escriba en los paths permitidos según su scope definido en su steering
+action: |
+  Antes de permitir escritura, verificar el scope del agente activo:
+  
+  SCOPES DE ESCRITURA POR AGENTE:
+  - Harness Engineer: scripts/, tools/scripts/, .kiro/hooks/, .kiro/steering/08-*, .kiro/steering/09-*, Workspace/telemetry/, Workspace/harness-improvements/
+  - Doc Updater: docs/, .kiro/steering/agent-doc-updater.md
+  - Test Engineer: tests/, test-results/, .playwright-mcp/
+  - Report Builder: docs/, Workspace/**/reports/
+  - PO-Agile: Workspace/plans/, docs/
+  - Angular Developer: src/, (paths del proyecto Angular activo)
+  - Cloud SRE: Workspace/**/reports/, docs/runbook/
+  - Cloud Infra: Workspace/**/reports/
+  - Knowledge Scout: Workspace/plans/
+  - Historian: (solo lectura, no escribe)
+  - Platform Analyst: (solo lectura, no escribe)
+  - Clarity Behavior: (solo lectura, no escribe)
+  - BI Strategist: (solo lectura, no escribe)
+  - Prompt Engineer: (solo lectura/texto, no escribe archivos)
+  - Comms Analyst: (solo lectura, no escribe)
+  
+  ARCHIVOS PROTEGIDOS (ningún agente puede modificar sin confirmación explícita del usuario):
+  - .kiro/settings/mcp.json
+  - package.json (solo Harness Engineer con confirmación)
+  - .kiro/steering/00-swarm-orchestrator.md (solo Orquestador con confirmación)
+  - Workspace/**/config/platforms.json
+  
+  Si el agente intenta escribir fuera de su scope: BLOQUEAR y sugerir qué agente debería hacerlo.
+---

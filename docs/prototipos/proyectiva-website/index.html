@@ -1,0 +1,1332 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Proyectiva — Agencia de Seguros Digital</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth;font-size:16px}
+    body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;color:#1a1a2e;background:#fff;line-height:1.6;overflow-x:hidden}
+    a{text-decoration:none;color:inherit}ul{list-style:none}img{max-width:100%;display:block}
+    button{cursor:pointer;border:none;font-family:inherit}input,select,textarea{font-family:inherit;font-size:1rem}
+    :root{
+      --primary:#6C3AE0;--primary-dark:#5228b8;--primary-light:#ede7fb;
+      --secondary:#1a1a2e;--accent:#00c9a7;--accent-dark:#00a88a;
+      --text:#1a1a2e;--text-light:#6b7280;--bg:#fff;--bg-light:#f8f9fc;
+      --bg-gradient:linear-gradient(135deg,#6C3AE0 0%,#9b59e6 100%);
+      --shadow-sm:0 2px 8px rgba(0,0,0,.06);--shadow-md:0 4px 16px rgba(0,0,0,.1);--shadow-lg:0 8px 32px rgba(0,0,0,.12);
+      --radius:12px;--radius-lg:20px;--max-width:1200px;--transition:.3s ease
+    }
+    .container{max-width:var(--max-width);margin:0 auto;padding:0 24px}
+    .section{padding:80px 0}.section--alt{background:var(--bg-light)}.text-center{text-align:center}
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:14px 28px;border-radius:50px;font-weight:600;font-size:.95rem;transition:var(--transition)}
+    .btn--primary{background:var(--primary);color:#fff}.btn--primary:hover{background:var(--primary-dark);transform:translateY(-2px);box-shadow:var(--shadow-md)}
+    .btn--outline{border:2px solid var(--primary);color:var(--primary);background:transparent}.btn--outline:hover{background:var(--primary);color:#fff}
+    .btn--accent{background:var(--accent);color:#fff}.btn--accent:hover{background:var(--accent-dark)}
+    .btn--white{background:#fff;color:var(--primary)}.btn--white:hover{background:var(--primary-light)}
+    .btn--sm{padding:10px 20px;font-size:.85rem}
+    .badge{display:inline-block;padding:4px 12px;border-radius:50px;font-size:.75rem;font-weight:600}
+    .badge--purple{background:var(--primary-light);color:var(--primary)}
+
+    /* HEADER */
+    .header{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(255,255,255,.97);backdrop-filter:blur(10px);border-bottom:1px solid rgba(0,0,0,.05)}
+    .header__inner{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;max-width:var(--max-width);margin:0 auto}
+    .header__logo{font-size:1.5rem;font-weight:800;color:var(--primary);cursor:pointer}
+    .header__nav{display:flex;align-items:center;gap:32px}
+    .header__nav a{font-size:.9rem;font-weight:500;color:var(--text);transition:var(--transition)}
+    .header__nav a:hover,.header__nav a.active{color:var(--primary)}
+    .header__actions{display:flex;align-items:center;gap:16px}
+    .header__phone{font-size:.85rem;color:var(--text-light)}
+    .header__cta{padding:10px 20px;font-size:.85rem}
+    .header__menu-btn{display:none;background:none;border:none;padding:8px;flex-direction:column;gap:5px}
+    .header__menu-btn span{display:block;width:24px;height:2px;background:var(--text);transition:var(--transition)}
+
+    /* MOBILE NAV */
+    .mobile-nav{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:#fff;z-index:999;padding:80px 24px 24px;flex-direction:column;gap:0}
+    .mobile-nav.active{display:flex}
+    .mobile-nav a{font-size:1.1rem;font-weight:500;padding:16px 0;border-bottom:1px solid #f0f0f5;display:block}
+    .mobile-nav .btn{margin-top:24px;justify-content:center}
+
+    /* HERO */
+    .hero{padding:140px 0 80px;background:linear-gradient(135deg,#f8f5ff 0%,#fff 50%,#f0fdf9 100%);position:relative;overflow:hidden}
+    .hero::after{content:'';position:absolute;top:-50%;right:-20%;width:600px;height:600px;background:radial-gradient(circle,rgba(108,58,224,.08) 0%,transparent 70%);border-radius:50%}
+    .hero__inner{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;position:relative;z-index:1}
+    .hero__title{font-size:3.2rem;font-weight:800;line-height:1.15;margin-bottom:20px;color:var(--secondary)}
+    .hero__subtitle{font-size:1.1rem;color:var(--text-light);margin-bottom:32px;max-width:480px}
+    .hero__visual{display:flex;align-items:center;justify-content:center;background:var(--bg-gradient);border-radius:var(--radius-lg);height:400px;color:#fff;font-size:3rem}
+
+    /* PRODUCTS */
+    .products__header{text-align:center;margin-bottom:48px}
+    .products__title{font-size:2rem;font-weight:700;margin-bottom:16px}
+    .products__subtitle{color:var(--text-light)}
+    .products__filters{display:flex;gap:12px;justify-content:center;margin-bottom:40px;flex-wrap:wrap}
+    .products__filter{padding:10px 20px;border-radius:50px;font-size:.85rem;font-weight:500;background:#f0f0f5;color:var(--text);border:none;transition:var(--transition)}
+    .products__filter.active,.products__filter:hover{background:var(--primary);color:#fff}
+    .products__grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:24px}
+    .product-card{background:#fff;border-radius:var(--radius);padding:32px;border:1px solid #f0f0f5;transition:var(--transition)}
+    .product-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg);border-color:var(--primary-light)}
+    .product-card__icon{width:56px;height:56px;border-radius:12px;background:var(--primary-light);display:flex;align-items:center;justify-content:center;margin-bottom:20px;font-size:1.5rem}
+    .product-card__title{font-size:1.2rem;font-weight:700;margin-bottom:8px}
+    .product-card__desc{font-size:.9rem;color:var(--text-light);margin-bottom:20px;line-height:1.6}
+    .product-card__actions{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+    .product-card__link{font-size:.85rem;color:var(--primary);font-weight:500}
+    .product-card__link:hover{text-decoration:underline}
+
+    /* BANNER */
+    .banner{background:var(--bg-gradient);padding:60px 0;text-align:center;color:#fff}
+    .banner__text{font-size:1.8rem;font-weight:700;max-width:700px;margin:0 auto}
+
+    /* CONTACT */
+    .contact__header{text-align:center;margin-bottom:48px}
+    .contact__title{font-size:1.2rem;color:var(--primary);font-weight:600;margin-bottom:8px}
+    .contact__heading{font-size:1.8rem;font-weight:700;margin-bottom:8px}
+    .contact__subtitle{color:var(--text-light);max-width:500px;margin:0 auto}
+    .contact__grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px}
+    .contact-card{background:#fff;border-radius:var(--radius);padding:32px;text-align:center;border:1px solid #f0f0f5;transition:var(--transition)}
+    .contact-card:hover{box-shadow:var(--shadow-md)}
+    .contact-card__icon{font-size:2rem;margin-bottom:16px}
+    .contact-card__title{font-weight:600;margin-bottom:4px}
+    .contact-card__info{color:var(--primary);font-weight:500;margin-bottom:8px;font-size:.9rem}
+    .contact-card__desc{font-size:.85rem;color:var(--text-light);margin-bottom:16px}
+
+    /* FAQ */
+    .faq__title{font-size:1.8rem;font-weight:700;text-align:center;margin-bottom:40px}
+    .faq__list{max-width:800px;margin:0 auto}
+    .faq__item{background:#fff;border-radius:var(--radius);margin-bottom:12px;overflow:hidden;border:1px solid #f0f0f5}
+    .faq__question{width:100%;padding:20px 24px;text-align:left;background:none;font-size:.95rem;font-weight:600;display:flex;justify-content:space-between;align-items:center;gap:16px}
+    .faq__question::after{content:'+';font-size:1.4rem;color:var(--primary);transition:var(--transition);flex-shrink:0}
+    .faq__item.active .faq__question::after{content:'\2212'}
+    .faq__answer{padding:0 24px;max-height:0;overflow:hidden;transition:max-height .3s ease,padding .3s ease}
+    .faq__answer p{color:var(--text-light);font-size:.9rem;line-height:1.7}
+    .faq__item.active .faq__answer{max-height:200px;padding:0 24px 20px}
+    .faq__cta{text-align:center;margin-top:32px;padding:24px;background:var(--primary-light);border-radius:var(--radius)}
+    .faq__cta p{font-weight:500;margin-bottom:12px}
+
+    /* ABOUT */
+    .about-hero{padding:140px 0 80px;background:linear-gradient(135deg,#f8f5ff 0%,#fff 100%)}
+    .about-hero__inner{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+    .about-hero__title{font-size:2.8rem;font-weight:800;margin-bottom:16px}
+    .about-hero__text{color:var(--text-light);margin-bottom:24px}
+    .about-hero__visual{background:var(--bg-gradient);border-radius:var(--radius-lg);height:350px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:3rem}
+    .pillars__grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:32px;margin-top:40px}
+    .pillar-card{text-align:center;padding:32px;background:#fff;border-radius:var(--radius);border:1px solid #f0f0f5}
+    .pillar-card__icon{font-size:2.5rem;margin-bottom:16px}
+    .pillar-card__title{font-weight:700;margin-bottom:8px}
+    .pillar-card__desc{font-size:.9rem;color:var(--text-light)}
+
+    /* BLOG */
+    .blog-hero{padding:140px 0 60px;background:var(--bg-gradient);color:#fff;text-align:center}
+    .blog-hero__title{font-size:2.4rem;font-weight:800;margin-bottom:12px}
+    .blog-hero__subtitle{opacity:.9}
+    .blog__filters{display:flex;gap:12px;justify-content:center;margin-bottom:40px;flex-wrap:wrap}
+    .blog__grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:24px}
+    .blog-card{background:#fff;border-radius:var(--radius);overflow:hidden;border:1px solid #f0f0f5;transition:var(--transition)}
+    .blog-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg)}
+    .blog-card__img{height:180px;background:var(--primary-light);display:flex;align-items:center;justify-content:center;font-size:2rem}
+    .blog-card__body{padding:24px}
+    .blog-card__badge{margin-bottom:8px}
+    .blog-card__meta{font-size:.8rem;color:var(--text-light);margin-bottom:8px}
+    .blog-card__title{font-size:1.05rem;font-weight:600;margin-bottom:8px}
+    .blog-card__excerpt{font-size:.85rem;color:var(--text-light);margin-bottom:16px;line-height:1.6}
+    .blog-card__link{color:var(--primary);font-weight:500;font-size:.85rem}
+    .blog-cta{background:var(--primary-light);border-radius:var(--radius);padding:40px;text-align:center}
+    .blog-cta__title{font-size:1.2rem;font-weight:700;margin-bottom:8px}
+    .blog-cta__text{color:var(--text-light);margin-bottom:16px}
+
+    /* HELP CENTER */
+    .help-hero{padding:140px 0 60px;background:linear-gradient(135deg,#6C3AE0 0%,#9b59e6 50%,#00c9a7 100%);color:#fff;text-align:center}
+    .help-hero__title{font-size:2.4rem;font-weight:800;margin-bottom:12px}
+    .help-hero__subtitle{opacity:.9;margin-bottom:32px}
+    .help__search{max-width:600px;margin:0 auto 48px;position:relative}
+    .help__search input{width:100%;padding:16px 24px 16px 48px;border-radius:50px;border:2px solid #f0f0f5;font-size:1rem;transition:var(--transition)}
+    .help__search input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 4px rgba(108,58,224,.1)}
+    .help__search::before{content:'\1F50D';position:absolute;left:20px;top:50%;transform:translateY(-50%);font-size:1.1rem}
+    .help__tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:32px;justify-content:center}
+    .help__tab{padding:10px 20px;border-radius:50px;font-size:.85rem;font-weight:500;background:#f0f0f5;border:none;transition:var(--transition)}
+    .help__tab.active,.help__tab:hover{background:var(--primary);color:#fff}
+    .help__contact{background:var(--primary-light);border-radius:var(--radius);padding:32px;display:flex;align-items:center;justify-content:space-between;gap:24px;margin-top:48px;flex-wrap:wrap}
+    .help__contact-text p{font-weight:600;margin-bottom:4px}
+    .help__contact-text small{color:var(--text-light)}
+
+    /* ARRIENDO LANDING */
+    .arriendo-hero{padding:140px 0 80px;background:linear-gradient(135deg,#f8f5ff 0%,#ede7fb 100%)}
+    .arriendo-hero__inner{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+    .arriendo-hero__title{font-size:2.6rem;font-weight:800;margin-bottom:8px}
+    .arriendo-hero__tagline{font-size:1.1rem;font-weight:600;color:var(--primary);margin-bottom:16px}
+    .arriendo-hero__text{color:var(--text-light);margin-bottom:24px}
+    .arriendo-hero__visual{background:var(--bg-gradient);border-radius:var(--radius-lg);height:380px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:3rem}
+    .benefits__grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:32px;margin-top:40px}
+    .benefit-card{text-align:center;padding:32px;background:#fff;border-radius:var(--radius);border:1px solid #f0f0f5}
+    .benefit-card__icon{font-size:2.5rem;margin-bottom:16px}
+    .benefit-card__title{font-weight:700;margin-bottom:8px}
+    .benefit-card__desc{font-size:.9rem;color:var(--text-light)}
+    .assistances__grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;margin-top:40px}
+    .assistance-card{background:#fff;border-radius:var(--radius);padding:28px;border:1px solid #f0f0f5;transition:var(--transition)}
+    .assistance-card:hover{box-shadow:var(--shadow-md)}
+    .assistance-card__icon{font-size:1.8rem;margin-bottom:12px}
+    .assistance-card__title{font-weight:600;margin-bottom:8px}
+    .assistance-card__desc{font-size:.85rem;color:var(--text-light)}
+
+    /* COTIZADOR */
+    .cotizador__container{max-width:560px;margin:0 auto}
+    .cotizador__step{display:none}.cotizador__step.active{display:block}
+    .cotizador__progress{display:flex;gap:8px;margin-bottom:32px}
+    .cotizador__progress-bar{flex:1;height:4px;border-radius:2px;background:#e0e0e0;transition:var(--transition)}
+    .cotizador__progress-bar.filled{background:var(--primary)}
+    .cotizador__card{background:#fff;border-radius:var(--radius-lg);padding:40px;box-shadow:var(--shadow-md)}
+    .cotizador__step-label{font-size:.85rem;color:var(--primary);font-weight:600;margin-bottom:8px}
+    .cotizador__title{font-size:1.5rem;font-weight:700;margin-bottom:8px}
+    .cotizador__subtitle{font-size:.9rem;color:var(--text-light);margin-bottom:28px}
+    .form-group{margin-bottom:20px}
+    .form-group label{display:block;font-size:.85rem;font-weight:500;margin-bottom:6px}
+    .form-group input,.form-group select{width:100%;padding:12px 16px;border:2px solid #e8e8ee;border-radius:10px;font-size:.95rem;transition:var(--transition)}
+    .form-group input:focus,.form-group select:focus{outline:none;border-color:var(--primary)}
+    .form-group small{display:block;margin-top:4px;font-size:.8rem;color:var(--text-light)}
+    .form-radio{display:flex;gap:12px;margin-top:8px}
+    .form-radio label{display:flex;align-items:center;gap:8px;padding:10px 20px;border:2px solid #e8e8ee;border-radius:10px;cursor:pointer;transition:var(--transition);font-size:.9rem}
+    .form-radio input{width:auto}
+    .form-radio label:has(input:checked){border-color:var(--primary);background:var(--primary-light)}
+    .cotizador__price{font-size:2.5rem;font-weight:800;color:var(--primary)}
+    .cotizador__price-label{font-size:.9rem;color:var(--text-light);margin-bottom:24px}
+    .cotizador__benefit{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid #f0f0f5}
+    .cotizador__benefit:last-child{border-bottom:none}
+    .cotizador__benefit-icon{color:var(--accent);font-size:1.2rem;flex-shrink:0}
+    .cotizador__extras{margin-top:24px;padding-top:24px;border-top:1px solid #f0f0f5}
+    .cotizador__extras-title{font-weight:600;margin-bottom:16px;font-size:.95rem}
+    .cotizador__extra-item{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--bg-light);border-radius:10px;margin-bottom:8px}
+    .cotizador__extra-item label{font-size:.85rem;display:flex;align-items:center;gap:8px}
+    .cotizador__extra-item span{font-size:.8rem;color:var(--primary);font-weight:500}
+    .cotizador__success{text-align:center;padding:40px 0}
+    .cotizador__success-icon{font-size:4rem;margin-bottom:24px}
+    .cotizador__success h3{font-size:1.5rem;font-weight:700;margin-bottom:12px}
+    .cotizador__success p{color:var(--text-light);margin-bottom:24px}
+    .form-error{color:#e53e3e;font-size:.8rem;margin-top:4px;display:none}
+
+    /* WHY US */
+    .why-us__grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:32px;margin-top:40px}
+    .why-card{background:#fff;border-radius:var(--radius);padding:32px;text-align:center;border:1px solid #f0f0f5}
+    .why-card__icon{font-size:2.5rem;margin-bottom:16px}
+    .why-card__title{font-weight:700;margin-bottom:8px}
+    .why-card__desc{font-size:.9rem;color:var(--text-light)}
+
+    /* FOOTER */
+    .footer{background:var(--secondary);color:#fff;padding:60px 0 24px}
+    .footer__grid{display:grid;grid-template-columns:2fr 1fr 1.5fr 1fr;gap:40px;margin-bottom:40px}
+    .footer__brand-name{font-size:1.3rem;font-weight:800;margin-bottom:12px}
+    .footer__brand p{color:rgba(255,255,255,.7);font-size:.9rem;margin-bottom:16px}
+    .footer__title{font-weight:600;margin-bottom:16px;font-size:.95rem}
+    .footer__links a{display:block;color:rgba(255,255,255,.7);font-size:.85rem;padding:4px 0;transition:var(--transition)}
+    .footer__links a:hover{color:#fff}
+    .footer__contact p{color:rgba(255,255,255,.7);font-size:.85rem;margin-bottom:8px}
+    .footer__bottom{border-top:1px solid rgba(255,255,255,.1);padding-top:24px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    .footer__bottom p{color:rgba(255,255,255,.5);font-size:.8rem}
+
+    /* PAGE VISIBILITY */
+    .page{display:none}.page.active{display:block}
+
+    /* MODAL (ciudad no disponible) */
+    .modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:2000;align-items:center;justify-content:center;padding:24px}
+    .modal-overlay.active{display:flex}
+    .modal{background:#fff;border-radius:var(--radius-lg);padding:40px;max-width:480px;width:100%;text-align:center}
+    .modal__icon{font-size:3rem;margin-bottom:16px}
+    .modal__title{font-size:1.3rem;font-weight:700;margin-bottom:8px}
+    .modal__text{color:var(--text-light);font-size:.9rem;margin-bottom:24px}
+    .modal__actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+
+    /* RESPONSIVE */
+    @media(max-width:1024px){
+      .hero__inner,.about-hero__inner,.arriendo-hero__inner{grid-template-columns:1fr;text-align:center}
+      .hero__subtitle{margin:0 auto 32px}
+      .hero__visual,.about-hero__visual,.arriendo-hero__visual{height:280px;margin-top:24px}
+      .footer__grid{grid-template-columns:1fr 1fr}
+    }
+    @media(max-width:768px){
+      .header__nav{display:none}.header__phone{display:none}.header__menu-btn{display:flex}
+      .hero{padding:120px 0 60px}.hero__title{font-size:2.2rem}
+      .section{padding:60px 0}
+      .products__grid,.blog__grid{grid-template-columns:1fr}
+      .banner__text{font-size:1.3rem;padding:0 16px}
+      .contact__grid{grid-template-columns:1fr}
+      .footer__grid{grid-template-columns:1fr;gap:32px}
+      .footer__bottom{flex-direction:column;text-align:center}
+      .cotizador__card{padding:24px}
+      .help__contact{flex-direction:column;text-align:center}
+      .arriendo-hero__title,.about-hero__title{font-size:2rem}
+      .blog-hero__title,.help-hero__title{font-size:1.8rem}
+    }
+    @media(max-width:480px){
+      .hero__title{font-size:1.8rem}
+      .products__filters,.blog__filters,.help__tabs{gap:8px}
+      .products__filter,.help__tab{padding:8px 14px;font-size:.8rem}
+      .btn{padding:12px 20px;font-size:.85rem}
+      .products__grid{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header__inner">
+      <div class="header__logo" onclick="navigateTo('home')">Proyectiva</div>
+      <nav class="header__nav">
+        <a href="#" onclick="navigateTo('productos')" data-page="productos">Nuestros productos</a>
+        <a href="#" onclick="navigateTo('nosotros')" data-page="nosotros">Nosotros</a>
+        <a href="#" onclick="navigateTo('blog')" data-page="blog">Blog</a>
+        <a href="#" onclick="navigateTo('ayuda')" data-page="ayuda">Centro de ayuda</a>
+      </nav>
+      <div class="header__actions">
+        <span class="header__phone">+57 300 123 4567</span>
+        <a href="#" class="btn btn--primary btn--sm header__cta" onclick="navigateTo('productos')">Comprar seguros</a>
+      </div>
+      <button class="header__menu-btn" onclick="toggleMobileNav()" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- MOBILE NAV -->
+  <div class="mobile-nav" id="mobileNav">
+    <a href="#" onclick="navigateTo('productos');toggleMobileNav()">Nuestros productos</a>
+    <a href="#" onclick="navigateTo('nosotros');toggleMobileNav()">Nosotros</a>
+    <a href="#" onclick="navigateTo('blog');toggleMobileNav()">Blog</a>
+    <a href="#" onclick="navigateTo('ayuda');toggleMobileNav()">Centro de ayuda</a>
+    <a href="#" class="btn btn--primary" onclick="navigateTo('productos');toggleMobileNav()">Comprar seguros</a>
+  </div>
+
+  <!-- ===== PAGE: HOME ===== -->
+  <div class="page active" id="page-home">
+    <section class="hero">
+      <div class="container">
+        <div class="hero__inner">
+          <div>
+            <span class="badge badge--purple">Agencia de seguros digital</span>
+            <h1 class="hero__title">Cuidamos lo que mas te importa</h1>
+            <p class="hero__subtitle">Olvidate del papeleo aburrido y de las letras chiquitas. Solicitar tu proteccion ideal es rapido y sencillo.</p>
+            <a href="#" class="btn btn--primary" onclick="navigateTo('productos')">Comprar seguros</a>
+          </div>
+          <div class="hero__visual">&#128737;</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Productos destacados -->
+    <section class="section">
+      <div class="container">
+        <div class="products__header">
+          <h2 class="products__title">Que quieres asegurar hoy?</h2>
+        </div>
+        <div class="products__grid">
+          <div class="product-card" data-category="patrimonio">
+            <div class="product-card__icon">&#127968;</div>
+            <h3 class="product-card__title">Mi arriendo</h3>
+            <p class="product-card__desc">Cuidamos tu arriendo, tus servicios y tu propiedad frente a todo dano.</p>
+            <div class="product-card__actions">
+              <a href="#" class="btn btn--primary btn--sm" onclick="navigateTo('arriendo')">Proteger mi arriendo</a>
+              <a href="#" class="product-card__link" onclick="navigateTo('arriendo')">Conocer mas</a>
+            </div>
+          </div>
+          <div class="product-card" data-category="patrimonio">
+            <div class="product-card__icon">&#128663;</div>
+            <h3 class="product-card__title">Mi carro</h3>
+            <p class="product-card__desc">Cuidamos tu camino, tu vehiculo y a quienes van contigo en cada viaje.</p>
+            <div class="product-card__actions">
+              <a href="#" class="btn btn--primary btn--sm">Proteger mi carro</a>
+              <a href="#" class="product-card__link">Conocer mas</a>
+            </div>
+          </div>
+          <div class="product-card" data-category="patrimonio">
+            <div class="product-card__icon">&#127969;</div>
+            <h3 class="product-card__title">Mi casa</h3>
+            <p class="product-card__desc">Cuidamos tu casa, tu bienestar y los recuerdos que construyes en ella.</p>
+            <div class="product-card__actions">
+              <a href="#" class="btn btn--primary btn--sm">Proteger mi casa</a>
+              <a href="#" class="product-card__link">Conocer mas</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Banner motivacional -->
+    <section class="banner">
+      <div class="container">
+        <p class="banner__text">La tranquilidad no es magia, es elegir vivir sin preocupaciones</p>
+      </div>
+    </section>
+
+    <!-- Contacto -->
+    <section class="section">
+      <div class="container">
+        <div class="contact__header">
+          <p class="contact__title">Estamos aqui para ti</p>
+          <h2 class="contact__heading">Como te ayudamos?</h2>
+          <p class="contact__subtitle">Multiples formas de contactarnos. Elige el canal que mejor se adapte a ti.</p>
+        </div>
+        <div class="contact__grid">
+          <div class="contact-card">
+            <div class="contact-card__icon">&#9993;</div>
+            <h3 class="contact-card__title">Correo electronico</h3>
+            <p class="contact-card__info">cliente@proyectivaseguros.com</p>
+            <p class="contact-card__desc">Envianos tus preguntas o solicitudes. Te respondemos en menos de 24 horas.</p>
+            <a href="#" class="btn btn--outline btn--sm">Enviar mensaje</a>
+          </div>
+          <div class="contact-card">
+            <div class="contact-card__icon">&#128172;</div>
+            <h3 class="contact-card__title">WhatsApp</h3>
+            <p class="contact-card__info">+57 300 123 4567</p>
+            <p class="contact-card__desc">Chatea con nosotros en tiempo real. Lunes a viernes de 8 a.m. a 6 p.m.</p>
+            <a href="#" class="btn btn--accent btn--sm">Abrir WhatsApp</a>
+          </div>
+          <div class="contact-card">
+            <div class="contact-card__icon">&#10067;</div>
+            <h3 class="contact-card__title">Centro de ayuda</h3>
+            <p class="contact-card__info">Resuelve tus dudas</p>
+            <p class="contact-card__desc">Consulta preguntas frecuentes, guias y documentacion disponible las 24 horas.</p>
+            <a href="#" class="btn btn--outline btn--sm" onclick="navigateTo('ayuda')">Ir al centro de ayuda</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Home -->
+    <section class="section section--alt">
+      <div class="container">
+        <h2 class="faq__title">Conoce nuestras preguntas frecuentes</h2>
+        <div class="faq__list">
+          <div class="faq__item">
+            <button class="faq__question" onclick="toggleFaq(this)">Que es Proyectiva y como me ayuda?</button>
+            <div class="faq__answer"><p>Proyectiva es una agencia de seguros 100% digital. Nacimos con el proposito de transformar la forma en que cuidas lo que mas te importa, eliminando la letra chiquita y los tramites aburridos.</p></div>
+          </div>
+          <div class="faq__item">
+            <button class="faq__question" onclick="toggleFaq(this)">Como puedo contratar mis productos?</button>
+            <div class="faq__answer"><p>Puedes contratar directamente desde nuestra web en pocos pasos: elige tu producto, completa tu informacion basica, recibe cotizacion en tiempo real y confirma tu poliza. Todo sin papeleria ni citas presenciales.</p></div>
+          </div>
+          <div class="faq__item">
+            <button class="faq__question" onclick="toggleFaq(this)">Puedo proteger varias cosas a la vez en un solo lugar?</button>
+            <div class="faq__answer"><p>Si. Desde tu cuenta Proyectiva puedes gestionar todos tus seguros: arrendamiento, carro, casa, salud y pymes en un solo lugar.</p></div>
+          </div>
+          <div class="faq__item">
+            <button class="faq__question" onclick="toggleFaq(this)">Que hace a Proyectiva diferente de los seguros tradicionales?</button>
+            <div class="faq__answer"><p>Somos 100% digitales, sin papeleo ni filas. Combinamos tecnologia con acompanamiento humano real. Nuestros procesos son transparentes y nuestros precios claros.</p></div>
+          </div>
+          <div class="faq__item">
+            <button class="faq__question" onclick="toggleFaq(this)">Que hago si tengo una emergencia o necesito usar una asistencia?</button>
+            <div class="faq__answer"><p>Contactanos por WhatsApp o llama a nuestra linea de asistencia 24/7. Ten a mano tu numero de poliza y te ayudamos a activar el servicio de inmediato.</p></div>
+          </div>
+        </div>
+        <div class="faq__cta">
+          <p>Tienes alguna otra duda en mente?</p>
+          <a href="#" class="btn btn--primary btn--sm" onclick="navigateTo('ayuda')">Ir al centro de ayuda</a>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ===== PAGE: PRODUCTOS (Comprar seguros) ===== -->
+  <div class="page" id="page-productos">
+    <section class="section" style="padding-top:120px">
+      <div class="container">
+        <div class="products__header">
+          <h2 class="products__title">Que quieres asegurar hoy?</h2>
+          <p class="products__subtitle">Elige el producto que necesitas.</p>
+        </div>
+        <!-- Why us -->
+        <div class="why-us__grid" style="margin-bottom:60px">
+          <div class="why-card">
+            <div class="why-card__icon">&#128241;</div>
+            <h3 class="why-card__title">100% Digital</h3>
+            <p class="why-card__desc">Contrata en minutos desde cualquier dispositivo. Sin papeleria, sin filas, sin citas.</p>
+          </div>
+          <div class="why-card">
+            <div class="why-card__icon">&#129309;</div>
+            <h3 class="why-card__title">Acompanamiento humano</h3>
+            <p class="why-card__desc">Tecnologia avanzada con personas reales detras, listas para ayudarte cuando lo necesites.</p>
+          </div>
+          <div class="why-card">
+            <div class="why-card__icon">&#127793;</div>
+            <h3 class="why-card__title">Pensado a largo plazo</h3>
+            <p class="why-card__desc">Disenamos coberturas sostenibles que protegen tus metas hoy y en el futuro.</p>
+          </div>
+        </div>
+        <!-- Filtros -->
+        <div class="products__filters">
+          <button class="products__filter active" onclick="filterProducts('todos')">Todos los seguros</button>
+          <button class="products__filter" onclick="filterProducts('vida')">Mi vida y bienestar</button>
+          <button class="products__filter" onclick="filterProducts('patrimonio')">Mi patrimonio</button>
+          <button class="products__filter" onclick="filterProducts('negocio')">Mi negocio</button>
+        </div>
+        <div class="products__grid" id="productsGrid">
+          <div class="product-card" data-category="patrimonio">
+            <div class="product-card__icon">&#127968;</div>
+            <h3 class="product-card__title">Mi arriendo</h3>
+            <p class="product-card__desc">Cuidamos tu arriendo, tus servicios y tu propiedad frente a todo dano.</p>
+            <div class="product-card__actions">
+              <a href="#" class="btn btn--primary btn--sm" onclick="navigateTo('arriendo')">Proteger mi arriendo</a>
+              <a href="#" class="product-card__link" onclick="navigateTo('arriendo')">Conocer mas</a>
+            </div>
+          </div>
+          <div class="product-card" data-category="patrimonio">
+            <div class="product-card__icon">&#128663;</div>
+            <h3 class="product-card__title">Mi carro</h3>
+            <p class="product-card__desc">Cuidamos tu camino, tu vehiculo y a quienes van contigo en cada viaje.</p>
+            <div class="product-card__actions">
+              <a href="#" class="btn btn--primary btn--sm">Proteger mi carro</a>
+              <a href="#" class="product-card__link">Conocer mas</a>
+            </div>
+          </div>
+          <div class="product-card" data-category="patrimonio">
+            <div class="product-card__icon">&#127969;</div>
+            <h3 class="product-card__title">Mi casa</h3>
+            <p class="product-card__desc">Cuidamos tu casa, tu bienestar y los recuerdos que construyes en ella.</p>
+            <div class="product-card__actions">
+              <a href="#" class="btn btn--primary btn--sm">Proteger mi casa</a>
+              <a href="#" class="product-card__link">Conocer mas</a>
+            </div>
+          </div>
+          <div class="product-card" data-category="vida">
+            <div class="product-card__icon">&#128154;</div>
+            <h3 class="product-card__title">Mi salud</h3>
+            <p class="product-card__desc">Cuidamos tu salud, tu bienestar y a quienes mas amas, en todo momento.</p>
+            <div class="product-card__actions">
+              <a href="#" class="btn btn--primary btn--sm">Proteger mi salud</a>
+              <a href="#" class="product-card__link">Conocer mas</a>
+            </div>
+          </div>
+          <div class="product-card" data-category="negocio">
+            <div class="product-card__icon">&#127970;</div>
+            <h3 class="product-card__title">Mi negocio</h3>
+            <p class="product-card__desc">Cuidamos tu negocio, tus activos y el gran esfuerzo de tu empresa hoy.</p>
+            <div class="product-card__actions">
+              <a href="#" class="btn btn--primary btn--sm">Proteger mi negocio</a>
+              <a href="#" class="product-card__link">Conocer mas</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Productos -->
+    <section class="section section--alt">
+      <div class="container">
+        <h2 class="faq__title">Preguntas sobre nuestros productos</h2>
+        <div class="faq__list">
+          <div class="faq__item">
+            <button class="faq__question" onclick="toggleFaq(this)">Puedo contratar mas de un seguro a la vez?</button>
+            <div class="faq__answer"><p>Si. Desde tu cuenta Proyectiva puedes contratar y gestionar varios seguros en simultaneo.</p></div>
+          </div>
+          <div class="faq__item">
+            <button class="faq__question" onclick="toggleFaq(this)">Como funciona el proceso de contratacion?</button>
+            <div class="faq__answer"><p>Elige tu producto, completa tu informacion y obten tu poliza en minutos. Todo 100% en linea.</p></div>
+          </div>
+          <div class="faq__item">
+            <button class="faq__question" onclick="toggleFaq(this)">Cuanto tiempo toma activar una poliza?</button>
+            <div class="faq__answer"><p>En la mayoria de productos la activacion es inmediata una vez confirmado el pago.</p></div>
+          </div>
+          <div class="faq__item">
+            <button class="faq__question" onclick="toggleFaq(this)">Puedo cancelar o modificar mi seguro despues?</button>
+            <div class="faq__answer"><p>Si. Puedes modificar coberturas o cancelar tu poliza desde tu cuenta en cualquier momento.</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ===== PAGE: NOSOTROS ===== -->
+  <div class="page" id="page-nosotros">
+    <section class="about-hero">
+      <div class="container">
+        <div class="about-hero__inner">
+          <div>
+            <span class="badge badge--purple">Quienes somos</span>
+            <h1 class="about-hero__title">Somos Proyectiva</h1>
+            <p class="about-hero__text">El manana no se adivina, se construye con las decisiones correctas hoy. Nacimos para transformar la forma en que cuidas lo que mas te importa.</p>
+            <a href="#" class="btn btn--primary" onclick="navigateTo('productos')">Conocer los productos</a>
+          </div>
+          <div class="about-hero__visual">&#128640;</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <h2 class="text-center" style="font-size:1.8rem;font-weight:700">Los pilares que nos mueven</h2>
+        <p class="text-center" style="color:var(--text-light);margin-top:8px;max-width:600px;margin-left:auto;margin-right:auto">Combinamos la velocidad de la tecnologia con la calidez de las personas para darte una experiencia de proteccion unica.</p>
+        <div class="pillars__grid">
+          <div class="pillar-card">
+            <div class="pillar-card__icon">&#128241;</div>
+            <h3 class="pillar-card__title">100% Digital</h3>
+            <p class="pillar-card__desc">Olvidate del papeleo. Disenamos procesos automaticos para que asegures tu mundo en minutos desde cualquier lugar.</p>
+          </div>
+          <div class="pillar-card">
+            <div class="pillar-card__icon">&#129309;</div>
+            <h3 class="pillar-card__title">Acompanamiento Humano</h3>
+            <p class="pillar-card__desc">Tecnologia avanzada con un equipo de expertos detras, listos para escucharte cuando lo necesites.</p>
+          </div>
+          <div class="pillar-card">
+            <div class="pillar-card__icon">&#127793;</div>
+            <h3 class="pillar-card__title">Largo Plazo</h3>
+            <p class="pillar-card__desc">Disenamos soluciones de proteccion sostenibles y pensadas para blindar tus metas del futuro.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="banner">
+      <div class="container">
+        <p class="banner__text">Nuestra vision: ser tu referente de tranquilidad digital</p>
+      </div>
+    </section>
+
+    <!-- FAQ Nosotros -->
+    <section class="section section--alt">
+      <div class="container">
+        <h2 class="faq__title">Conoce nuestras preguntas frecuentes</h2>
+        <div class="faq__list">
+          <div class="faq__item">
+            <button class="faq__question" onclick="toggleFaq(this)">Que es Proyectiva y como me ayuda?</button>
+            <div class="faq__answer"><p>Proyectiva es una agencia de seguros 100% digital que nacio para simplificar la proteccion de lo que mas te importa.</p></div>
+          </div>
+          <div class="faq__item">
+            <button class="faq__question" onclick="toggleFaq(this)">Como puedo contratar mis productos?</button>
+            <div class="faq__answer"><p>Entra a nuestro sitio, elige el producto que necesitas, completa tu informacion y obten tu poliza en minutos.</p></div>
+          </div>
+          <div class="faq__item">
+            <button class="faq__question" onclick="toggleFaq(this)">Que hace a Proyectiva diferente?</button>
+            <div class="faq__answer"><p>Todo es digital, sin filas ni papeleria. Nuestros precios son claros y tenemos un equipo humano disponible cuando lo necesitas.</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ===== PAGE: BLOG ===== -->
+  <div class="page" id="page-blog">
+    <section class="blog-hero">
+      <div class="container">
+        <span class="badge badge--purple" style="background:rgba(255,255,255,.2);color:#fff">Aprende con Proyectiva</span>
+        <h1 class="blog-hero__title">Tips, historias y noticias sobre proteccion digital</h1>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="blog__filters">
+          <button class="products__filter active" onclick="filterBlog('todos')">Todos</button>
+          <button class="products__filter" onclick="filterBlog('consejos')">Consejos de proteccion</button>
+          <button class="products__filter" onclick="filterBlog('historias')">Historias de clientes</button>
+          <button class="products__filter" onclick="filterBlog('tramites')">Seguros y tramites</button>
+          <button class="products__filter" onclick="filterBlog('digital')">Vida digital</button>
+        </div>
+        <div class="blog__grid" id="blogGrid">
+          <div class="blog-card" data-cat="consejos">
+            <div class="blog-card__img">&#128218;</div>
+            <div class="blog-card__body">
+              <span class="badge badge--purple blog-card__badge">Consejos</span>
+              <p class="blog-card__meta">12 jun 2026 · 4 min lectura</p>
+              <h3 class="blog-card__title">Como hacer una reclamacion exitosa sin morir en el intento</h3>
+              <p class="blog-card__excerpt">Reclamar un seguro no deberia ser una odisea. Te contamos el paso a paso para que tu proceso sea agil y sin contratiempos.</p>
+              <a href="#" class="blog-card__link">Leer mas &rarr;</a>
+            </div>
+          </div>
+          <div class="blog-card" data-cat="historias">
+            <div class="blog-card__img">&#128100;</div>
+            <div class="blog-card__body">
+              <span class="badge badge--green blog-card__badge">Historias</span>
+              <p class="blog-card__meta">8 jun 2026 · 5 min lectura</p>
+              <h3 class="blog-card__title">La historia de Juan: protegido en su nuevo apartamento desde el dia uno</h3>
+              <p class="blog-card__excerpt">Juan tenia miedo de arrendar su propiedad. Descubre como el seguro de arrendamiento le cambio la perspectiva.</p>
+              <a href="#" class="blog-card__link">Leer mas &rarr;</a>
+            </div>
+          </div>
+          <div class="blog-card" data-cat="tramites">
+            <div class="blog-card__img">&#128203;</div>
+            <div class="blog-card__body">
+              <span class="badge badge--purple blog-card__badge">Tramites</span>
+              <p class="blog-card__meta">3 jun 2026 · 6 min lectura</p>
+              <h3 class="blog-card__title">Errores comunes al contratar un seguro (y como evitarlos)</h3>
+              <p class="blog-card__excerpt">La letra chiquita, las exclusiones no leidas y los plazos ignorados. Los 7 errores mas frecuentes al contratar.</p>
+              <a href="#" class="blog-card__link">Leer mas &rarr;</a>
+            </div>
+          </div>
+          <!-- CTA intermedio -->
+          <div class="blog-cta" style="grid-column:1/-1">
+            <p class="blog-cta__title">Listo para proteger lo que mas te importa?</p>
+            <p class="blog-cta__text">Contrata tu seguro en menos de 5 minutos.</p>
+            <a href="#" class="btn btn--primary btn--sm" onclick="navigateTo('productos')">Comprar seguros</a>
+          </div>
+          <div class="blog-card" data-cat="digital">
+            <div class="blog-card__img">&#128187;</div>
+            <div class="blog-card__body">
+              <span class="badge badge--purple blog-card__badge">Vida digital</span>
+              <p class="blog-card__meta">28 may 2026 · 3 min lectura</p>
+              <h3 class="blog-card__title">Que significa '100% digital' en seguros? Lo que realmente importa</h3>
+              <p class="blog-card__excerpt">No todas las aseguradoras digitales son iguales. Te explicamos que debe incluir una experiencia verdaderamente digital.</p>
+              <a href="#" class="blog-card__link">Leer mas &rarr;</a>
+            </div>
+          </div>
+          <div class="blog-card" data-cat="consejos">
+            <div class="blog-card__img">&#128161;</div>
+            <div class="blog-card__body">
+              <span class="badge badge--purple blog-card__badge">Consejos</span>
+              <p class="blog-card__meta">20 may 2026 · 4 min lectura</p>
+              <h3 class="blog-card__title">Asistencias que probablemente no sabias que tenias contratadas</h3>
+              <p class="blog-card__excerpt">Muchos arrendadores desconocen los servicios de asistencia incluidos en su poliza. Aqui un repaso de los mas valiosos.</p>
+              <a href="#" class="blog-card__link">Leer mas &rarr;</a>
+            </div>
+          </div>
+          <div class="blog-card" data-cat="historias">
+            <div class="blog-card__img">&#128167;</div>
+            <div class="blog-card__body">
+              <span class="badge badge--green blog-card__badge">Historias</span>
+              <p class="blog-card__meta">15 may 2026 · 5 min lectura</p>
+              <h3 class="blog-card__title">De deudas a tranquilidad: como Maria recupero el control de su propiedad</h3>
+              <p class="blog-card__excerpt">Su inquilino desaparecio con dos meses de arriendo impago. Asi fue como el seguro de arrendamiento respondio.</p>
+              <a href="#" class="blog-card__link">Leer mas &rarr;</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ===== PAGE: CENTRO DE AYUDA ===== -->
+  <div class="page" id="page-ayuda">
+    <section class="help-hero">
+      <div class="container">
+        <span class="badge" style="background:rgba(255,255,255,.2);color:#fff">Estamos para ayudarte</span>
+        <h1 class="help-hero__title">Resuelve tus dudas aqui</h1>
+        <p class="help-hero__subtitle">Encuentra respuestas sobre coberturas, pagos, reclamaciones y todo lo que necesites saber de tus seguros.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="help__search">
+          <input type="text" placeholder="Buscar en el centro de ayuda..." id="helpSearch" onkeyup="filterHelp()">
+        </div>
+        <div class="help__tabs">
+          <button class="help__tab active" onclick="filterHelpTab('general',this)">General</button>
+          <button class="help__tab" onclick="filterHelpTab('arrendamiento',this)">Arrendamiento</button>
+          <button class="help__tab" onclick="filterHelpTab('carros',this)">Carros</button>
+          <button class="help__tab" onclick="filterHelpTab('casa',this)">Casa</button>
+          <button class="help__tab" onclick="filterHelpTab('salud',this)">Salud</button>
+          <button class="help__tab" onclick="filterHelpTab('negocio',this)">Negocio</button>
+        </div>
+        <div class="faq__list" id="helpFaqList">
+          <!-- General -->
+          <div class="faq__item" data-help-cat="general">
+            <button class="faq__question" onclick="toggleFaq(this)">Que es Proyectiva y que tipo de seguros ofrece?</button>
+            <div class="faq__answer"><p>Proyectiva es una agencia de seguros 100% digital. Ofrecemos seguros de arrendamiento, carros, casa, salud y pymes, todos contratables en minutos desde tu dispositivo.</p></div>
+          </div>
+          <div class="faq__item" data-help-cat="general">
+            <button class="faq__question" onclick="toggleFaq(this)">Como creo mi cuenta en Proyectiva?</button>
+            <div class="faq__answer"><p>Entra a proyectivaseguros.com, haz clic en Comprar seguros, elige tu producto y sigue el proceso. Tu cuenta se crea automaticamente al confirmar tu primera poliza.</p></div>
+          </div>
+          <div class="faq__item" data-help-cat="general">
+            <button class="faq__question" onclick="toggleFaq(this)">Como reporto una emergencia o inicio una reclamacion?</button>
+            <div class="faq__answer"><p>Escribenos por WhatsApp o llama a nuestra linea 24/7. Ten tu numero de poliza a la mano.</p></div>
+          </div>
+          <div class="faq__item" data-help-cat="general">
+            <button class="faq__question" onclick="toggleFaq(this)">Cuales son los medios de pago disponibles?</button>
+            <div class="faq__answer"><p>Aceptamos tarjetas debito y credito (Visa, Mastercard, Amex), PSE y efectivo en puntos autorizados.</p></div>
+          </div>
+          <!-- Arrendamiento -->
+          <div class="faq__item" data-help-cat="arrendamiento" style="display:none">
+            <button class="faq__question" onclick="toggleFaq(this)">Que cubre el seguro de arrendamiento?</button>
+            <div class="faq__answer"><p>Cubre el canon mensual si el inquilino no paga, deudas de servicios publicos pendientes, danos al inmueble y asistencias de emergencia.</p></div>
+          </div>
+          <div class="faq__item" data-help-cat="arrendamiento" style="display:none">
+            <button class="faq__question" onclick="toggleFaq(this)">Cuanto tiempo tarda el estudio del inquilino?</button>
+            <div class="faq__answer"><p>El estudio de credito del inquilino se realiza en linea y generalmente tarda entre 2 y 6 horas habiles.</p></div>
+          </div>
+          <div class="faq__item" data-help-cat="arrendamiento" style="display:none">
+            <button class="faq__question" onclick="toggleFaq(this)">El seguro cubre si el inquilino dana el inmueble al salir?</button>
+            <div class="faq__answer"><p>Si. Cubre danos causados por el arrendatario durante el periodo de arriendo, hasta los limites definidos en tu poliza.</p></div>
+          </div>
+          <!-- Carros -->
+          <div class="faq__item" data-help-cat="carros" style="display:none">
+            <button class="faq__question" onclick="toggleFaq(this)">Que coberturas incluye el seguro para carros?</button>
+            <div class="faq__answer"><p>Dependiendo del plan puede incluir responsabilidad civil, danos al vehiculo propio, hurto total, asistencia en carretera y vidrios.</p></div>
+          </div>
+          <div class="faq__item" data-help-cat="carros" style="display:none">
+            <button class="faq__question" onclick="toggleFaq(this)">Como reporto un accidente de transito?</button>
+            <div class="faq__answer"><p>Contactanos por WhatsApp o a nuestra linea de emergencias inmediatamente. Ten el numero de poliza y datos del otro conductor.</p></div>
+          </div>
+          <!-- Casa -->
+          <div class="faq__item" data-help-cat="casa" style="display:none">
+            <button class="faq__question" onclick="toggleFaq(this)">Que cubre el seguro para la casa?</button>
+            <div class="faq__answer"><p>Cubre danos a la estructura por incendio, terremoto, inundacion, robo de contenidos y responsabilidad civil.</p></div>
+          </div>
+          <div class="faq__item" data-help-cat="casa" style="display:none">
+            <button class="faq__question" onclick="toggleFaq(this)">El seguro cubre los electrodomesticos y muebles?</button>
+            <div class="faq__answer"><p>Los planes de contenido cubren bienes muebles y electrodomesticos por robo o dano hasta el valor asegurado declarado.</p></div>
+          </div>
+          <!-- Salud -->
+          <div class="faq__item" data-help-cat="salud" style="display:none">
+            <button class="faq__question" onclick="toggleFaq(this)">Que cubre el seguro de salud de Proyectiva?</button>
+            <div class="faq__answer"><p>Cubre gastos medicos por hospitalizacion, cirugias, consultas especializadas, medicamentos y urgencias segun el plan.</p></div>
+          </div>
+          <div class="faq__item" data-help-cat="salud" style="display:none">
+            <button class="faq__question" onclick="toggleFaq(this)">Puedo incluir a mi familia en la misma poliza?</button>
+            <div class="faq__answer"><p>Si. Puedes incluir conyuge e hijos dependientes en tu plan de salud.</p></div>
+          </div>
+          <!-- Negocio -->
+          <div class="faq__item" data-help-cat="negocio" style="display:none">
+            <button class="faq__question" onclick="toggleFaq(this)">Que cubre el seguro para pymes?</button>
+            <div class="faq__answer"><p>Cubre danos a activos fisicos del negocio, robo, responsabilidad civil, perdida de ingresos y accidentes laborales segun el plan.</p></div>
+          </div>
+          <div class="faq__item" data-help-cat="negocio" style="display:none">
+            <button class="faq__question" onclick="toggleFaq(this)">Puedo asegurar el inventario de mi negocio?</button>
+            <div class="faq__answer"><p>Si. Los planes de contenido comercial cubren el inventario, maquinaria y equipos contra robo, incendio y danos accidentales.</p></div>
+          </div>
+        </div>
+
+        <div class="help__contact">
+          <div class="help__contact-text">
+            <p>No encontraste lo que buscabas?</p>
+            <small>Nuestro equipo esta disponible de lunes a viernes de 8 a.m. a 6 p.m.</small>
+          </div>
+          <a href="#" class="btn btn--accent btn--sm">Escribir al WhatsApp</a>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ===== PAGE: ARRIENDO ===== -->
+  <div class="page" id="page-arriendo">
+    <section class="arriendo-hero">
+      <div class="container">
+        <div class="arriendo-hero__inner">
+          <div>
+            <h1 class="arriendo-hero__title">Seguro de arrendamiento</h1>
+            <p class="arriendo-hero__tagline">No es magia, es el seguro de arrendamiento</p>
+            <p class="arriendo-hero__text">Adquiere la tranquilidad de recibir tu dinero sin pensar en danos ni facturas pendientes 100% en linea.</p>
+            <a href="#" class="btn btn--primary" onclick="document.getElementById('cotizadorSection').scrollIntoView({behavior:'smooth'})">Proteger mi arriendo</a>
+          </div>
+          <div class="arriendo-hero__visual">&#127968;</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Beneficios -->
+    <section class="section">
+      <div class="container">
+        <h2 class="text-center" style="font-size:1.8rem;font-weight:700">Cuales son los beneficios del seguro?</h2>
+        <div class="benefits__grid">
+          <div class="benefit-card">
+            <div class="benefit-card__icon">&#128176;</div>
+            <h3 class="benefit-card__title">Tu arriendo seguro, pase lo que pase</h3>
+            <p class="benefit-card__desc">Olvidate de los retrasos. Tu dinero llegara completo mes a mes, garantizando la estabilidad que mereces.</p>
+          </div>
+          <div class="benefit-card">
+            <div class="benefit-card__icon">&#128161;</div>
+            <h3 class="benefit-card__title">Despreocupate por los servicios</h3>
+            <p class="benefit-card__desc">No acumules deudas ajenas. Si quedan facturas pendientes, nos encargamos.</p>
+          </div>
+          <div class="benefit-card">
+            <div class="benefit-card__icon">&#127969;</div>
+            <h3 class="benefit-card__title">Tu propiedad impecable, siempre</h3>
+            <p class="benefit-card__desc">Entregaste tu espacio en buen estado, asi debe volver. Reparamos cualquier dano.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Banner -->
+    <section class="banner">
+      <div class="container">
+        <p class="banner__text">Disfruta de tu vida. Tu arriendo llegara mes a mes, totalmente seguro</p>
+      </div>
+    </section>
+
+    <!-- Asistencias -->
+    <section class="section section--alt">
+      <div class="container">
+        <h2 class="text-center" style="font-size:1.8rem;font-weight:700">Asistencias incluidas</h2>
+        <div class="assistances__grid">
+          <div class="assistance-card">
+            <div class="assistance-card__icon">&#128167;</div>
+            <h3 class="assistance-card__title">Fugas de agua o gas</h3>
+            <p class="assistance-card__desc">Enviamos tecnicos expertos de inmediato para controlar el dano y proteger la infraestructura de tu inmueble.</p>
+          </div>
+          <div class="assistance-card">
+            <div class="assistance-card__icon">&#128273;</div>
+            <h3 class="assistance-card__title">Cerrajeria de emergencia</h3>
+            <p class="assistance-card__desc">Olvidate de los dolores de cabeza por llaves perdidas. Te damos asistencia rapida para garantizar el acceso.</p>
+          </div>
+          <div class="assistance-card">
+            <div class="assistance-card__icon">&#128295;</div>
+            <h3 class="assistance-card__title">Danos al inmueble</h3>
+            <p class="assistance-card__desc">Si ocurren imprevistos que afecten el funcionamiento de la vivienda, nos encargamos de repararlo.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Arriendo -->
+    <section class="section">
+      <div class="container">
+        <h2 class="faq__title">Preguntas frecuentes</h2>
+        <div class="faq__list">
+          <div class="faq__item">
+            <button class="faq__question" onclick="toggleFaq(this)">Que cubre exactamente mi seguro de arrendamiento?</button>
+            <div class="faq__answer"><p>El seguro cubre el canon de arrendamiento si el inquilino no paga, deudas de servicios publicos pendientes, danos al inmueble causados por el arrendatario y asistencias de emergencia.</p></div>
+          </div>
+          <div class="faq__item">
+            <button class="faq__question" onclick="toggleFaq(this)">Que pasa si el inquilino no paga el arriendo?</button>
+            <div class="faq__answer"><p>Te pagamos nosotros. Recibiras el canon de arrendamiento completo mes a mes, sin importar si tu inquilino ha cumplido o no.</p></div>
+          </div>
+          <div class="faq__item">
+            <button class="faq__question" onclick="toggleFaq(this)">El seguro cubre las deudas de servicios publicos?</button>
+            <div class="faq__answer"><p>Si. Si el inquilino deja deudas de agua, luz, gas u otros servicios al terminar el contrato, el seguro cubre esas obligaciones hasta los topes definidos en tu poliza.</p></div>
+          </div>
+          <div class="faq__item">
+            <button class="faq__question" onclick="toggleFaq(this)">Cuanto vale asegurar mi propiedad en arriendo?</button>
+            <div class="faq__answer"><p>Generalmente representa entre el 3% y el 5% del valor del arriendo mensual. Obten tu cotizacion exacta en menos de 2 minutos.</p></div>
+          </div>
+          <div class="faq__item">
+            <button class="faq__question" onclick="toggleFaq(this)">Que requisitos debe cumplir el inquilino?</button>
+            <div class="faq__answer"><p>Cedula de ciudadania, comprobante de ingresos (minimo 3 veces el valor del arriendo) y buen historial crediticio.</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- COTIZADOR -->
+    <section class="section section--alt" id="cotizadorSection">
+      <div class="container">
+        <div class="cotizador__container">
+          <!-- Step 1 -->
+          <div class="cotizador__step active" id="cotStep1">
+            <div class="cotizador__progress">
+              <div class="cotizador__progress-bar filled"></div>
+              <div class="cotizador__progress-bar"></div>
+              <div class="cotizador__progress-bar"></div>
+            </div>
+            <div class="cotizador__card">
+              <p class="cotizador__step-label">Paso 1 de 3</p>
+              <h2 class="cotizador__title">Cuentanos del lugar</h2>
+              <p class="cotizador__subtitle">Con estos datos calculamos la proteccion exacta para tu bolsillo.</p>
+              <div class="form-group">
+                <label>Departamento</label>
+                <select id="cotDepto" onchange="updateCities()">
+                  <option value="">Selecciona</option>
+                  <option value="cundinamarca">Cundinamarca</option>
+                  <option value="valle">Valle del Cauca</option>
+                  <option value="meta">Meta</option>
+                  <option value="antioquia">Antioquia</option>
+                  <option value="atlantico">Atlantico</option>
+                  <option value="otro">Otro departamento</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Ciudad</label>
+                <select id="cotCiudad">
+                  <option value="">Primero selecciona un departamento</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Cuanto vale el arriendo?</label>
+                <input type="text" id="cotArriendo" placeholder="$ 0" oninput="formatCurrency(this)">
+                <small>El valor mensual que paga tu inquilino</small>
+              </div>
+              <div class="form-group">
+                <label>Tiene cuota de administracion?</label>
+                <div class="form-radio">
+                  <label><input type="radio" name="admin" value="si" onchange="document.getElementById('adminGroup').style.display='block'"> Si</label>
+                  <label><input type="radio" name="admin" value="no" checked onchange="document.getElementById('adminGroup').style.display='none'"> No</label>
+                </div>
+              </div>
+              <div class="form-group" id="adminGroup" style="display:none">
+                <label>Cuanto vale la administracion?</label>
+                <input type="text" id="cotAdmin" placeholder="$ 0" oninput="formatCurrency(this)">
+                <small>El valor mensual de la administracion</small>
+              </div>
+              <div class="form-group">
+                <label>Por cuanto tiempo lo aseguraras?</label>
+                <select id="cotTiempo">
+                  <option value="6">6 meses</option>
+                  <option value="12" selected>12 meses</option>
+                  <option value="24">24 meses</option>
+                  <option value="36">36 meses</option>
+                </select>
+              </div>
+              <button class="btn btn--primary" style="width:100%;justify-content:center" onclick="cotizadorStep2()">Ver cotizacion</button>
+            </div>
+          </div>
+
+          <!-- Step 2 - Resultado -->
+          <div class="cotizador__step" id="cotStep2">
+            <div class="cotizador__progress">
+              <div class="cotizador__progress-bar filled"></div>
+              <div class="cotizador__progress-bar filled"></div>
+              <div class="cotizador__progress-bar"></div>
+            </div>
+            <div class="cotizador__card">
+              <div style="text-align:center;margin-bottom:24px">
+                <p style="font-size:.9rem;font-weight:600;color:var(--primary);margin-bottom:4px">Todo listo! Este es tu presupuesto</p>
+                <p style="font-size:.85rem;color:var(--text-light)">Calculado exactamente a la medida de tu propiedad.</p>
+              </div>
+              <div style="text-align:center;margin-bottom:24px">
+                <p class="cotizador__price" id="cotPrecio">$ 1.200.000</p>
+                <p class="cotizador__price-label">Lo que pagas por todo el ano</p>
+              </div>
+              <div>
+                <div class="cotizador__benefit">
+                  <span class="cotizador__benefit-icon">&#10003;</span>
+                  <span>Hasta 12 meses de arriendo cubiertos si tu inquilino se atrasa</span>
+                </div>
+                <div class="cotizador__benefit">
+                  <span class="cotizador__benefit-icon">&#10003;</span>
+                  <span>Pago de facturas de servicios publicos pendientes</span>
+                </div>
+                <div class="cotizador__benefit">
+                  <span class="cotizador__benefit-icon">&#10003;</span>
+                  <span>Cobertura total de los tramites en el proceso de desocupacion</span>
+                </div>
+                <div class="cotizador__benefit">
+                  <span class="cotizador__benefit-icon">&#10003;</span>
+                  <span>Respaldo y asistencia juridica experta disponible 24/7</span>
+                </div>
+              </div>
+              <div class="cotizador__extras">
+                <p class="cotizador__extras-title">Coberturas adicionales</p>
+                <div class="cotizador__extra-item">
+                  <label><input type="checkbox"> Servicios publicos hasta $3.000.000</label>
+                  <span>+ $20.000</span>
+                </div>
+                <div class="cotizador__extra-item">
+                  <label><input type="checkbox"> Faltas en el inventario hasta $950.000</label>
+                  <span>+ $15.000</span>
+                </div>
+              </div>
+              <button class="btn btn--primary" style="width:100%;justify-content:center;margin-top:24px" onclick="cotizadorStep3()">Continuar</button>
+            </div>
+          </div>
+
+          <!-- Step 3 - Datos -->
+          <div class="cotizador__step" id="cotStep3">
+            <div class="cotizador__progress">
+              <div class="cotizador__progress-bar filled"></div>
+              <div class="cotizador__progress-bar filled"></div>
+              <div class="cotizador__progress-bar filled"></div>
+            </div>
+            <div class="cotizador__card">
+              <p class="cotizador__step-label">Paso 3 de 3</p>
+              <h2 class="cotizador__title">Casi listo</h2>
+              <p class="cotizador__subtitle">Danos tus datos y un asesor te contactara para finalizar.</p>
+              <div class="form-group">
+                <label>Nombre completo</label>
+                <input type="text" id="cotNombre" placeholder="Tu nombre completo">
+                <p class="form-error" id="errNombre">Ingresa tu nombre completo</p>
+              </div>
+              <div class="form-group">
+                <label>Numero de celular</label>
+                <input type="tel" id="cotTel" placeholder="300 123 4567" maxlength="10">
+                <p class="form-error" id="errTel">Ingresa un numero valido (10 digitos)</p>
+              </div>
+              <div class="form-group">
+                <label>Correo electronico</label>
+                <input type="email" id="cotEmail" placeholder="tu@correo.com">
+                <p class="form-error" id="errEmail">Ingresa un correo valido</p>
+              </div>
+              <button class="btn btn--primary" style="width:100%;justify-content:center" onclick="cotizadorSubmit()">Confirmar cotizacion</button>
+            </div>
+          </div>
+
+          <!-- Step 4 - Success -->
+          <div class="cotizador__step" id="cotStep4">
+            <div class="cotizador__card">
+              <div class="cotizador__success">
+                <div class="cotizador__success-icon">&#10004;</div>
+                <h3>Ya tenemos tus datos!</h3>
+                <p>Un asesor se pondra en contacto contigo pronto para finalizar tu cotizacion.</p>
+                <a href="#" class="btn btn--primary" onclick="navigateTo('home')">Volver al inicio</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Otros productos -->
+    <section class="section">
+      <div class="container">
+        <h2 class="text-center" style="font-size:1.8rem;font-weight:700;margin-bottom:40px">Que mas quieres asegurar hoy?</h2>
+        <div class="products__grid">
+          <div class="product-card">
+            <div class="product-card__icon">&#128663;</div>
+            <h3 class="product-card__title">Mi carro</h3>
+            <p class="product-card__desc">Cuidamos tu camino, tu vehiculo y a quienes van contigo en cada viaje.</p>
+            <div class="product-card__actions">
+              <a href="#" class="btn btn--primary btn--sm">Proteger mi carro</a>
+            </div>
+          </div>
+          <div class="product-card">
+            <div class="product-card__icon">&#128154;</div>
+            <h3 class="product-card__title">Mi salud</h3>
+            <p class="product-card__desc">Cuidamos tu salud, tu bienestar y a quienes mas amas, en todo momento.</p>
+            <div class="product-card__actions">
+              <a href="#" class="btn btn--primary btn--sm">Proteger mi salud</a>
+            </div>
+          </div>
+          <div class="product-card">
+            <div class="product-card__icon">&#127969;</div>
+            <h3 class="product-card__title">Mi casa</h3>
+            <p class="product-card__desc">Cuidamos tu casa, tu bienestar y los recuerdos que construyes en ella.</p>
+            <div class="product-card__actions">
+              <a href="#" class="btn btn--primary btn--sm">Proteger mi casa</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ===== MODAL: Ciudad no disponible ===== -->
+  <div class="modal-overlay" id="modalCiudad">
+    <div class="modal">
+      <div class="modal__icon">&#128205;</div>
+      <h3 class="modal__title">Aun no llegamos a tu ciudad</h3>
+      <p class="modal__text">Estamos creciendo. Por ahora cubrimos Cundinamarca, Cali y Villavicencio.</p>
+      <div class="modal__actions">
+        <a href="#" class="btn btn--primary btn--sm" onclick="navigateTo('productos');closeModal()">Conocer mas productos</a>
+        <button class="btn btn--outline btn--sm" onclick="closeModal()">Volver a seleccionar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__grid">
+        <div class="footer__brand">
+          <p class="footer__brand-name">Proyectiva</p>
+          <p>Agencia de seguros 100% digital. Cuidamos lo que mas te importa, sin papeleo y sin letras chiquitas.</p>
+          <a href="#" class="btn btn--accent btn--sm">Escribenos al WhatsApp</a>
+        </div>
+        <div>
+          <p class="footer__title">Nuestros productos</p>
+          <div class="footer__links">
+            <a href="#" onclick="navigateTo('arriendo')">Seguro de arrendamiento</a>
+            <a href="#">Seguro para carros</a>
+            <a href="#">Seguro de salud</a>
+            <a href="#">Seguro para pymes</a>
+            <a href="#">Seguro para la casa</a>
+          </div>
+        </div>
+        <div>
+          <p class="footer__title">Canales de atencion</p>
+          <div class="footer__contact">
+            <p>cliente@proyectivaseguros.com</p>
+            <p>Bogota, Cra 11 no 71 73 piso 3 — Edificio Davivienda</p>
+            <p style="margin-top:12px;font-size:.8rem">Proyectiva Agencia de Seguros LTDA<br>NIT: 900957271-1</p>
+          </div>
+        </div>
+        <div>
+          <p class="footer__title">Enlaces de interes</p>
+          <div class="footer__links">
+            <a href="#" onclick="navigateTo('nosotros')">Sobre nosotros</a>
+            <a href="#" onclick="navigateTo('ayuda')">Centro de ayuda</a>
+            <a href="#">Terminos y condiciones</a>
+            <a href="#">Politica de datos</a>
+            <a href="#">Radicacion de PQRS</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <p>&copy; 2026 Proyectiva. Todos los derechos reservados.</p>
+        <p>Proyectiva Agencia de Seguros LTDA &middot; NIT 900957271-1</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===== JAVASCRIPT ===== -->
+  <script>
+    // Navigation SPA
+    function navigateTo(page) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      const target = document.getElementById('page-' + page);
+      if (target) target.classList.add('active');
+      window.scrollTo(0, 0);
+      // Update nav active state
+      document.querySelectorAll('.header__nav a').forEach(a => {
+        a.classList.toggle('active', a.dataset.page === page);
+      });
+    }
+
+    // Mobile nav
+    function toggleMobileNav() {
+      document.getElementById('mobileNav').classList.toggle('active');
+    }
+
+    // FAQ accordion
+    function toggleFaq(btn) {
+      const item = btn.parentElement;
+      const wasActive = item.classList.contains('active');
+      // Close siblings
+      item.parentElement.querySelectorAll('.faq__item').forEach(i => i.classList.remove('active'));
+      if (!wasActive) item.classList.add('active');
+    }
+
+    // Product filters
+    function filterProducts(category) {
+      const grid = document.getElementById('productsGrid');
+      const cards = grid.querySelectorAll('.product-card');
+      const buttons = grid.closest('section').querySelectorAll('.products__filter');
+      buttons.forEach(b => b.classList.remove('active'));
+      event.target.classList.add('active');
+      cards.forEach(card => {
+        if (category === 'todos' || card.dataset.category === category) {
+          card.style.display = '';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    // Blog filters
+    function filterBlog(category) {
+      const grid = document.getElementById('blogGrid');
+      const cards = grid.querySelectorAll('.blog-card');
+      const buttons = grid.closest('section').querySelectorAll('.products__filter');
+      buttons.forEach(b => b.classList.remove('active'));
+      event.target.classList.add('active');
+      cards.forEach(card => {
+        if (category === 'todos' || card.dataset.cat === category) {
+          card.style.display = '';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    // Help center tabs
+    function filterHelpTab(category, btn) {
+      const list = document.getElementById('helpFaqList');
+      const items = list.querySelectorAll('.faq__item');
+      const tabs = document.querySelectorAll('.help__tab');
+      tabs.forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+      items.forEach(item => {
+        if (item.dataset.helpCat === category) {
+          item.style.display = '';
+        } else {
+          item.style.display = 'none';
+        }
+      });
+    }
+
+    // Help search
+    function filterHelp() {
+      const query = document.getElementById('helpSearch').value.toLowerCase();
+      const items = document.getElementById('helpFaqList').querySelectorAll('.faq__item');
+      items.forEach(item => {
+        const text = item.textContent.toLowerCase();
+        item.style.display = text.includes(query) ? '' : 'none';
+      });
+    }
+
+    // Cotizador - Cities
+    const cities = {
+      cundinamarca: ['Bogota', 'Soacha', 'Chia', 'Zipaquira', 'Facatativa'],
+      valle: ['Cali', 'Palmira', 'Buenaventura', 'Tulua'],
+      meta: ['Villavicencio', 'Acacias', 'Granada'],
+      antioquia: ['Medellin', 'Envigado', 'Bello', 'Itagui'],
+      atlantico: ['Barranquilla', 'Soledad', 'Malambo'],
+      otro: []
+    };
+    const coveredCities = ['Bogota','Soacha','Chia','Zipaquira','Facatativa','Cali','Villavicencio'];
+
+    function updateCities() {
+      const depto = document.getElementById('cotDepto').value;
+      const citySelect = document.getElementById('cotCiudad');
+      citySelect.innerHTML = '';
+      if (!depto || depto === 'otro') {
+        citySelect.innerHTML = '<option value="">No disponible en tu departamento</option>';
+        return;
+      }
+      citySelect.innerHTML = '<option value="">Selecciona ciudad</option>';
+      (cities[depto] || []).forEach(c => {
+        citySelect.innerHTML += '<option value="' + c + '">' + c + '</option>';
+      });
+    }
+
+    // Currency format
+    function formatCurrency(input) {
+      let val = input.value.replace(/[^0-9]/g, '');
+      if (val) {
+        val = parseInt(val).toLocaleString('es-CO');
+        input.value = '$ ' + val;
+      } else {
+        input.value = '';
+      }
+    }
+
+    // Cotizador steps
+    function cotizadorStep2() {
+      const depto = document.getElementById('cotDepto').value;
+      const ciudad = document.getElementById('cotCiudad').value;
+      const arriendo = document.getElementById('cotArriendo').value;
+
+      if (!depto || !ciudad || !arriendo) {
+        alert('Por favor completa todos los campos');
+        return;
+      }
+
+      // Check covered cities
+      if (!coveredCities.includes(ciudad)) {
+        document.getElementById('modalCiudad').classList.add('active');
+        return;
+      }
+
+      // Calculate price (simplified: 4% anual del arriendo)
+      const arriendoNum = parseInt(arriendo.replace(/[^0-9]/g, '')) || 0;
+      const tiempo = parseInt(document.getElementById('cotTiempo').value);
+      const precio = Math.round(arriendoNum * 0.04 * tiempo);
+      document.getElementById('cotPrecio').textContent = '$ ' + precio.toLocaleString('es-CO');
+
+      showStep(2);
+    }
+
+    function cotizadorStep3() { showStep(3); }
+
+    function cotizadorSubmit() {
+      const nombre = document.getElementById('cotNombre').value.trim();
+      const tel = document.getElementById('cotTel').value.trim();
+      const email = document.getElementById('cotEmail').value.trim();
+      let valid = true;
+
+      // Validate
+      if (nombre.length < 3) {
+        document.getElementById('errNombre').style.display = 'block'; valid = false;
+      } else { document.getElementById('errNombre').style.display = 'none'; }
+
+      if (!/^\d{10}$/.test(tel)) {
+        document.getElementById('errTel').style.display = 'block'; valid = false;
+      } else { document.getElementById('errTel').style.display = 'none'; }
+
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        document.getElementById('errEmail').style.display = 'block'; valid = false;
+      } else { document.getElementById('errEmail').style.display = 'none'; }
+
+      if (valid) showStep(4);
+    }
+
+    function showStep(n) {
+      document.querySelectorAll('.cotizador__step').forEach(s => s.classList.remove('active'));
+      document.getElementById('cotStep' + n).classList.add('active');
+    }
+
+    // Modal
+    function closeModal() {
+      document.getElementById('modalCiudad').classList.remove('active');
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informe Ejecutivo — Errores App Fácil Pro | Mayo 2026</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #e94560;
+            --primary-dark: #c23152;
+            --dark: #1a1a2e;
+            --dark-alt: #16213e;
+            --dark-card: #0f3460;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #3b82f6;
+            --gray-100: #f1f5f9;
+            --gray-300: #cbd5e1;
+            --gray-500: #64748b;
+            --gray-700: #334155;
+            --gray-900: #0f172a;
+        }
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--gray-100);
+            color: var(--gray-900);
+            line-height: 1.6;
+        }
+        .hero {
+            background: linear-gradient(135deg, var(--dark) 0%, var(--dark-alt) 50%, var(--dark-card) 100%);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 600px;
+            height: 600px;
+            background: var(--primary);
+            opacity: 0.08;
+            border-radius: 50%;
+        }
+        .hero h1 { font-size: 2.2rem; font-weight: 800; margin-bottom: 0.5rem; position: relative; }
+        .hero .subtitle { font-size: 1.1rem; opacity: 0.8; position: relative; }
+        .hero .date { margin-top: 1rem; font-size: 0.9rem; opacity: 0.6; position: relative; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+
+        /* KPI Cards */
+        .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.2rem; margin: -3rem auto 2rem; position: relative; z-index: 10; padding: 0 2rem; max-width: 1200px; }
+        .kpi-card {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            text-align: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border-top: 4px solid var(--gray-300);
+        }
+        .kpi-card:hover { transform: translateY(-4px); box-shadow: 0 8px 30px rgba(0,0,0,0.12); }
+        .kpi-card.success { border-top-color: var(--success); }
+        .kpi-card.danger { border-top-color: var(--danger); }
+        .kpi-card.warning { border-top-color: var(--warning); }
+        .kpi-card.info { border-top-color: var(--info); }
+        .kpi-card .number { font-size: 2.5rem; font-weight: 800; }
+        .kpi-card.success .number { color: var(--success); }
+        .kpi-card.danger .number { color: var(--danger); }
+        .kpi-card.warning .number { color: var(--warning); }
+        .kpi-card.info .number { color: var(--info); }
+        .kpi-card .label { font-size: 0.85rem; color: var(--gray-500); margin-top: 0.3rem; }
+        .kpi-card .detail { font-size: 0.75rem; color: var(--gray-500); margin-top: 0.5rem; font-style: italic; }
+
+        /* Sections */
+        .section { margin-bottom: 2.5rem; }
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 3px solid var(--primary);
+            display: inline-block;
+        }
+        .section-desc { color: var(--gray-500); margin-bottom: 1.5rem; font-size: 0.95rem; }
+
+        /* Donut Chart */
+        .chart-container { display: flex; align-items: center; gap: 2rem; flex-wrap: wrap; justify-content: center; margin-bottom: 2rem; }
+        .donut-wrapper { position: relative; width: 220px; height: 220px; }
+        .donut-wrapper svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+        .donut-wrapper circle { fill: none; stroke-width: 28; }
+        .donut-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; }
+        .donut-center .big { font-size: 2rem; font-weight: 800; color: var(--dark); }
+        .donut-center .small { font-size: 0.75rem; color: var(--gray-500); }
+        .legend { display: flex; flex-direction: column; gap: 0.8rem; }
+        .legend-item { display: flex; align-items: center; gap: 0.6rem; font-size: 0.9rem; }
+        .legend-dot { width: 14px; height: 14px; border-radius: 4px; flex-shrink: 0; }
+
+        /* Tables */
+        .table-wrapper { overflow-x: auto; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+        table { width: 100%; border-collapse: collapse; background: white; font-size: 0.88rem; }
+        thead { background: var(--dark); color: white; }
+        th { padding: 0.9rem 1rem; text-align: left; font-weight: 600; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; }
+        td { padding: 0.8rem 1rem; border-bottom: 1px solid #f1f5f9; }
+        tr:hover td { background: #f8fafc; }
+        .badge { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.72rem; font-weight: 600; }
+        .badge-success { background: #d1fae5; color: #065f46; }
+        .badge-danger { background: #fee2e2; color: #991b1b; }
+        .badge-warning { background: #fef3c7; color: #92400e; }
+        .badge-info { background: #dbeafe; color: #1e40af; }
+        .badge-gray { background: #f1f5f9; color: #475569; }
+        .badge-purple { background: #ede9fe; color: #5b21b6; }
+
+        /* Timeline */
+        .timeline { position: relative; padding-left: 2rem; }
+        .timeline::before { content: ''; position: absolute; left: 8px; top: 0; bottom: 0; width: 3px; background: linear-gradient(to bottom, var(--primary), var(--info), var(--success)); border-radius: 2px; }
+        .timeline-item { position: relative; margin-bottom: 1.5rem; padding: 1.2rem; background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .timeline-item::before { content: ''; position: absolute; left: -1.65rem; top: 1.5rem; width: 14px; height: 14px; border-radius: 50%; border: 3px solid var(--primary); background: white; }
+        .timeline-item.active::before { background: var(--primary); }
+        .timeline-item.done::before { background: var(--success); border-color: var(--success); }
+        .timeline-item .phase { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: var(--primary); font-weight: 700; }
+        .timeline-item h4 { margin: 0.3rem 0; font-size: 1rem; }
+        .timeline-item p { font-size: 0.85rem; color: var(--gray-500); }
+
+        /* Tabs */
+        .tabs { display: flex; gap: 0; margin-bottom: 0; border-bottom: 2px solid #e2e8f0; }
+        .tab { padding: 0.8rem 1.5rem; cursor: pointer; font-weight: 600; font-size: 0.9rem; color: var(--gray-500); border-bottom: 3px solid transparent; transition: all 0.2s; margin-bottom: -2px; }
+        .tab:hover { color: var(--dark); }
+        .tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+        .tab-content { display: none; padding: 1.5rem 0; }
+        .tab-content.active { display: block; }
+
+        /* Callout */
+        .callout { padding: 1.2rem 1.5rem; border-radius: 12px; margin-bottom: 1.5rem; display: flex; align-items: flex-start; gap: 1rem; }
+        .callout-success { background: #ecfdf5; border-left: 4px solid var(--success); }
+        .callout-danger { background: #fef2f2; border-left: 4px solid var(--danger); }
+        .callout-warning { background: #fffbeb; border-left: 4px solid var(--warning); }
+        .callout-info { background: #eff6ff; border-left: 4px solid var(--info); }
+        .callout .icon { font-size: 1.5rem; flex-shrink: 0; }
+        .callout .text { font-size: 0.9rem; }
+        .callout .text strong { display: block; margin-bottom: 0.2rem; }
+
+        /* Progress bars */
+        .progress-row { display: flex; align-items: center; gap: 1rem; margin-bottom: 0.8rem; }
+        .progress-label { width: 140px; font-size: 0.82rem; font-weight: 600; color: var(--gray-700); }
+        .progress-bar { flex: 1; height: 10px; background: #e2e8f0; border-radius: 5px; overflow: hidden; }
+        .progress-fill { height: 100%; border-radius: 5px; transition: width 1s ease; }
+        .progress-value { width: 40px; font-size: 0.8rem; font-weight: 700; text-align: right; }
+
+        /* Footer */
+        .footer { text-align: center; padding: 2rem; color: var(--gray-500); font-size: 0.8rem; border-top: 1px solid #e2e8f0; margin-top: 2rem; }
+
+        @media (max-width: 768px) {
+            .kpi-grid { grid-template-columns: repeat(2, 1fr); padding: 0 1rem; }
+            .hero h1 { font-size: 1.6rem; }
+            .container { padding: 1rem; }
+            .chart-container { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <h1>📊 Informe Ejecutivo — Errores App Fácil Pro</h1>
+        <p class="subtitle">Respuesta al Escalamiento — Gerencia de Facilities</p>
+        <p class="date">14 de mayo de 2026 | Equipo de Desarrollo Facilities</p>
+    </div>
+
+    <div class="kpi-grid">
+        <div class="kpi-card success">
+            <div class="number">36%</div>
+            <div class="label">No son error</div>
+            <div class="detail">OTs reportadas exitosamente</div>
+        </div>
+        <div class="kpi-card danger">
+            <div class="number">41%</div>
+            <div class="label">Error real</div>
+            <div class="detail">Causa raíz identificada</div>
+        </div>
+        <div class="kpi-card warning">
+            <div class="number">5%</div>
+            <div class="label">Regla de negocio</div>
+            <div class="detail">No es error técnico</div>
+        </div>
+        <div class="kpi-card info">
+            <div class="number">20 may</div>
+            <div class="label">Fecha producción</div>
+            <div class="detail">Deploy de fixes activos</div>
+        </div>
+    </div>
+
+    <div class="container">
+
+        <!-- CONCLUSIÓN PRINCIPAL -->
+        <div class="callout callout-success">
+            <div class="icon">✅</div>
+            <div class="text">
+                <strong>Conclusión principal</strong>
+                El 36% de los casos reportados como "error" en realidad fueron OTs procesadas exitosamente. El problema real (41%) tiene causa raíz identificada y plan de remediación activo con fecha de producción martes 20 de mayo de 2026.
+            </div>
+        </div>
+
+        <!-- SECCIÓN 1: CLASIFICACIÓN VISUAL -->
+        <div class="section">
+            <h2 class="section-title">1. Clasificación de los 22 Casos Reportados</h2>
+            <p class="section-desc">Análisis cruzado con Datadog APM, Jira (MDSB) y verificación en plataforma</p>
+
+            <div class="chart-container">
+                <div class="donut-wrapper">
+                    <svg viewBox="0 0 120 120">
+                        <circle cx="60" cy="60" r="46" stroke="#e2e8f0" stroke-dasharray="289" stroke-dashoffset="0"></circle>
+                        <circle cx="60" cy="60" r="46" stroke="#10b981" stroke-dasharray="289" stroke-dashoffset="185" style="animation: fill1 1.5s ease forwards;"></circle>
+                        <circle cx="60" cy="60" r="46" stroke="#ef4444" stroke-dasharray="289" stroke-dashoffset="104" style="animation: fill2 1.5s ease 0.3s forwards;"></circle>
+                        <circle cx="60" cy="60" r="46" stroke="#f59e0b" stroke-dasharray="289" stroke-dashoffset="275" style="animation: fill3 1.5s ease 0.6s forwards;"></circle>
+                    </svg>
+                    <div class="donut-center">
+                        <div class="big">22</div>
+                        <div class="small">casos totales</div>
+                    </div>
+                </div>
+                <div class="legend">
+                    <div class="legend-item"><div class="legend-dot" style="background:#10b981"></div> <strong>8 casos</strong> — OTs exitosas (no son error)</div>
+                    <div class="legend-item"><div class="legend-dot" style="background:#ef4444"></div> <strong>9 casos</strong> — Error real de plataforma</div>
+                    <div class="legend-item"><div class="legend-dot" style="background:#f59e0b"></div> <strong>1 caso</strong> — Regla de negocio (no es error)</div>
+                    <div class="legend-item"><div class="legend-dot" style="background:#8b5cf6"></div> <strong>2 casos</strong> — Error con workaround</div>
+                    <div class="legend-item"><div class="legend-dot" style="background:#94a3b8"></div> <strong>2 casos</strong> — Sin evidencia suficiente</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN 2: TABS DE DETALLE -->
+        <div class="section">
+            <h2 class="section-title">2. Detalle por Caso</h2>
+
+            <div class="tabs">
+                <div class="tab active" onclick="switchTab(event, 'tab-ok')">✅ No son error (8)</div>
+                <div class="tab" onclick="switchTab(event, 'tab-error')">🔴 Error real (9)</div>
+                <div class="tab" onclick="switchTab(event, 'tab-other')">🟡 Otros (5)</div>
+            </div>
+
+            <div id="tab-ok" class="tab-content active">
+                <div class="callout callout-info">
+                    <div class="icon">💡</div>
+                    <div class="text">
+                        <strong>Hallazgo clave</strong>
+                        Existe una desconexión de percepción entre lo que el técnico ve en la app (estado "verde") y lo que el coordinador ve en la plataforma web. Además, la regla de herencia de fotos (solo Dx→Ex) no es conocida por todos los coordinadores.
+                    </div>
+                </div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead><tr><th>OT</th><th>Novedad reportada</th><th>Realidad verificada</th></tr></thead>
+                        <tbody>
+                            <tr><td>541138, 541105</td><td>Queda en verde pero en PC sale en técnico asignado</td><td><span class="badge badge-success">OTs reportadas exitosamente, cuentan con reporte</span></td></tr>
+                            <tr><td>547654</td><td>No se evidencia cargue de información</td><td><span class="badge badge-success">OT tiene evidencia. Regla: solo Dx y Ex heredan fotos</span></td></tr>
+                            <tr><td>547657</td><td>No se evidencia registro fotográfico</td><td><span class="badge badge-success">Misma regla de herencia de fotos</span></td></tr>
+                            <tr><td>540166</td><td>Sube todo pero sigue abierto</td><td><span class="badge badge-success">OT reportada exitosamente desde el app</span></td></tr>
+                            <tr><td>540256</td><td>Sube todo pero sigue abierto</td><td><span class="badge badge-success">OT reportada exitosamente desde el app</span></td></tr>
+                            <tr><td>540248</td><td>Sube todo pero sigue abierto</td><td><span class="badge badge-success">OT reportada exitosamente desde el app</span></td></tr>
+                            <tr><td>546852</td><td>Sube todo pero sigue abierto</td><td><span class="badge badge-success">OT reportada exitosamente desde el app</span></td></tr>
+                            <tr><td>547044</td><td>"Error al enviar el servicio"</td><td><span class="badge badge-success">OT cuenta con reporte y evidencias</span></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="tab-error" class="tab-content">
+                <div class="table-wrapper">
+                    <table>
+                        <thead><tr><th>OT</th><th>Novedad</th><th>Ticket MDSB</th><th>Causa técnica</th></tr></thead>
+                        <tbody>
+                            <tr><td>533438</td><td>Fotos no se evidencian, app pegada</td><td><span class="badge badge-danger">MDSB-1012329</span></td><td>Timeout 7+ min en actarcser</td></tr>
+                            <tr><td>521541</td><td>Fotos no se evidencian, app pegada</td><td><span class="badge badge-gray">Sin reporte</span></td><td>Mismo timeout</td></tr>
+                            <tr><td>533443</td><td>App pegada, archivos se borran</td><td><span class="badge badge-danger">MDSB-1012329</span></td><td>Timeout + sin transaccionalidad</td></tr>
+                            <tr><td>546398</td><td>Diagnóstico se borró al cargar</td><td><span class="badge badge-danger">MDSB-1022494</span></td><td>Reporte parcial por desconexión</td></tr>
+                            <tr><td>532461</td><td>Se borraron fotos y acta</td><td><span class="badge badge-danger">MDSB-1025203</span></td><td>Falla S3 upload (HTTP 500)</td></tr>
+                            <tr><td>547494, 547598, 547234</td><td>Se cerró sin adjuntos / sin acta</td><td><span class="badge badge-danger">MDSB-1026374</span></td><td>Pipeline de evidencias falló</td></tr>
+                            <tr><td>546668</td><td>Queda en verde pero no se envían</td><td><span class="badge badge-danger">MDSB-1026897</span></td><td>Reporte fantasma (JSON corrupto)</td></tr>
+                            <tr><td>545463, 547693, 549047</td><td>"Error al enviar el servicio"</td><td><span class="badge badge-danger">MDSB-1036790</span></td><td>NullReferenceException en backend</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="tab-other" class="tab-content">
+                <div class="table-wrapper">
+                    <table>
+                        <thead><tr><th>OT</th><th>Novedad</th><th>Clasificación</th><th>Detalle</th></tr></thead>
+                        <tbody>
+                            <tr><td>528091 + 9 más</td><td>Finalizada en campo no cambia estado</td><td><span class="badge badge-warning">Regla de negocio</span></td><td>Cierre masivo (MDSB-1000966) rompió flujo. Pendiente respuesta de gerencia.</td></tr>
+                            <tr><td>540241</td><td>App muestra cerrado pero sigue abierto</td><td><span class="badge badge-purple">Workaround</span></td><td>MDSB-1024215 — intervención manual</td></tr>
+                            <tr><td>539177</td><td>Fecha incorrecta al marcar llegada</td><td><span class="badge badge-purple">Workaround</span></td><td>Bug DateTime.Parse() sin CultureInfo</td></tr>
+                            <tr><td>540206, 540242, 540238</td><td>Reportadas por web con error</td><td><span class="badge badge-gray">Sin reporte Jira</span></td><td>No fueron por app móvil</td></tr>
+                            <tr><td>528521</td><td>Fotos no se evidencian</td><td><span class="badge badge-gray">Sin reporte</span></td><td>Falla histórica, sin ticket</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN 3: DIAGNÓSTICO TÉCNICO -->
+        <div class="section">
+            <h2 class="section-title">3. Diagnóstico Técnico — Causa Raíz</h2>
+            <p class="section-desc">Datos de Datadog APM — Período abril 2026</p>
+
+            <div class="callout callout-danger">
+                <div class="icon">⚠️</div>
+                <div class="text">
+                    <strong>Problema central</strong>
+                    El endpoint POST /api/servicio/actarcser tarda 7+ minutos en procesar. El dispositivo móvil cierra la conexión antes de que termine, dejando reportes en estado inconsistente (parciales, sin evidencias, sin cambio de estado).
+                </div>
+            </div>
+
+            <h3 style="font-size:1rem; margin: 1.5rem 0 1rem; color: var(--gray-700);">Errores por endpoint (últimos 7 días — abril 2026)</h3>
+            <div class="progress-row">
+                <div class="progress-label">actarcser</div>
+                <div class="progress-bar"><div class="progress-fill" style="width:33%; background: var(--danger);"></div></div>
+                <div class="progress-value" style="color:var(--danger)">392</div>
+            </div>
+            <div class="progress-row">
+                <div class="progress-label">doc_documento_ot</div>
+                <div class="progress-bar"><div class="progress-fill" style="width:22%; background: #f97316;"></div></div>
+                <div class="progress-value" style="color:#f97316">261</div>
+            </div>
+            <div class="progress-row">
+                <div class="progress-label">amazon-s3/create</div>
+                <div class="progress-bar"><div class="progress-fill" style="width:21%; background: var(--warning);"></div></div>
+                <div class="progress-value" style="color:var(--warning)">253</div>
+            </div>
+            <div class="progress-row">
+                <div class="progress-label">trabajosupdate</div>
+                <div class="progress-bar"><div class="progress-fill" style="width:10%; background: var(--info);"></div></div>
+                <div class="progress-value" style="color:var(--info)">114</div>
+            </div>
+            <div class="progress-row">
+                <div class="progress-label">reporte/{idot}</div>
+                <div class="progress-bar"><div class="progress-fill" style="width:7%; background: #8b5cf6;"></div></div>
+                <div class="progress-value" style="color:#8b5cf6">86</div>
+            </div>
+            <div style="text-align:right; margin-top:0.5rem;">
+                <strong style="font-size:1.1rem; color:var(--danger);">Total: 1,183 errores/semana</strong>
+            </div>
+
+            <h3 style="font-size:1rem; margin: 2rem 0 1rem; color: var(--gray-700);">Flujo del error (reconstruido)</h3>
+            <div style="background:white; border-radius:12px; padding:1.5rem; box-shadow:0 2px 8px rgba(0,0,0,0.05); font-family: monospace; font-size:0.82rem; line-height:1.8; overflow-x:auto;">
+                <div>1️⃣ Técnico completa checklist + captura fotos</div>
+                <div>2️⃣ App envía reporte → <strong style="color:var(--danger)">POST /api/servicio/actarcser</strong></div>
+                <div>3️⃣ ⏱️ Backend tarda <strong style="color:var(--danger)">7+ minutos</strong> (416s medidos en Datadog)</div>
+                <div>4️⃣ 📱 Dispositivo móvil cierra conexión por timeout</div>
+                <div>5️⃣ ❌ Reporte queda <strong>PARCIALMENTE</strong> guardado en BD</div>
+                <div>6️⃣ 📷 Evidencias <strong>NO</strong> se suben a S3</div>
+                <div>7️⃣ 🔄 Al reintentar → <strong style="color:var(--warning)">"Reporte ya existe"</strong> (pero corrupto)</div>
+                <div>8️⃣ 📋 OT queda en "Técnico Asignado" — nunca transiciona</div>
+            </div>
+
+            <h3 style="font-size:1rem; margin: 2rem 0 1rem; color: var(--gray-700);">Factores agravantes</h3>
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap:1rem;">
+                <div style="background:white; border-radius:10px; padding:1rem; border-left:4px solid var(--danger); box-shadow:0 1px 4px rgba(0,0,0,0.05);">
+                    <strong style="font-size:0.85rem;">Backend monolítico legacy</strong>
+                    <p style="font-size:0.8rem; color:var(--gray-500); margin-top:0.3rem;">ASP.NET Framework — Reporte.cs = 2,700 líneas (God Object)</p>
+                </div>
+                <div style="background:white; border-radius:10px; padding:1rem; border-left:4px solid var(--danger); box-shadow:0 1px 4px rgba(0,0,0,0.05);">
+                    <strong style="font-size:0.85rem;">Sin transaccionalidad</strong>
+                    <p style="font-size:0.8rem; color:var(--gray-500); margin-top:0.3rem;">Si falla a mitad del proceso, no hay rollback. Datos quedan inconsistentes.</p>
+                </div>
+                <div style="background:white; border-radius:10px; padding:1rem; border-left:4px solid var(--warning); box-shadow:0 1px 4px rgba(0,0,0,0.05);">
+                    <strong style="font-size:0.85rem;">Sin idempotencia</strong>
+                    <p style="font-size:0.8rem; color:var(--gray-500); margin-top:0.3rem;">Reintentar crea conflictos ("reporte ya existe").</p>
+                </div>
+                <div style="background:white; border-radius:10px; padding:1rem; border-left:4px solid var(--warning); box-shadow:0 1px 4px rgba(0,0,0,0.05);">
+                    <strong style="font-size:0.85rem;">Sin circuit breaker</strong>
+                    <p style="font-size:0.8rem; color:var(--gray-500); margin-top:0.3rem;">Fallas en servicios externos se propagan sin control.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN 4: PLAN DE REMEDIACIÓN -->
+        <div class="section">
+            <h2 class="section-title">4. Plan de Remediación — Historias en Progreso</h2>
+            <p class="section-desc">Target de producción: <strong style="color:var(--primary);">Martes 20 de mayo de 2026</strong></p>
+
+            <div class="callout callout-warning">
+                <div class="icon">🚀</div>
+                <div class="text">
+                    <strong>Estado del sprint actual</strong>
+                    4 historias en progreso activo + 1 en pruebas QA + 1 completada. El equipo está enfocado en resolver la causa raíz del timeout y la pérdida de evidencias.
+                </div>
+            </div>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead><tr><th>HU</th><th>Título</th><th>Estado</th><th>Responsable</th><th>Impacto</th></tr></thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>GD820-7173</strong></td>
+                            <td>Convertir actArcSer a procesamiento asíncrono (202)</td>
+                            <td><span class="badge badge-warning">En Progreso</span></td>
+                            <td>Juan Pablo Valdes</td>
+                            <td>Elimina 392 errores de timeout</td>
+                        </tr>
+                        <tr>
+                            <td><strong>GD820-7344</strong></td>
+                            <td>Unificación endpoint reporte + evidencias</td>
+                            <td><span class="badge badge-warning">En Progreso</span></td>
+                            <td>Juan Pablo Valdes</td>
+                            <td>Reduce puntos de falla</td>
+                        </tr>
+                        <tr>
+                            <td><strong>GD820-7217</strong></td>
+                            <td>Desempaquetar AggregateException + eliminar tareas paralelas</td>
+                            <td><span class="badge badge-warning">En Progreso</span></td>
+                            <td>Julio Cesar Barbosa</td>
+                            <td>Mejora manejo de errores</td>
+                        </tr>
+                        <tr>
+                            <td><strong>GD820-7212</strong></td>
+                            <td>Actualización por reemplazo de reportes (sincronización)</td>
+                            <td><span class="badge badge-warning">En Progreso</span></td>
+                            <td>Julio Cesar Barbosa</td>
+                            <td>Resuelve "reporte ya existe"</td>
+                        </tr>
+                        <tr>
+                            <td><strong>GD820-7339</strong></td>
+                            <td>Eliminar validación fecha Fin + bug fix</td>
+                            <td><span class="badge badge-info">En Pruebas QA</span></td>
+                            <td>Jesse Jones Cortes</td>
+                            <td>Corrige fechas incorrectas</td>
+                        </tr>
+                        <tr>
+                            <td><strong>GD820-7471</strong></td>
+                            <td>Creación nuevo recurso para recibir reporte</td>
+                            <td><span class="badge badge-success">Hecho ✓</span></td>
+                            <td>Juan Pablo Valdes</td>
+                            <td>Nuevo endpoint listo</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- SECCIÓN 5: PLAN ESTRUCTURAL -->
+        <div class="section">
+            <h2 class="section-title">5. Plan Estructural de Transformación</h2>
+            <p class="section-desc">Estrategia Strangler Fig Pattern — Migración progresiva de C#/.NET a Java/Spring Boot</p>
+
+            <div class="timeline">
+                <div class="timeline-item active">
+                    <div class="phase">Fase 1 — Sprint actual → 20 mayo</div>
+                    <h4>Estabilización inmediata</h4>
+                    <p>Procesamiento asíncrono (GD820-7173), unificación de flujo (GD820-7344), corrección de errores (GD820-7217), sincronización de reportes (GD820-7212)</p>
+                </div>
+                <div class="timeline-item">
+                    <div class="phase">Fase 2 — Sprints junio 2026</div>
+                    <h4>Resiliencia</h4>
+                    <p>Transaccionalidad con rollback (GD820-7177), circuit breaker para SIAB (GD820-7192), optimización SQL (GD820-7193), validaciones preventivas (GD820-7444, 7381)</p>
+                </div>
+                <div class="timeline-item">
+                    <div class="phase">Fase 3 — Q3 2026</div>
+                    <h4>Migración tecnológica</h4>
+                    <p>Migración a Java/Spring Boot con Strangler Fig (GD820-7221), nuevo endpoint async (GD820-7222), migración de consultas (GD820-7229). Eliminación definitiva del legacy.</p>
+                </div>
+            </div>
+
+            <h3 style="font-size:1rem; margin: 2rem 0 1rem; color: var(--gray-700);">Backlog estructural completo (12 HUs)</h3>
+            <div class="table-wrapper">
+                <table>
+                    <thead><tr><th>HU</th><th>Título</th><th>Estado</th><th>Responsable</th><th>Fase</th></tr></thead>
+                    <tbody>
+                        <tr><td>GD820-7177</td><td>Transaccionalidad con rollback</td><td><span class="badge badge-gray">Backlog</span></td><td>Juan Pablo Valdes</td><td>2</td></tr>
+                        <tr><td>GD820-7192</td><td>Paralelizar sincronización + circuit breaker SIAB</td><td><span class="badge badge-gray">Backlog</span></td><td>Carlos Patino</td><td>2</td></tr>
+                        <tr><td>GD820-7193</td><td>Optimizar cambio de estado OT — timeouts SQL</td><td><span class="badge badge-gray">Backlog</span></td><td>Carlos Patino</td><td>2</td></tr>
+                        <tr><td>GD820-7381</td><td>Validación null-safe nombre archivo (.NET)</td><td><span class="badge badge-info">Por Hacer</span></td><td>Oscar Romero</td><td>2</td></tr>
+                        <tr><td>GD820-7432</td><td>Permitir envío sin evidencia + nota excepción</td><td><span class="badge badge-gray">Backlog</span></td><td>Carlos Patino</td><td>2</td></tr>
+                        <tr><td>GD820-7436</td><td>Notificar coordinador si reporte sin evidencia</td><td><span class="badge badge-gray">Backlog</span></td><td>Carlos Patino</td><td>2</td></tr>
+                        <tr><td>GD820-7444</td><td>Validar existencia archivo fotos antes de envío</td><td><span class="badge badge-gray">Backlog</span></td><td>Carlos Patino</td><td>2</td></tr>
+                        <tr><td>GD820-7512</td><td>Revisión reporte vs criterios de aceptación</td><td><span class="badge badge-info">Por Hacer</span></td><td>Julio Cesar Barbosa</td><td>2</td></tr>
+                        <tr><td>GD820-7221</td><td>Migración servicio reportes C#→Java (Strangler Fig)</td><td><span class="badge badge-info">Por Hacer</span></td><td>Carlos Patino</td><td>3</td></tr>
+                        <tr><td>GD820-7222</td><td>Migrar endpoint creación reporte a Java async</td><td><span class="badge badge-gray">Backlog</span></td><td>Carlos Patino</td><td>3</td></tr>
+                        <tr><td>GD820-7229</td><td>Migrar consulta reportes a Java/Spring Boot</td><td><span class="badge badge-gray">Backlog</span></td><td>Juan Pablo Valdes</td><td>3</td></tr>
+                        <tr><td>GD820-7338</td><td>EBA Transformación FácilPro</td><td><span class="badge badge-gray">Backlog</span></td><td>Carlos Patino</td><td>3</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- SECCIÓN 6: CONCLUSIONES -->
+        <div class="section">
+            <h2 class="section-title">6. Conclusiones para la Gerencia</h2>
+
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap:1.5rem; margin-bottom:2rem;">
+                <div style="background:white; border-radius:14px; padding:1.5rem; box-shadow:0 2px 12px rgba(0,0,0,0.06);">
+                    <h3 style="color:var(--danger); font-size:1rem; margin-bottom:1rem;">🔴 Lo que SÍ es error (y se está corrigiendo)</h3>
+                    <ul style="list-style:none; font-size:0.88rem; line-height:2;">
+                        <li>⚡ Timeout de 7+ min en envío de reportes → <strong>Fix en progreso</strong></li>
+                        <li>📷 Evidencias que no suben a S3 → <strong>Unificación de endpoint</strong></li>
+                        <li>👻 "Reporte ya existe" fantasma → <strong>Sincronización por reemplazo</strong></li>
+                        <li>📅 Fechas incorrectas → <strong>En pruebas QA</strong></li>
+                    </ul>
+                </div>
+                <div style="background:white; border-radius:14px; padding:1.5rem; box-shadow:0 2px 12px rgba(0,0,0,0.06);">
+                    <h3 style="color:var(--success); font-size:1rem; margin-bottom:1rem;">✅ Lo que NO es error</h3>
+                    <ul style="list-style:none; font-size:0.88rem; line-height:2;">
+                        <li>📊 <strong>36% de los casos</strong> son OTs procesadas correctamente</li>
+                        <li>📸 Herencia de fotos (solo Dx→Ex) es <strong>regla de negocio</strong></li>
+                        <li>🔒 Cierre masivo (MDSB-1000966) es <strong>decisión de negocio</strong> pendiente</li>
+                        <li>💡 Desconexión de percepción app vs web (comunicación)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="callout callout-warning">
+                <div class="icon">📌</div>
+                <div class="text">
+                    <strong>Pendiente de la Gerencia</strong>
+                    La regla de negocio del cierre masivo de OTs (MDSB-1000966, solicitado por María Paula Poveda) rompió el flujo automático de cierre. Se ha puesto sobre la mesa revisarla pero <strong>no se ha recibido respuesta</strong>. Esto afecta a 10+ OTs del listado.
+                </div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN 7: PRÓXIMOS PASOS -->
+        <div class="section">
+            <h2 class="section-title">7. Próximos Pasos</h2>
+            <div class="table-wrapper">
+                <table>
+                    <thead><tr><th>Acción</th><th>Responsable</th><th>Fecha</th><th>Estado</th></tr></thead>
+                    <tbody>
+                        <tr><td>Deploy de fixes en progreso a producción</td><td>Equipo desarrollo</td><td><strong>20 mayo 2026</strong></td><td><span class="badge badge-warning">En curso</span></td></tr>
+                        <tr><td>Validación post-deploy con Datadog APM</td><td>Equipo desarrollo</td><td>21-23 mayo</td><td><span class="badge badge-gray">Pendiente</span></td></tr>
+                        <tr><td>Comunicar a coordinadores: regla herencia fotos</td><td>Operaciones</td><td>Inmediato</td><td><span class="badge badge-info">Recomendado</span></td></tr>
+                        <tr><td>Revisar regla cierre masivo (MDSB-1000966)</td><td>Gerencia Facilities</td><td>Pendiente</td><td><span class="badge badge-danger">Sin respuesta</span></td></tr>
+                        <tr><td>Iniciar Fase 2 — Resiliencia</td><td>Equipo desarrollo</td><td>Sprint junio</td><td><span class="badge badge-gray">Planificado</span></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>Informe generado con datos de <strong>Jira</strong> (GD820, MDSB), <strong>Datadog APM</strong> y <strong>GitHub</strong></p>
+        <p>Última actualización: 14 de mayo de 2026 | Equipo de Desarrollo Facilities</p>
+    </div>
+
+    <script>
+        function switchTab(event, tabId) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+        }
+
+        // Animate progress bars on scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.querySelectorAll('.progress-fill').forEach(bar => {
+                        bar.style.width = bar.style.width;
+                    });
+                }
+            });
+        }, { threshold: 0.3 });
+
+        document.querySelectorAll('.progress-row').forEach(row => observer.observe(row));
+
+        // Animate KPI cards on load
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.kpi-card').forEach((card, i) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = `opacity 0.5s ease ${i * 0.1}s, transform 0.5s ease ${i * 0.1}s`;
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 100);
+            });
+        });
+    </script>
+</body>
+</html>

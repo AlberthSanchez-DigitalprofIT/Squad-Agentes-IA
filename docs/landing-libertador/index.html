@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>El Libertador - Registro</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap');
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --lib-red: #C41E1E;
+      --lib-red-dark: #9B1818;
+      --lib-red-light: #E02D2D;
+      --lib-black: #1A1A1A;
+      --lib-dark-gray: #2C2C2C;
+      --lib-gray: #6B6B6B;
+      --lib-light-gray: #E8E8E8;
+      --lib-bg: #F5F5F5;
+      --lib-white: #FFFFFF;
+      --lib-border: #D0D0D0;
+      --lib-shadow: rgba(0, 0, 0, 0.12);
+      --radius: 8px;
+      --transition: 0.25s ease;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: var(--lib-bg);
+      color: var(--lib-black);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* ── Header / Logo Bar ── */
+    .header {
+      width: 100%;
+      background: var(--lib-black);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 18px 24px;
+    }
+
+    .header img {
+      height: 48px;
+      object-fit: contain;
+    }
+
+    /* ── Hero Section ── */
+    .hero {
+      width: 100%;
+      background: linear-gradient(135deg, var(--lib-black) 0%, var(--lib-dark-gray) 100%);
+      padding: 48px 24px 56px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--lib-red);
+    }
+
+    .hero h1 {
+      color: var(--lib-white);
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 12px;
+      line-height: 1.2;
+    }
+
+    .hero h1 span {
+      color: var(--lib-red);
+    }
+
+    .hero p {
+      color: #B0B0B0;
+      font-size: 1rem;
+      font-weight: 400;
+      max-width: 480px;
+      margin: 0 auto;
+      line-height: 1.5;
+    }
+
+    /* ── Form Card ── */
+    .form-card {
+      background: var(--lib-white);
+      width: 100%;
+      max-width: 480px;
+      margin: -32px auto 40px;
+      border-radius: 12px;
+      box-shadow: 0 8px 32px var(--lib-shadow);
+      padding: 36px 32px 32px;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* ── Fields ── */
+    .field {
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .field label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--lib-gray);
+      margin-bottom: 6px;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      height: 48px;
+      padding: 0 14px;
+      border: 1.5px solid var(--lib-border);
+      border-radius: var(--radius);
+      font-family: inherit;
+      font-size: 0.95rem;
+      color: var(--lib-black);
+      background: var(--lib-white);
+      transition: border-color var(--transition), box-shadow var(--transition);
+      outline: none;
+    }
+
+    .field input::placeholder {
+      color: #A0A0A0;
+      font-weight: 400;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      border-color: var(--lib-red);
+      box-shadow: 0 0 0 3px rgba(196, 30, 30, 0.12);
+    }
+
+    .field input.input-error {
+      border-color: var(--lib-red);
+    }
+
+    .field-error {
+      display: block;
+      color: var(--lib-red);
+      font-size: 0.75rem;
+      margin-top: 4px;
+      font-weight: 500;
+    }
+
+    /* ── Phone Row ── */
+    .phone-row {
+      display: flex;
+      gap: 12px;
+    }
+
+    .phone-prefix {
+      flex: 0 0 140px;
+    }
+
+    .phone-prefix label,
+    .phone-number label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--lib-gray);
+      margin-bottom: 6px;
+    }
+
+    .phone-prefix select {
+      width: 100%;
+      height: 48px;
+      padding: 0 10px;
+      border: 1.5px solid var(--lib-border);
+      border-radius: var(--radius);
+      font-family: inherit;
+      font-size: 0.9rem;
+      color: var(--lib-black);
+      background: var(--lib-white);
+      cursor: pointer;
+      outline: none;
+      transition: border-color var(--transition);
+    }
+
+    .phone-prefix select:focus {
+      border-color: var(--lib-red);
+      box-shadow: 0 0 0 3px rgba(196, 30, 30, 0.12);
+    }
+
+    .phone-number {
+      flex: 1;
+    }
+
+    .phone-number input {
+      width: 100%;
+      height: 48px;
+      padding: 0 14px;
+      border: 1.5px solid var(--lib-border);
+      border-radius: var(--radius);
+      font-family: inherit;
+      font-size: 0.95rem;
+      color: var(--lib-black);
+      outline: none;
+      transition: border-color var(--transition);
+    }
+
+    .phone-number input::placeholder {
+      color: #A0A0A0;
+    }
+
+    .phone-number input:focus {
+      border-color: var(--lib-red);
+      box-shadow: 0 0 0 3px rgba(196, 30, 30, 0.12);
+    }
+
+    /* ── Document Row ── */
+    .doc-row {
+      display: flex;
+      gap: 12px;
+    }
+
+    .doc-type {
+      flex: 0 0 200px;
+    }
+
+    .doc-type label,
+    .doc-number label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--lib-gray);
+      margin-bottom: 6px;
+    }
+
+    .doc-type select {
+      width: 100%;
+      height: 48px;
+      padding: 0 10px;
+      border: 1.5px solid var(--lib-border);
+      border-radius: var(--radius);
+      font-family: inherit;
+      font-size: 0.85rem;
+      color: var(--lib-black);
+      background: var(--lib-white);
+      cursor: pointer;
+      outline: none;
+      transition: border-color var(--transition);
+    }
+
+    .doc-type select:focus {
+      border-color: var(--lib-red);
+      box-shadow: 0 0 0 3px rgba(196, 30, 30, 0.12);
+    }
+
+    .doc-number {
+      flex: 1;
+    }
+
+    .doc-number input {
+      width: 100%;
+      height: 48px;
+      padding: 0 14px;
+      border: 1.5px solid var(--lib-border);
+      border-radius: var(--radius);
+      font-family: inherit;
+      font-size: 0.95rem;
+      color: var(--lib-black);
+      outline: none;
+      transition: border-color var(--transition);
+    }
+
+    .doc-number input::placeholder {
+      color: #A0A0A0;
+    }
+
+    .doc-number input:focus {
+      border-color: var(--lib-red);
+      box-shadow: 0 0 0 3px rgba(196, 30, 30, 0.12);
+    }
+
+    /* ── Terms Checkbox ── */
+    .terms {
+      margin: 24px 0 20px;
+    }
+
+    .checkbox-label {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .checkbox-label input[type="checkbox"] {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .checkmark {
+      flex-shrink: 0;
+      width: 22px;
+      height: 22px;
+      border: 2px solid var(--lib-border);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all var(--transition);
+      margin-top: 1px;
+    }
+
+    .checkbox-label input:checked + .checkmark {
+      background: var(--lib-red);
+      border-color: var(--lib-red);
+    }
+
+    .checkbox-label input:checked + .checkmark::after {
+      content: '✓';
+      color: white;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .checkbox-label input:focus-visible + .checkmark {
+      box-shadow: 0 0 0 3px rgba(196, 30, 30, 0.2);
+    }
+
+    .terms-text {
+      font-size: 0.8rem;
+      color: var(--lib-gray);
+      line-height: 1.5;
+    }
+
+    .terms-text a {
+      color: var(--lib-red);
+      font-weight: 600;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    .terms-text a:hover {
+      color: var(--lib-red-dark);
+    }
+
+    /* ── Submit Button ── */
+    .btn-submit {
+      width: 100%;
+      height: 52px;
+      background: var(--lib-red);
+      color: var(--lib-white);
+      border: none;
+      border-radius: var(--radius);
+      font-family: inherit;
+      font-size: 1.05rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: background var(--transition), transform 0.15s ease;
+      letter-spacing: 0.3px;
+    }
+
+    .btn-submit:hover {
+      background: var(--lib-red-dark);
+    }
+
+    .btn-submit:active {
+      transform: scale(0.98);
+    }
+
+    .btn-submit:focus-visible {
+      outline: 3px solid rgba(196, 30, 30, 0.4);
+      outline-offset: 2px;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 520px) {
+      .form-card {
+        margin: -24px 16px 32px;
+        padding: 28px 20px 24px;
+      }
+
+      .hero h1 {
+        font-size: 1.5rem;
+      }
+
+      .hero p {
+        font-size: 0.9rem;
+      }
+
+      .phone-row,
+      .doc-row {
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .phone-prefix,
+      .doc-type {
+        flex: 1;
+      }
+    }
+</style>
+</head>
+<body>
+
+  <!-- Header con logo -->
+  <header class="header">
+    <img src="logo-libertador.svg" alt="El Libertador" />
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <h1>¡A un paso de tener tu <span>lugar soñado!</span></h1>
+    <p>Tus datos nos ayudan a brindarte una experiencia personalizada y están seguros con El Libertador.</p>
+  </section>
+
+  <!-- Formulario -->
+  <main class="form-card" role="main">
+    <form id="contactForm" novalidate>
+
+      <!-- Nombre -->
+      <div class="field">
+        <label for="nombre">Nombre / razón social*</label>
+        <input type="text" id="nombre" name="nombre" placeholder="Nombre / razón social*" required />
+      </div>
+
+      <!-- Correo -->
+      <div class="field">
+        <label for="correo">Correo electrónico*</label>
+        <input type="email" id="correo" name="correo" placeholder="Correo electrónico*" required />
+      </div>
+
+      <!-- Teléfono -->
+      <div class="field phone-row">
+        <div class="phone-prefix">
+          <label for="indicativo">Indicativo*</label>
+          <select id="indicativo" name="indicativo" aria-label="Indicativo telefónico">
+            <option value="+57" selected>🇨🇴 +57</option>
+            <option value="+1">🇺🇸 +1</option>
+            <option value="+52">🇲🇽 +52</option>
+            <option value="+34">🇪🇸 +34</option>
+            <option value="+51">🇵🇪 +51</option>
+            <option value="+56">🇨🇱 +56</option>
+            <option value="+54">🇦🇷 +54</option>
+            <option value="+593">🇪🇨 +593</option>
+          </select>
+        </div>
+        <div class="phone-number">
+          <label for="celular">Número de celular*</label>
+          <input type="tel" id="celular" name="celular" placeholder="Número de celular*" required pattern="[0-9]{7,15}" />
+        </div>
+      </div>
+
+      <!-- Documento -->
+      <div class="field doc-row">
+        <div class="doc-type">
+          <label for="tipoDoc">Tipo de documento*</label>
+          <select id="tipoDoc" name="tipoDoc" aria-label="Tipo de documento">
+            <option value="CC" selected>Cédula de ciudadanía</option>
+            <option value="CE">Cédula de extranjería</option>
+            <option value="NIT">NIT</option>
+            <option value="PP">Pasaporte</option>
+            <option value="TI">Tarjeta de identidad</option>
+          </select>
+        </div>
+        <div class="doc-number">
+          <label for="numDoc">Número de documento*</label>
+          <input type="text" id="numDoc" name="numDoc" placeholder="Número de documento*" required />
+        </div>
+      </div>
+
+      <!-- Términos -->
+      <div class="terms">
+        <label class="checkbox-label">
+          <input type="checkbox" id="terminos" name="terminos" required />
+          <span class="checkmark"></span>
+          <span class="terms-text">
+            Acepto los <a href="#" target="_blank">Términos y condiciones</a>, he leído la
+            <a href="#" target="_blank">Política de privacidad</a> y autorizo el
+            <a href="#" target="_blank">Tratamiento de mis datos personales.</a>
+          </span>
+        </label>
+      </div>
+
+      <!-- Botón -->
+      <button type="submit" class="btn-submit">
+        Continuar
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+      </button>
+    </form>
+  </main>
+
+  <script>
+    const form = document.getElementById('contactForm');
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      // Reset errors
+      document.querySelectorAll('.field-error').forEach(el => el.remove());
+      document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+
+      let valid = true;
+
+      const required = [
+        { id: 'nombre', msg: 'El nombre es obligatorio' },
+        { id: 'correo', msg: 'El correo electrónico es obligatorio' },
+        { id: 'celular', msg: 'El número de celular es obligatorio' },
+        { id: 'numDoc', msg: 'El número de documento es obligatorio' },
+      ];
+
+      required.forEach(function(field) {
+        const input = document.getElementById(field.id);
+        if (!input.value.trim()) {
+          valid = false;
+          showError(input, field.msg);
+        }
+      });
+
+      // Email format
+      const correo = document.getElementById('correo');
+      if (correo.value.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo.value)) {
+        valid = false;
+        showError(correo, 'Ingresa un correo electrónico válido');
+      }
+
+      // Checkbox
+      const terminos = document.getElementById('terminos');
+      if (!terminos.checked) {
+        valid = false;
+        const termsDiv = document.querySelector('.terms');
+        const err = document.createElement('span');
+        err.className = 'field-error';
+        err.textContent = 'Debes aceptar los términos y condiciones';
+        termsDiv.appendChild(err);
+      }
+
+      if (valid) {
+        alert('¡Formulario enviado correctamente! Gracias por registrarte en El Libertador.');
+        form.reset();
+      }
+    });
+
+    function showError(input, msg) {
+      input.classList.add('input-error');
+      const err = document.createElement('span');
+      err.className = 'field-error';
+      err.textContent = msg;
+      input.parentElement.appendChild(err);
+    }
+  </script>
+
+</body>
+</html>

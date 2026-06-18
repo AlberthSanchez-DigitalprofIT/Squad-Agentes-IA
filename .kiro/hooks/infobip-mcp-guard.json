@@ -1,0 +1,15 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Infobip MCP Guard",
+      "description": "Solo el agente Comms Analyst puede usar los MCPs de Infobip. Además, PROHÍBE cualquier acción de envío directo de mensajes (SMS, WhatsApp, Email, Voice, Push, 2FA PIN) incluso si el agente autorizado lo intenta.",
+      "trigger": "PreToolUse",
+      "action": {
+        "type": "agent",
+        "prompt": "CONTROL DE ACCESO — Infobip MCP Guard.\n\nEl MCP de Infobip está RESTRINGIDO a:\n- Comms Analyst (análisis de flujos, templates, logs, documentación)\n\nEvalúa si la herramienta MCP de Infobip es invocada por un agente autorizado.\n\n- Si el contexto actual es Comms Analyst: Verificar RESTRICCIÓN DE ENVÍO (ver abajo).\n- Si el contexto es cualquier otro agente: ACCESO DENEGADO. Informa que las consultas a Infobip deben delegarse al agente Comms Analyst.\n\nRESTRICCIÓN DE ENVÍO (aplica incluso para Comms Analyst):\nSi la herramienta invocada tiene como propósito ENVIAR un mensaje (send_sms, send_whatsapp, send_email, send_voice, send_pin, send_push, o cualquier acción que resulte en comunicación saliente a un usuario final):\n- ACCESO DENEGADO. El agente Comms Analyst tiene PROHIBIDO enviar mensajes directamente.\n- Informar: 'El envío directo de mensajes está restringido. El agente puede preparar el payload/template pero el envío debe ejecutarse manualmente desde el portal de Infobip.'\n\nAcciones PERMITIDAS para Comms Analyst:\n- Consultar logs, reportes de entrega, estadísticas\n- Crear/editar templates (sin enviar)\n- Crear/editar/previsualizar flujos de WhatsApp Flow\n- Consultar perfiles de People\n- Buscar documentación de Infobip\n- Consultar configuraciones de 2FA (sin enviar PINs)\n- Consultar balance y auditoría de cuenta"
+      },
+      "enabled": false
+    }
+  ]
+}

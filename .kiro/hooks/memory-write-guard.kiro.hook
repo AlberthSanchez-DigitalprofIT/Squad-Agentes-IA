@@ -1,0 +1,33 @@
+---
+trigger: preToolUse
+tools:
+  - write
+description: Enforcea que cada agente solo escriba en su propia carpeta de memoria. Ningún agente puede escribir en la memoria de otro.
+action: |
+  Cuando un agente intenta escribir en `Workspace/memory/`, verificar:
+  
+  1. El path de destino DEBE corresponder a la carpeta del agente activo:
+     - Knowledge Scout → Workspace/memory/scout/
+     - Historian → Workspace/memory/historian/
+     - Test Engineer → Workspace/memory/test-engineer/
+     - Platform Analyst → Workspace/memory/platform-analyst/
+     - PO-Agile → Workspace/memory/po-agile/
+     - Doc Updater → Workspace/memory/doc-updater/
+     - Cloud SRE → Workspace/memory/cloud-sre/
+     - Clarity Behavior → Workspace/memory/clarity-behavior/
+     - Angular Developer → Workspace/memory/angular-developer/
+     - Cloud Infra → Workspace/memory/cloud-infra/
+     - AI Agent Ops → Workspace/memory/ai-agent-ops/
+     - BI Strategist → Workspace/memory/bi-strategist/
+     - Report Builder → Workspace/memory/report-builder/
+     - Comms Analyst → Workspace/memory/comms-analyst/
+     - Harness Engineer → Workspace/memory/harness-engineer/
+     - Auditor → Workspace/memory/auditor/
+  
+  2. Si el agente intenta escribir en una carpeta de memoria que NO le corresponde: BLOQUEAR.
+     Mensaje: "Solo puedes escribir en tu propia memoria: Workspace/memory/{tu-carpeta}/"
+  
+  3. LECTURA es libre: cualquier agente puede leer cualquier carpeta de memoria.
+  
+  4. El Orquestador NO escribe en memorias (solo coordina).
+---

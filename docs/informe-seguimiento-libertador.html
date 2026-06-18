@@ -1,0 +1,462 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard de Seguimiento Ejecutivo - Squad El Libertador</title>
+<style>
+:root{--azul:#253150;--rojo:#bd0f14;--gris-claro:#f4f4f4;--gris-medio:#e0e0e0;--verde:#28a745;--amarillo:#f0ad4e;--rojo-sem:#dc3545;--texto:#2c3e50;--texto-sec:#6c757d;--blanco:#ffffff}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI','Helvetica Neue',Arial,sans-serif;background:var(--gris-claro);color:var(--texto);line-height:1.6}
+.container{max-width:1200px;margin:0 auto;padding:2rem}
+header{background:linear-gradient(90deg,var(--rojo),var(--azul));color:var(--blanco);padding:2.5rem 3rem;border-radius:12px;margin-bottom:2rem;box-shadow:0 4px 20px rgba(37,49,80,0.3)}
+header h1{font-size:1.75rem;font-weight:700;margin-bottom:0.5rem}
+header .subtitle{font-size:1rem;opacity:0.9}
+header .meta{display:flex;gap:2rem;margin-top:1rem;font-size:0.85rem;opacity:0.8}
+.logo-placeholder{float:right;width:80px;height:80px;background:rgba(255,255,255,0.15);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:0.7rem;text-align:center;color:rgba(255,255,255,0.6)}
+.resumen-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.25rem;margin-bottom:2rem}
+.resumen-card{background:var(--blanco);border-radius:10px;padding:1.5rem;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,0.06);border-top:4px solid var(--azul)}
+.resumen-card .valor{font-size:2rem;font-weight:700;color:var(--azul)}
+.resumen-card .label{font-size:0.85rem;color:var(--texto-sec);margin-top:0.25rem}
+.section{margin-bottom:2.5rem}
+.section-title{font-size:1.25rem;font-weight:700;color:var(--azul);margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:3px solid var(--rojo);display:inline-block}
+.section-desc{background:var(--blanco);border-radius:10px;padding:1.25rem 1.5rem;margin-bottom:1.25rem;box-shadow:0 2px 8px rgba(0,0,0,0.04);font-size:0.92rem;color:var(--texto-sec);border-left:4px solid var(--azul)}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;margin-bottom:1.5rem}
+.kpi-card{background:var(--blanco);border-radius:10px;padding:1.25rem;box-shadow:0 2px 8px rgba(0,0,0,0.06);display:flex;align-items:center;gap:1rem}
+.kpi-card .semaforo{width:14px;height:14px;border-radius:50%;flex-shrink:0}
+.semaforo.verde{background:var(--verde)}.semaforo.amarillo{background:var(--amarillo)}.semaforo.rojo{background:var(--rojo-sem)}.semaforo.gris{background:var(--gris-medio)}
+.kpi-card .kpi-info{flex:1}
+.kpi-card .kpi-name{font-size:0.85rem;color:var(--texto-sec)}
+.kpi-card .kpi-values{display:flex;gap:1.5rem;margin-top:0.25rem}
+.kpi-card .kpi-real{font-weight:700;color:var(--azul)}
+.kpi-card .kpi-obj{font-size:0.85rem;color:var(--texto-sec)}
+.cumpl-critico{color:var(--rojo-sem);font-weight:600}.cumpl-pendiente{color:var(--texto-sec);font-style:italic;font-size:0.8rem}
+.cumpl-verde{color:var(--verde);font-weight:600}
+.table-wrapper{background:var(--blanco);border-radius:10px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.06);margin-bottom:1.5rem}
+table{width:100%;border-collapse:collapse}
+th{background:var(--azul);color:var(--blanco);padding:0.85rem 1rem;font-size:0.8rem;text-transform:uppercase;letter-spacing:0.03em;text-align:left}
+td{padding:0.75rem 1rem;font-size:0.88rem;border-bottom:1px solid var(--gris-medio)}
+tr:nth-child(even) td{background:var(--gris-claro)}
+tr:last-child td{border-bottom:none}
+.badge{display:inline-block;padding:0.2rem 0.6rem;border-radius:4px;font-size:0.75rem;font-weight:600}
+.badge-prod{background:#d4edda;color:#155724}.badge-pruebas{background:#fff3cd;color:#856404}.badge-dev{background:#cce5ff;color:#004085}.badge-estab{background:#e2e3f1;color:#383d6e}
+.alerta-box{background:#fff5f5;border:1px solid #f5c6cb;border-left:4px solid var(--rojo-sem);border-radius:8px;padding:1rem 1.25rem;margin-bottom:1rem}
+.alerta-box.warning{background:#fffbea;border-color:#ffeeba;border-left-color:var(--amarillo)}
+.alerta-box h4{font-size:0.9rem;margin-bottom:0.25rem;color:var(--rojo-sem)}
+.alerta-box.warning h4{color:#856404}
+.alerta-box p{font-size:0.85rem;color:var(--texto-sec)}
+.equipo-tag{display:inline-block;background:var(--azul);color:var(--blanco);padding:0.3rem 0.75rem;border-radius:20px;font-size:0.8rem;margin:0.25rem}
+.backlog-list{background:var(--blanco);border-radius:10px;padding:1.25rem;box-shadow:0 2px 8px rgba(0,0,0,0.04);margin-bottom:1rem}
+.backlog-list ul{padding-left:1.5rem}.backlog-list li{margin-bottom:0.4rem;font-size:0.88rem;color:var(--texto-sec)}
+.footer{text-align:center;padding:2rem 0 1rem;font-size:0.8rem;color:var(--texto-sec);border-top:1px solid var(--gris-medio);margin-top:2rem}
+@media(max-width:768px){.container{padding:1rem}header{padding:1.5rem}header h1{font-size:1.3rem}.resumen-grid{grid-template-columns:repeat(2,1fr)}}
+.slide{background:var(--blanco);border-radius:12px;padding:2rem;margin-bottom:1.5rem;box-shadow:0 2px 12px rgba(0,0,0,0.06);position:relative;overflow:hidden}
+.slide::before{content:'';position:absolute;top:0;left:0;width:100%;height:5px;background:linear-gradient(90deg,var(--rojo),var(--azul))}
+.slide-title{font-size:1.15rem;font-weight:700;color:var(--azul);margin-bottom:1rem;text-align:center}
+.slide-subtitle{font-size:0.92rem;color:var(--texto-sec);margin-bottom:0.75rem;text-align:center}
+.slide-logo{position:absolute;top:1rem;right:1.5rem;font-size:0.7rem;color:var(--azul);font-weight:700;opacity:0.6}
+.hallazgo-card{background:var(--gris-claro);border-radius:8px;padding:1rem 1.25rem;border-left:4px solid;margin-bottom:0.75rem}
+.hallazgo-card.verde-border{border-left-color:var(--verde)}
+.hallazgo-card.amarillo-border{border-left-color:var(--amarillo)}
+.hallazgo-card.rojo-border{border-left-color:var(--rojo-sem)}
+.hallazgo-card h4{font-size:0.9rem;margin-bottom:0.3rem}
+.hallazgo-card p,.hallazgo-card li{font-size:0.85rem;color:var(--texto-sec)}
+.conclusiones-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1rem;margin-bottom:1rem}
+.conclusion-card{background:var(--gris-claro);border-radius:8px;padding:1.25rem;border:1px solid var(--gris-medio)}
+.conclusion-card h4{font-size:0.9rem;color:var(--azul);margin-bottom:0.4rem}
+.conclusion-card p{font-size:0.83rem;color:var(--texto-sec)}
+.acciones-banner{background:var(--azul);color:var(--blanco);border-radius:8px;padding:1rem 1.5rem;margin-top:1rem;font-size:0.85rem;text-align:center}
+.acciones-banner span{margin:0 0.5rem}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+<div class="logo-placeholder">LOGO<br>El Libertador</div>
+<h1>Dashboard de Seguimiento Ejecutivo</h1>
+<p class="subtitle">Squad El Libertador &mdash; Reporte VP Sponsor</p>
+<div class="meta"><span>Fecha de corte: Junio 2026</span><span>Carriles activos: 6</span></div>
+</header>
+
+<section class="section">
+<h2 class="section-title">Resumen Ejecutivo</h2>
+<div class="resumen-grid">
+<div class="resumen-card"><div class="valor">6</div><div class="label">Carriles Estrategicos</div></div>
+<div class="resumen-card"><div class="valor">3 Dev</div><div class="label">Equipo Dev</div></div>
+<div class="resumen-card"><div class="valor">2 Dev</div><div class="label">Dev Autogestion</div></div>
+<div class="resumen-card"><div class="valor">1 Analitica</div><div class="label">Equipo Analitica</div></div>
+<div class="resumen-card"><div class="valor" style="color:#dc3545">1</div><div class="label">Alertas Activas</div></div>
+</div>
+</section>
+
+<!-- CARRIL 1: APIFICACION -->
+<section class="section">
+<h2 class="section-title">1. Apificacion</h2>
+<div class="section-desc">
+<strong>Proposito:</strong> Habilitar la integracion tecnologica con aliados (inmobiliarias e integradores) para que puedan originar estudios digitales de arrendamiento directamente desde sus CRM o canales digitales, con el fin de: Acelerar el ingreso de negocios, reducir fricciones operativas, incrementar volumen de estudios digitales y mejorar la experiencia de aliados y clientes.
+</div>
+
+<h3 style="font-size:1rem;color:var(--azul);margin-bottom:0.75rem">KPIs</h3>
+<div class="kpi-grid">
+<div class="kpi-card"><div class="semaforo rojo"></div><div class="kpi-info"><div class="kpi-name">Numero de aliados VIP en produccion</div><div class="kpi-values"><span class="kpi-real">5</span><span class="kpi-obj">Obj: 138</span></div><div class="cumpl-critico">3.62%</div></div></div>
+<div class="kpi-card"><div class="semaforo gris"></div><div class="kpi-info"><div class="kpi-name">Numero inmobiliarias en produccion</div><div class="kpi-values"><span class="kpi-real">0</span></div><div class="cumpl-pendiente">Sin meta definida</div></div></div>
+<div class="kpi-card"><div class="semaforo rojo"></div><div class="kpi-info"><div class="kpi-name">Numero de CRM en Produccion</div><div class="kpi-values"><span class="kpi-real">0</span><span class="kpi-obj">Obj: 6</span></div><div class="cumpl-critico">0.00%</div></div></div>
+<div class="kpi-card"><div class="semaforo gris"></div><div class="kpi-info"><div class="kpi-name">Solicitudes via apificacion (incluye Ciencuadras)</div><div class="kpi-values"><span class="kpi-real">303</span><span class="kpi-obj">Obj: Pendiente</span></div><div class="cumpl-pendiente">Pendiente</div></div></div>
+</div>
+
+<h3 style="font-size:1rem;color:var(--azul);margin-bottom:0.75rem">&#191;En que vamos? &mdash; Estado de Integraciones</h3>
+<div class="table-wrapper">
+<table>
+<thead><tr><th>Aliado</th><th>Tipo</th><th>Estado</th><th>Fecha Produccion</th></tr></thead>
+<tbody>
+<tr><td>La Estrella</td><td>Inmobiliaria</td><td><span class="badge badge-prod">Produccion</span></td><td>En produccion</td></tr>
+<tr><td>El Castillo</td><td>Inmobiliaria</td><td><span class="badge badge-prod">Produccion</span></td><td>En produccion</td></tr>
+<tr><td>Acrecer</td><td>Inmobiliaria</td><td><span class="badge badge-prod">Produccion</span></td><td>En produccion</td></tr>
+<tr><td>Financar</td><td>Inmobiliaria</td><td><span class="badge badge-prod">Produccion</span></td><td>En produccion</td></tr>
+<tr><td>Alquilando</td><td>Inmobiliaria</td><td><span class="badge badge-prod">Produccion</span></td><td>4 mayo (marcha blanca)</td></tr>
+<tr><td>Arrendamientos Villacruz</td><td>Inmobiliaria</td><td><span class="badge badge-pruebas">En pruebas</span></td><td>Junio 15</td></tr>
+<tr><td>Livin Inmobiliaria</td><td>Inmobiliaria</td><td><span class="badge badge-pruebas">En pruebas</span></td><td>Junio 15</td></tr>
+<tr><td>Portada Inmobiliaria</td><td>Inmobiliaria</td><td><span class="badge badge-pruebas">En pruebas</span></td><td>Pendiente definir</td></tr>
+<tr><td>Bancasa</td><td>Inmobiliaria</td><td><span class="badge badge-pruebas">En pruebas</span></td><td>Junio 30</td></tr>
+<tr><td>Inmobiliaria Esteban Rios</td><td>Inmobiliaria (Web)</td><td><span class="badge badge-dev">En desarrollo</span></td><td>Junio 20</td></tr>
+<tr><td>Arrendamientos Ayura S.A.S.</td><td>Inmobiliaria</td><td><span class="badge badge-dev">En desarrollo</span></td><td>Julio 15</td></tr>
+<tr><td>Castellon Inmobiliaria</td><td>Inmobiliaria</td><td><span class="badge badge-dev">En desarrollo</span></td><td>Julio 15</td></tr>
+<tr><td>Simi</td><td>CRM</td><td><span class="badge badge-pruebas">En pruebas</span></td><td>Junio 30</td></tr>
+<tr><td>I+D</td><td>CRM</td><td><span class="badge badge-pruebas">En pruebas</span></td><td>Mayo 30</td></tr>
+<tr><td>Orbis</td><td>CRM</td><td><span class="badge badge-pruebas">En pruebas</span></td><td>Julio 30</td></tr>
+<tr><td>Empatia</td><td>CRM</td><td><span class="badge badge-dev">En desarrollo</span></td><td>Agosto 30</td></tr>
+<tr><td>Domus</td><td>CRM</td><td><span class="badge badge-dev">En desarrollo</span></td><td>Agosto 30</td></tr>
+<tr><td>Sedi</td><td>CRM</td><td><span class="badge badge-dev">En desarrollo</span></td><td>Julio 30</td></tr>
+</tbody>
+</table>
+</div>
+
+<!-- SLIDE: EQUIPO -->
+<div class="slide">
+<div class="slide-logo">EL LIBERTADOR</div>
+<h3 class="slide-title">Apificacion &mdash; Equipo</h3>
+<p class="slide-subtitle">Dedicacion de los equipos de desarrollo, desde la construccion del API hasta la dedicacion a las integraciones</p>
+<div class="table-wrapper" style="margin-top:1rem">
+<table>
+<thead><tr><th>Rol</th><th>SEP/25</th><th>OCT/25</th><th>NOV/25</th><th>DIC/25</th><th>ENE/26</th><th>FEB/26</th><th>MAR/26</th><th>ABR/26</th><th>MAY/26</th><th>JUN/26</th><th>JUL/26</th><th>AGO/26</th></tr></thead>
+<tbody>
+<tr><td><strong>PO</strong></td><td>0,25</td><td>0,25</td><td>0,25</td><td>0,25</td><td>0,1</td><td>0,1</td><td>0,3</td><td>0,3</td><td>0,2</td><td>0,2</td><td>0,2</td><td>0,2</td></tr>
+<tr><td><strong>LT</strong></td><td>0,3</td><td>0,3</td><td>0,3</td><td>0,3</td><td>0,2</td><td>0,2</td><td>0,2</td><td>0,2</td><td>0,2</td><td>0,2</td><td>0,2</td><td>0,2</td></tr>
+<tr><td><strong>Dev</strong></td><td>0,5</td><td>0,5</td><td>0,5</td><td>0,5</td><td>0</td><td>0</td><td>0</td><td>2</td><td>2</td><td>1</td><td>1</td><td>1</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<!-- SLIDE: INTEGRACIONES ROADMAP -->
+<div class="slide">
+<div class="slide-logo">EL LIBERTADOR</div>
+<h3 class="slide-title">Integraciones &mdash; Roadmap por Canal</h3>
+<div class="table-wrapper">
+<table>
+<thead><tr><th>Canal</th><th>DIC/25</th><th>ENE/26</th><th>FEB/26</th><th>MAR/26</th><th>ABR/26</th><th>MAY/26</th><th>JUN/26</th><th>JUL/26</th><th>AGO/26</th></tr></thead>
+<tbody>
+<tr><td><strong>Ciencuadras</strong></td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td></tr>
+<tr><td><strong>Inmobiliarias</strong></td><td></td><td></td><td></td><td>3</td><td>5</td><td>8</td><td>10</td><td>10</td><td></td></tr>
+<tr><td><strong>CRM</strong></td><td></td><td></td><td></td><td></td><td></td><td>2</td><td>4</td><td>6</td><td></td></tr>
+<tr><td><strong>CRM Inmobil.</strong></td><td></td><td></td><td></td><td></td><td></td><td>66</td><td>117</td><td>136</td><td></td></tr>
+<tr><td><strong>Pagina Inmobil.</strong></td><td></td><td></td><td></td><td></td><td></td><td>1</td><td>1</td><td>1</td><td></td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<!-- SLIDE: DETALLE IMPLEMENTACION -->
+<div class="slide">
+<div class="slide-logo">EL LIBERTADOR</div>
+<h3 class="slide-title">Detalle Implementacion</h3>
+<div class="table-wrapper">
+<table>
+<thead><tr><th>Canal</th><th>Abril</th><th>Mayo</th><th>Junio</th><th>Julio</th><th>Agosto</th></tr></thead>
+<tbody>
+<tr>
+<td><strong>Inmobiliaria</strong></td>
+<td>Acrecer<br>El Castillo<br>La Estrella<br><span class="badge badge-prod">Produccion</span></td>
+<td>Financar<br>Alquilando<br><span class="badge badge-prod">Produccion</span></td>
+<td>Bancasa<br>Livin<br>Villacruz<br><span class="badge badge-pruebas">En pruebas</span></td>
+<td>Esteban Rios<br>Ayura<br><span class="badge badge-dev">Desarrollo</span></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>CRM</strong></td>
+<td></td>
+<td></td>
+<td>Simi<br>I+D<br><span class="badge badge-pruebas">En pruebas</span></td>
+<td>Orbis<br>Sedi<br><span class="badge badge-dev">Desarrollo</span></td>
+<td>Domus<br>Empatia<br><span class="badge badge-dev">Desarrollo</span></td>
+</tr>
+<tr>
+<td><strong>Pagina Web</strong></td>
+<td></td>
+<td></td>
+<td>Castellon Inmobiliaria<br><span class="badge badge-dev">Desarrollo</span></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<!-- SLIDE: VOLUMETRIA POR ALIADO -->
+<div class="slide">
+<div class="slide-logo">EL LIBERTADOR</div>
+<h3 class="slide-title">Detalle Solicitudes por Aliado</h3>
+<div class="table-wrapper">
+<table>
+<thead><tr><th>Aliado</th><th>&#9989; Aprobadas</th><th>&#128488; En estudio</th><th>&#9888;&#65039; Aplazadas</th><th>&#128193; Borrador</th><th>&#10060; Rechazadas</th><th>Total</th></tr></thead>
+<tbody>
+<tr><td>Ciencuadras</td><td>89</td><td>6</td><td>55</td><td>15468</td><td>43</td><td><strong>15661</strong></td></tr>
+<tr><td>Acrecer</td><td>15</td><td>-</td><td>1</td><td>4</td><td>9</td><td><strong>29</strong></td></tr>
+<tr><td>El Castillo</td><td>41</td><td>-</td><td>5</td><td>18</td><td>12</td><td><strong>76</strong></td></tr>
+<tr><td>Financar</td><td>1</td><td>-</td><td>1</td><td>2</td><td>-</td><td><strong>4</strong></td></tr>
+<tr><td>Alquilando</td><td>-</td><td>-</td><td>-</td><td>-</td><td>1</td><td><strong>1</strong></td></tr>
+<tr style="background:#e8f0fe"><td><strong>TOTAL MAYO 2026</strong></td><td style="color:#28a745;font-weight:700">146</td><td>6</td><td style="color:#f0ad4e;font-weight:700">62</td><td>15492</td><td style="color:#dc3545;font-weight:700">65</td><td><strong style="font-size:1.1rem">15771</strong></td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<!-- SLIDE: HALLAZGOS -->
+<div class="slide">
+<div class="slide-logo">EL LIBERTADOR</div>
+<h3 class="slide-title">Hallazgos</h3>
+<p style="text-align:center;font-size:0.9rem;color:var(--texto-sec);margin-bottom:1rem"><strong>&#128202; Comportamiento observado en aliados en produccion y en implementacion</strong></p>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+<div class="hallazgo-card verde-border">
+<h4 style="color:var(--verde)">Avance Tecnico</h4>
+<p>&#9989; Se evidencia avance tecnico y capacidad de integracion con los CRM priorizados.</p>
+</div>
+<div class="hallazgo-card amarillo-border">
+<h4 style="color:#856404">&#9888;&#65039; Evidencia de Negocio Pendiente</h4>
+<p>Aun no existe suficiente evidencia de negocio para validar:</p>
+<ul style="padding-left:1.2rem;margin-top:0.4rem"><li>Volumen incremental generado por integracion</li><li>Nivel de adopcion real por parte de las inmobiliarias</li><li>Impacto en conversion, productividad y experiencia</li></ul>
+</div>
+</div>
+<div class="hallazgo-card rojo-border" style="margin-top:1rem">
+<h4 style="color:var(--rojo-sem)">Riesgo Operativo</h4>
+<p>&#9888;&#65039; Mantener aperturas simultaneas de nuevos aliados diluye capacidad tecnologica y dificulta medir efectividad del modelo.</p>
+</div>
+<div class="alerta-box warning" style="margin-top:1rem">
+<p style="text-align:center;font-weight:600;color:#856404">&#9888;&#65039; La integracion tecnica no garantiza por si sola la utilizacion del canal.</p>
+</div>
+</div>
+
+<!-- SLIDE: CONCLUSIONES -->
+<div class="slide">
+<div class="slide-logo">EL LIBERTADOR</div>
+<h3 class="slide-title">Conclusiones</h3>
+<div class="conclusiones-grid">
+<div class="conclusion-card">
+<h4>1. Finalizar lo iniciado</h4>
+<p><strong>Prioridad:</strong> llevar a produccion los aliados actualmente en desarrollo.<br><strong>Objetivo:</strong> capitalizar la inversion y completar el universo minimo.</p>
+</div>
+<div class="conclusion-card">
+<h4>2. Pausar nuevos aliados</h4>
+<p><strong>Recomendacion:</strong> detener temporalmente nuevos onboarding de apificacion.<br>Evitar dispersion &middot; Consolidar estabilidad &middot; Generar data estrategica.</p>
+</div>
+<div class="conclusion-card">
+<h4>3. Movilizar la adopcion de las integraciones realizadas</h4>
+<p>Evaluar CRM integrados con KPIs sugeridos:<br>&bull; Solicitudes generadas via API<br>&bull; % adopcion por inmobiliaria</p>
+</div>
+<div class="conclusion-card">
+<h4>4. Foco en CRMs para ganar capilaridad</h4>
+<p>Los CRMs multiplican el alcance sin requerir integracion uno a uno con cada inmobiliaria.</p>
+</div>
+<div class="conclusion-card" style="grid-column:1/-1">
+<h4>5. Disminuir capacidad de 2 Dev a 1 Dev</h4>
+<p>Reasignar dedicacion a <strong>Gestion de Cartera</strong>, optimizando los recursos del squad.</p>
+</div>
+</div>
+<div class="acciones-banner">
+<strong>Estrategia de Activacion Comercial:</strong>
+<span>&#9989; Capacitaciones estructuradas</span> |
+<span>&#9989; Playbook de habilitacion</span> |
+<span>&#9989; Acompanamiento post-produccion</span>
+</div>
+</div>
+
+<!-- SLIDE: ACCIONES A IMPLEMENTAR -->
+<div class="slide">
+<div class="slide-logo">EL LIBERTADOR</div>
+<h3 class="slide-title">Acciones a Implementar</h3>
+<div class="conclusiones-grid">
+<div class="conclusion-card" style="grid-column:1/-1">
+<h4>1. Activacion y adopcion comercial del canal</h4>
+<p><strong>Plan de habilitacion con Capacitacion para aliados.</strong><br>Objetivos: Incentivar uso efectivo, aumentar adopcion y fortalecer conocimiento del canal API.</p>
+</div>
+<div class="conclusion-card">
+<h4>2. Priorizar gestion de aplazados</h4>
+<p>Implementar en herramientas de gestion la priorizacion de asignacion de solicitudes por canales de aliados.</p>
+</div>
+<div class="conclusion-card">
+<h4>3. Acuerdos de Confidencialidad</h4>
+<p>Firma de acuerdos de confidencialidad (NDA) con CRMs para asegurar el tratamiento de datos.</p>
+</div>
+</div>
+<div class="acciones-banner">
+<strong>Propuesta de Acciones Prioritarias:</strong>
+<span>&#9989; Capacitaciones estructuradas</span> |
+<span>&#9989; Playbook de uso</span> |
+<span>&#9989; Acompanamiento post-salida</span> |
+<span>&#9989; Seguimiento de activacion</span>
+</div>
+</div>
+
+<div class="backlog-list"><strong>Backlog:</strong><ul><li>Desarrollo de integracion en las 8 inmobiliarias priorizadas</li></ul></div>
+<div><span class="equipo-tag">1 Dev</span><span class="equipo-tag">0.15 LT</span></div>
+</section>
+
+<!-- CARRIL 2: EXPERIENCIA DIGITAL Y CLIENTES -->
+<section class="section">
+<h2 class="section-title">2. Experiencia Digital y Clientes</h2>
+<div class="section-desc">
+<strong>Proposito:</strong> Rediseno de puntos de contacto digitales para mejorar la satisfaccion y la autogestion de inmobiliarias e inquilinos.
+</div>
+
+<h3 style="font-size:1rem;color:var(--azul);margin-bottom:0.75rem">KPIs</h3>
+<div class="kpi-grid">
+<div class="kpi-card"><div class="semaforo gris"></div><div class="kpi-info"><div class="kpi-name">Leads Portal</div><div class="kpi-values"><span class="kpi-real">73</span><span class="kpi-obj">Obj: Pendiente</span></div><div class="cumpl-pendiente">Pendiente</div></div></div>
+<div class="kpi-card"><div class="semaforo rojo"></div><div class="kpi-info"><div class="kpi-name">INS Portal</div><div class="kpi-values"><span class="kpi-real">50</span><span class="kpi-obj">Obj: 80</span></div><div class="cumpl-critico">62.50%</div></div></div>
+<div class="kpi-card"><div class="semaforo gris"></div><div class="kpi-info"><div class="kpi-name">SLO (confiabilidad Datadog)</div><div class="kpi-values"><span class="kpi-real">Pendiente</span></div><div class="cumpl-pendiente">Pendiente</div></div></div>
+<div class="kpi-card"><div class="semaforo gris"></div><div class="kpi-info"><div class="kpi-name">Sesiones</div><div class="kpi-values"><span class="kpi-real">52,941</span></div><div class="cumpl-pendiente">Pendiente</div></div></div>
+<div class="kpi-card"><div class="semaforo gris"></div><div class="kpi-info"><div class="kpi-name">Duracion promedio sesion</div><div class="kpi-values"><span class="kpi-real">4:50 min</span></div><div class="cumpl-pendiente">Pendiente</div></div></div>
+<div class="kpi-card"><div class="semaforo gris"></div><div class="kpi-info"><div class="kpi-name">% Rebote</div><div class="kpi-values"><span class="kpi-real">41.9%</span></div><div class="cumpl-pendiente">Pendiente</div></div></div>
+<div class="kpi-card"><div class="semaforo verde"></div><div class="kpi-info"><div class="kpi-name">Indicador rendimiento</div><div class="kpi-values"><span class="kpi-real">88</span><span class="kpi-obj">Obj: 80</span></div><div class="cumpl-verde">110.00%</div></div></div>
+</div>
+
+<h3 style="font-size:1rem;color:var(--azul);margin-bottom:0.75rem">&#191;En que vamos?</h3>
+<div class="table-wrapper">
+<table>
+<thead><tr><th>Iniciativa</th><th>Estado</th><th>Fecha Clave</th></tr></thead>
+<tbody>
+<tr><td>Ajustes a la funcionalidad de PQRS</td><td><span class="badge badge-dev">En desarrollo</span></td><td>Prod: 12 junio</td></tr>
+<tr><td>Ajustes banner de Jelpit</td><td><span class="badge badge-dev">En desarrollo</span></td><td>Prod: 12 junio</td></tr>
+<tr><td>Rediseno seccion noticias y botones (UX)</td><td><span class="badge badge-estab">En espera imagenes</span></td><td>Pendiente entrega UX</td></tr>
+<tr><td>Diseno de CMS (Modulo administrativo)</td><td><span class="badge badge-dev">En diseno</span></td><td>TBD</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="backlog-list"><strong>Backlog:</strong><ul><li>Portal Inmobiliarias (Login unificado)</li><li>Estrategia de comunicacion de aplazados</li></ul></div>
+<div><span class="equipo-tag">1 Dev</span><span class="equipo-tag">0.15 LT</span></div>
+</section>
+
+<!-- CARRIL 3: AUTOGESTION -->
+<section class="section">
+<h2 class="section-title">3. Autogestion</h2>
+<div class="section-desc">
+<strong>Proposito:</strong> Iniciativas enfocadas en la automatizacion de informes y herramientas de gestion interna para liberar capacidad del equipo manual.
+</div>
+
+<h3 style="font-size:1rem;color:var(--azul);margin-bottom:0.75rem">KPIs</h3>
+<div class="kpi-grid">
+<div class="kpi-card"><div class="semaforo gris"></div><div class="kpi-info"><div class="kpi-name">Solicitudes Aplazadas Biometria/total</div><div class="kpi-values"><span class="kpi-real">1.98%</span></div><div class="cumpl-pendiente">Pendiente</div></div></div>
+<div class="kpi-card"><div class="semaforo gris"></div><div class="kpi-info"><div class="kpi-name">% solicitudes biometria gestionadas negadas</div><div class="kpi-values"><span class="kpi-real">13.72%</span></div><div class="cumpl-pendiente">N/A</div></div></div>
+<div class="kpi-card"><div class="semaforo verde"></div><div class="kpi-info"><div class="kpi-name">Solicitudes aplazadas/total solicitudes</div><div class="kpi-values"><span class="kpi-real">5.33%</span><span class="kpi-obj">Obj: 11%</span></div><div class="cumpl-verde">206%</div></div></div>
+<div class="kpi-card"><div class="semaforo gris"></div><div class="kpi-info"><div class="kpi-name">% solicitudes Estudio digital negadas</div><div class="kpi-values"><span class="kpi-real">Pendiente</span></div><div class="cumpl-pendiente">N/A</div></div></div>
+<div class="kpi-card"><div class="semaforo gris"></div><div class="kpi-info"><div class="kpi-name">Disminucion tiempo operacion Biometria</div><div class="kpi-values"><span class="kpi-real">2h 32min</span></div><div class="cumpl-pendiente">N/A</div></div></div>
+</div>
+
+<h3 style="font-size:1rem;color:var(--azul);margin-bottom:0.75rem">&#191;En que vamos?</h3>
+<div class="table-wrapper">
+<table>
+<thead><tr><th>Iniciativa</th><th>Estado</th><th>Fecha Clave</th></tr></thead>
+<tbody>
+<tr><td>Herramienta de gestion de aplazados: conexion a nueva API</td><td><span class="badge badge-dev">En desarrollo</span></td><td>OK Conexion</td></tr>
+<tr><td>Herramienta de gestion de aplazados Biometria</td><td><span class="badge badge-prod">En produccion</span></td><td>Completado</td></tr>
+<tr><td>Tablero de cifras de la operacion: conexion nueva API + ajustes</td><td><span class="badge badge-dev">En desarrollo</span></td><td>Ajustes en curso</td></tr>
+<tr><td>Unificacion herramienta de aplazados (estudio digital + biometria)</td><td><span class="badge badge-prod">En produccion</span></td><td>Ajustes: 2 junio</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="alerta-box warning">
+<h4>Alerta</h4>
+<p>En revision para migrar a Power BI ya que el tablero de Looker no soporta toda la data. Solo muestra el ultimo mes. Pendiente definicion de metas por parte de la operacion.</p>
+</div>
+
+<div class="backlog-list"><strong>Backlog:</strong><ul><li>Acciones para movilizar solicitudes de estudio digital</li></ul></div>
+<div><span class="equipo-tag">1 Dev Autogestion</span><span class="equipo-tag">0.15 LT</span></div>
+</section>
+
+<!-- CARRIL 4: VICTORIA -->
+<section class="section">
+<h2 class="section-title">4. Victoria</h2>
+<div class="section-desc">
+<strong>Proposito:</strong> Optimizar la atencion en El Libertador con Victoria, aumentando la resolucion automatica, el INS y las eficiencias operativas.
+</div>
+
+<h3 style="font-size:1rem;color:var(--azul);margin-bottom:0.75rem">KPIs</h3>
+<div class="kpi-grid">
+<div class="kpi-card"><div class="semaforo rojo"></div><div class="kpi-info"><div class="kpi-name">INS (16 encuestas semana)</div><div class="kpi-values"><span class="kpi-real">46</span><span class="kpi-obj">Obj: 80</span></div><div class="cumpl-critico">57.50%</div></div></div>
+<div class="kpi-card"><div class="semaforo amarillo"></div><div class="kpi-info"><div class="kpi-name">% resolucion sin intervencion humana</div><div class="kpi-values"><span class="kpi-real">88.81%</span><span class="kpi-obj">Obj: 90%</span></div><div style="font-size:0.8rem;font-weight:600;color:var(--amarillo)">98.67%</div></div></div>
+<div class="kpi-card"><div class="semaforo gris"></div><div class="kpi-info"><div class="kpi-name"># solicitudes atendidas sin intervencion humana</div><div class="kpi-values"><span class="kpi-real">476</span></div><div class="cumpl-pendiente">Pendiente</div></div></div>
+<div class="kpi-card"><div class="semaforo gris"></div><div class="kpi-info"><div class="kpi-name">Eficiencias</div><div class="kpi-values"><span class="kpi-real">0</span><span class="kpi-obj">Obj: 3</span></div><div class="cumpl-pendiente">Pendiente</div></div></div>
+</div>
+
+<h3 style="font-size:1rem;color:var(--azul);margin-bottom:0.75rem">&#191;En que vamos?</h3>
+<div class="table-wrapper">
+<table>
+<thead><tr><th>Iniciativa</th><th>Estado</th><th>Fecha Clave</th></tr></thead>
+<tbody>
+<tr><td>Mejoras pruebaton: fallas en flujo conversacional para solucion de dudas</td><td><span class="badge badge-dev">En desarrollo</span></td><td>Junio 11</td></tr>
+<tr><td>Mejoras pruebaton: mejoras en guion de saludo y bienvenida</td><td><span class="badge badge-dev">En desarrollo</span></td><td>Junio 11</td></tr>
+<tr><td>Victoria gestiona solicitudes de traslado</td><td><span class="badge badge-dev">En desarrollo</span></td><td>Junio 9</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="backlog-list"><strong>Backlog:</strong><ul>
+<li>Victoria gestiona solicitudes de aumento de canon</li>
+<li>Victoria gestiona solicitudes de agendamiento de llamada</li>
+<li>Mejoras pruebaton: sincronizacion de estados para consulta de estudios digitales</li>
+<li>Actualizacion base de conocimiento sobre intentos de biometria</li>
+</ul></div>
+<div><span class="equipo-tag">1 Dev</span><span class="equipo-tag">0.15 LT</span></div>
+</section>
+
+<!-- CARRIL 5: RECAUDO Y CARTERA -->
+<section class="section">
+<h2 class="section-title">5. Recaudo y Cartera</h2>
+<div class="section-desc">
+<strong>Proposito:</strong> Proyectos que impactan directamente el flujo de caja, la cobranza y los procesos juridicos.
+</div>
+
+<div class="section-desc" style="border-left-color:var(--verde)">
+<strong>&#9989; Actualizacion:</strong> Esta semana se realizo la priorizacion, definicion y revision con el equipo de operaciones de cada iniciativa. El equipo ya inicio los desarrollos.
+</div>
+
+<h3 style="font-size:1rem;color:var(--azul);margin-bottom:0.75rem">&#191;En que vamos?</h3>
+<div class="table-wrapper">
+<table>
+<thead><tr><th>#</th><th>Iniciativa</th><th>Estado</th><th>Fecha Produccion</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>Aviso al deudor: recibe WhatsApp con deuda e instruccion</td><td><span class="badge badge-dev">En desarrollo</span></td><td>Junio 15</td></tr>
+<tr><td>2</td><td>Alertas automaticas por grandes siniestros</td><td><span class="badge badge-dev">En desarrollo</span></td><td>Junio 15</td></tr>
+<tr><td>3</td><td>Dashboard de seguimiento de desistimientos</td><td><span class="badge badge-dev">En desarrollo</span></td><td>Junio 15</td></tr>
+<tr><td>4</td><td>Alerta si contactabilidad cae del umbral</td><td><span class="badge badge-dev">En desarrollo</span></td><td>Junio 15</td></tr>
+<tr><td>5</td><td>Recordatorios compromiso de pago (dia anterior + dia de pago)</td><td><span class="badge badge-dev">En desarrollo</span></td><td>Junio 15</td></tr>
+<tr><td>6</td><td>Mensaje automatico si no registra pago en 24h + nuevo link pago</td><td><span class="badge badge-dev">En desarrollo</span></td><td>Junio 15</td></tr>
+<tr><td>7</td><td>Alerta recaudo por sucursal y tipo inmueble</td><td><span class="badge badge-dev">En desarrollo</span></td><td>Junio 15</td></tr>
+<tr><td>8</td><td>Metrica barridos por cobrador y alertamiento baja gestion</td><td><span class="badge badge-dev">En desarrollo</span></td><td>Junio 15</td></tr>
+<tr><td>9</td><td>Migracion aplicativo Huella: levantamiento + primeros modulos frontend Angular (mocks)</td><td><span class="badge badge-dev">En desarrollo</span></td><td>TBD</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="backlog-list"><strong>Backlog:</strong><ul><li>Migracion completa aplicativo Huella</li></ul></div>
+<div><span class="equipo-tag">2 Dev Autogestion</span><span class="equipo-tag">1 Analitica</span><span class="equipo-tag">0.15 LT</span></div>
+</section>
+
+<div class="footer">
+<p>Informe generado con IA &mdash; Squad Agentes IA &middot; Proyecto: El Libertador &middot; Junio 2026</p>
+</div>
+</div>
+</body>
+</html>
