@@ -5,395 +5,70 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gateway de Pagos — Proyectiva</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background: #0f1419;
-            color: #e7e9ea;
-            overflow-x: hidden;
-        }
-
-        .slide {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 60px 80px;
-            position: relative;
-        }
-
-        .slide::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 10%;
-            right: 10%;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, #2d3748, transparent);
-        }
-
-        .slide:last-child::after {
-            display: none;
-        }
-
-        /* Slide 1 — Portada */
-        .slide-cover {
-            background: linear-gradient(135deg, #0f1419 0%, #1a2332 50%, #0f1419 100%);
-        }
-
-        .slide-cover h1 {
-            font-size: 3.2rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #4ade80, #22d3ee);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 16px;
-            text-align: center;
-        }
-
-        .slide-cover .subtitle {
-            font-size: 1.4rem;
-            color: #9ca3af;
-            margin-bottom: 40px;
-            text-align: center;
-        }
-
-        .slide-cover .badge {
-            display: inline-block;
-            padding: 8px 20px;
-            border-radius: 20px;
-            background: rgba(74, 222, 128, 0.1);
-            border: 1px solid rgba(74, 222, 128, 0.3);
-            color: #4ade80;
-            font-size: 0.9rem;
-            font-weight: 500;
-        }
-
-        /* Slide 2 — Alcance */
-        .slide-scope h2 {
-            font-size: 2.2rem;
-            margin-bottom: 32px;
-            color: #f9fafb;
-        }
-
-        .scope-box {
-            background: rgba(34, 211, 238, 0.05);
-            border: 1px solid rgba(34, 211, 238, 0.2);
-            border-radius: 16px;
-            padding: 40px;
-            max-width: 800px;
-            text-align: center;
-        }
-
-        .scope-box p {
-            font-size: 1.2rem;
-            line-height: 1.8;
-            color: #d1d5db;
-        }
-
-        .scope-box .highlight {
-            color: #22d3ee;
-            font-weight: 600;
-        }
-
-        .exclusions {
-            margin-top: 32px;
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .exclusion-tag {
-            padding: 6px 14px;
-            border-radius: 8px;
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            color: #f87171;
-            font-size: 0.85rem;
-        }
-
-        /* Slide 3 — Estados */
-        .slide-states h2 {
-            font-size: 2.2rem;
-            margin-bottom: 40px;
-            color: #f9fafb;
-        }
-
-        .states-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-            max-width: 1000px;
-            width: 100%;
-        }
-
-        .state-card {
-            padding: 24px;
-            border-radius: 12px;
-            background: #1a2332;
-            border: 1px solid #2d3748;
-            transition: transform 0.2s, border-color 0.2s;
-        }
-
-        .state-card:hover {
-            transform: translateY(-2px);
-            border-color: #4ade80;
-        }
-
-        .state-card .state-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 12px;
-        }
-
-        .state-card .state-name {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: #f9fafb;
-        }
-
-        .state-card .state-badge {
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .badge-implementado {
-            background: rgba(74, 222, 128, 0.15);
-            color: #4ade80;
-        }
-
-        .badge-en-implementacion {
-            background: rgba(251, 191, 36, 0.15);
-            color: #fbbf24;
-        }
-
-        .badge-nuevo {
-            background: rgba(34, 211, 238, 0.15);
-            color: #22d3ee;
-        }
-
-        .badge-nuevo-invertir {
-            background: rgba(168, 85, 247, 0.15);
-            color: #a855f7;
-        }
-
-        .state-card .state-desc {
-            color: #9ca3af;
-            font-size: 0.9rem;
-            line-height: 1.5;
-        }
-
-        /* Slide 4 — Diagrama de Flujo */
-        .slide-flow h2 {
-            font-size: 2.2rem;
-            margin-bottom: 40px;
-            color: #f9fafb;
-        }
-
-        .flow-container {
-            max-width: 900px;
-            width: 100%;
-        }
-
-        .flow-diagram {
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0;
-        }
-
-        .flow-node {
-            padding: 14px 28px;
-            border-radius: 10px;
-            font-weight: 600;
-            font-size: 0.95rem;
-            text-align: center;
-            position: relative;
-            z-index: 2;
-        }
-
-        .flow-node-initial {
-            background: linear-gradient(135deg, #fbbf24, #f59e0b);
-            color: #1a2332;
-        }
-
-        .flow-node-intermediate {
-            background: linear-gradient(135deg, #3b82f6, #2563eb);
-            color: #fff;
-        }
-
-        .flow-node-success {
-            background: linear-gradient(135deg, #4ade80, #22c55e);
-            color: #1a2332;
-        }
-
-        .flow-node-error {
-            background: linear-gradient(135deg, #f87171, #ef4444);
-            color: #fff;
-        }
-
-        .flow-node-cancel {
-            background: linear-gradient(135deg, #a855f7, #7c3aed);
-            color: #fff;
-        }
-
-        .flow-node-expire {
-            background: linear-gradient(135deg, #6b7280, #4b5563);
-            color: #fff;
-        }
-
-        .flow-node-return {
-            background: linear-gradient(135deg, #22d3ee, #06b6d4);
-            color: #1a2332;
-        }
-
-        .flow-arrow {
-            width: 2px;
-            height: 30px;
-            background: #4b5563;
-            position: relative;
-        }
-
-        .flow-arrow::after {
-            content: '';
-            position: absolute;
-            bottom: -4px;
-            left: 50%;
-            transform: translateX(-50%);
-            border-left: 5px solid transparent;
-            border-right: 5px solid transparent;
-            border-top: 6px solid #4b5563;
-        }
-
-        .flow-row {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            width: 100%;
-            justify-content: center;
-        }
-
-        .flow-branch {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0;
-        }
-
-        /* SVG Diagram */
-        .svg-flow {
-            width: 100%;
-            max-width: 860px;
-        }
-
-        .svg-flow text {
-            font-family: 'Segoe UI', system-ui, sans-serif;
-        }
-
-        /* Slide 5 — Happy Path */
-        .slide-happy h2 {
-            font-size: 2.2rem;
-            margin-bottom: 40px;
-            color: #f9fafb;
-        }
-
-        .happy-path {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .happy-step {
-            padding: 16px 24px;
-            border-radius: 10px;
-            font-weight: 600;
-            font-size: 1rem;
-        }
-
-        .happy-arrow {
-            color: #4ade80;
-            font-size: 1.5rem;
-        }
-
-        .happy-step-1 { background: rgba(251, 191, 36, 0.15); color: #fbbf24; border: 1px solid rgba(251, 191, 36, 0.3); }
-        .happy-step-2 { background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); }
-        .happy-step-3 { background: rgba(74, 222, 128, 0.15); color: #4ade80; border: 1px solid rgba(74, 222, 128, 0.3); }
-        .happy-step-4 { background: rgba(34, 211, 238, 0.15); color: #22d3ee; border: 1px solid rgba(34, 211, 238, 0.3); }
-
-        /* Slide nav */
-        .slide-number {
-            position: absolute;
-            bottom: 24px;
-            right: 40px;
-            font-size: 0.8rem;
-            color: #4b5563;
-        }
-
-        /* Legend */
-        .legend {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin-top: 32px;
-        }
-
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.85rem;
-            color: #9ca3af;
-        }
-
-        .legend-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 3px;
-        }
-
-        .legend-dot-impl { background: #4ade80; }
-        .legend-dot-wip { background: #fbbf24; }
-        .legend-dot-new { background: #22d3ee; }
-        .legend-dot-invest { background: #a855f7; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: #fff; color: #2d2d2d; overflow-x: hidden; }
+        .slide { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 60px 80px; position: relative; }
+        .slide::after { content: ''; position: absolute; bottom: 0; left: 10%; right: 10%; height: 1px; background: linear-gradient(90deg, transparent, #e5e7eb, transparent); }
+        .slide:last-child::after { display: none; }
+        :root { --primary: #E8632B; --primary-dark: #D94B3F; --primary-light: #F4845F; --success: #16A34A; --error: #DC2626; --nuevo: #2563eb; --gray-50: #f9fafb; --gray-200: #e5e7eb; --gray-500: #6b7280; --gray-700: #374151; --gray-900: #1f2937; }
+        .slide-cover { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); color: #fff; }
+        .slide-cover h1 { font-size: 3.2rem; font-weight: 700; color: #fff; margin-bottom: 16px; text-align: center; }
+        .slide-cover .subtitle { font-size: 1.4rem; color: rgba(255,255,255,0.85); margin-bottom: 40px; text-align: center; }
+        .slide-cover .badge { display: inline-block; padding: 8px 20px; border-radius: 20px; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.4); color: #fff; font-size: 0.9rem; font-weight: 500; }
+        .slide-scope h2, .slide-states h2, .slide-flow h2, .slide-happy h2 { font-size: 2.2rem; margin-bottom: 32px; color: var(--gray-900); }
+        .scope-box { background: var(--gray-50); border: 1px solid var(--gray-200); border-left: 4px solid var(--primary); border-radius: 12px; padding: 40px; max-width: 800px; text-align: center; }
+        .scope-box p { font-size: 1.2rem; line-height: 1.8; color: var(--gray-700); }
+        .scope-box .highlight { color: var(--primary); font-weight: 600; }
+        .exclusions { margin-top: 32px; display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+        .exclusion-tag { padding: 6px 14px; border-radius: 8px; background: rgba(220,38,38,0.08); border: 1px solid rgba(220,38,38,0.25); color: var(--error); font-size: 0.85rem; }
+        .states-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; max-width: 1000px; width: 100%; }
+        .state-card { padding: 24px; border-radius: 12px; background: #fff; border: 1px solid var(--gray-200); box-shadow: 0 2px 8px rgba(0,0,0,0.04); transition: transform 0.2s, box-shadow 0.2s; }
+        .state-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(232,99,43,0.12); }
+        .state-card .state-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+        .state-card .state-name { font-size: 1.1rem; font-weight: 700; color: var(--gray-900); }
+        .state-badge { padding: 4px 10px; border-radius: 6px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+        .badge-implementado { background: rgba(22,163,74,0.1); color: var(--success); }
+        .badge-en-implementacion { background: rgba(232,99,43,0.1); color: var(--primary); }
+        .badge-nuevo { background: rgba(37,99,235,0.1); color: var(--nuevo); }
+        .state-card .state-desc { color: var(--gray-500); font-size: 0.9rem; line-height: 1.5; }
+        .flow-container { max-width: 900px; width: 100%; }
+        .svg-flow { width: 100%; max-width: 860px; }
+        .svg-flow text { font-family: 'Segoe UI', system-ui, sans-serif; }
+        .happy-path { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; justify-content: center; }
+        .happy-step { padding: 16px 24px; border-radius: 10px; font-weight: 600; font-size: 1rem; }
+        .happy-arrow { color: var(--primary); font-size: 1.5rem; }
+        .happy-step-1 { background: rgba(232,99,43,0.08); color: var(--primary); border: 1px solid rgba(232,99,43,0.3); }
+        .happy-step-2 { background: rgba(232,99,43,0.08); color: var(--primary); border: 1px solid rgba(232,99,43,0.3); }
+        .happy-step-3 { background: rgba(22,163,74,0.08); color: var(--success); border: 1px solid rgba(22,163,74,0.3); }
+        .happy-step-4 { background: rgba(22,163,74,0.08); color: var(--success); border: 1px solid rgba(22,163,74,0.3); }
+        .slide-number { position: absolute; bottom: 24px; right: 40px; font-size: 0.8rem; color: var(--gray-500); }
+        .legend { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; margin-top: 32px; }
+        .legend-item { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: var(--gray-500); }
+        .legend-dot { width: 12px; height: 12px; border-radius: 3px; }
+        .legend-dot-impl { background: var(--success); }
+        .legend-dot-wip { background: var(--primary); }
+        .legend-dot-new { background: var(--nuevo); }
+        .tabla-estados { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+        .tabla-estados thead tr { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); }
+        .tabla-estados th { padding: 14px 16px; text-align: left; color: #fff; font-weight: 600; }
+        .tabla-estados td { padding: 12px 16px; border-bottom: 1px solid var(--gray-200); color: var(--gray-700); }
+        .tabla-estados tbody tr:hover { background: var(--gray-50); }
     </style>
 </head>
 <body>
-
     <!-- SLIDE 1: Portada -->
     <section class="slide slide-cover">
         <h1>Gateway de Pagos</h1>
         <p class="subtitle">Alcance para Proyectiva — Venta Digital</p>
         <span class="badge">Solo venta digital del producto</span>
-        <span class="slide-number">1 / 6</span>
+        <span class="slide-number" style="color:rgba(255,255,255,0.5);">1 / 6</span>
     </section>
 
     <!-- SLIDE 2: Alcance -->
     <section class="slide slide-scope">
         <h2>Alcance</h2>
         <div class="scope-box">
-            <p>
-                Para el caso de Proyectiva, el gateway se limita exclusivamente a la
-                <span class="highlight">venta digital del producto</span>.
-                Flujo transaccional de pago unico: el usuario ingresa al formulario,
-                realiza el pago y recibe la confirmacion de compra.
-            </p>
+            <p>Para el caso de Proyectiva, el gateway se limita exclusivamente a la <span class="highlight">venta digital del producto</span>. Flujo transaccional de pago unico: el usuario ingresa al formulario, realiza el pago y recibe la confirmacion de compra.</p>
             <div class="exclusions">
                 <span class="exclusion-tag">Sin reversos</span>
                 <span class="exclusion-tag">Sin devoluciones</span>
@@ -405,245 +80,123 @@
         <span class="slide-number">2 / 6</span>
     </section>
 
-    <!-- SLIDE 3: Estados -->
+    <!-- SLIDE 3: Estados Cards -->
     <section class="slide slide-states">
         <h2>Estados del Gateway</h2>
         <div class="states-grid">
-            <div class="state-card">
-                <div class="state-header">
-                    <span class="state-name">LOADED</span>
-                    <span class="state-badge badge-en-implementacion">En implementacion</span>
-                </div>
-                <p class="state-desc">Formulario de pago cargado. PayLink generado, usuario aun no realiza el pago.</p>
-            </div>
-            <div class="state-card">
-                <div class="state-header">
-                    <span class="state-name">PENDIENTE</span>
-                    <span class="state-badge badge-en-implementacion">En implementacion</span>
-                </div>
-                <p class="state-desc">Pago enviado a la pasarela, esperando respuesta.</p>
-            </div>
-            <div class="state-card">
-                <div class="state-header">
-                    <span class="state-name">APROBADO</span>
-                    <span class="state-badge badge-implementado">Implementado</span>
-                </div>
-                <p class="state-desc">Pago exitoso. Venta completada, se procede con emision del producto.</p>
-            </div>
-            <div class="state-card">
-                <div class="state-header">
-                    <span class="state-name">RECHAZADO</span>
-                    <span class="state-badge badge-implementado">Implementado</span>
-                </div>
-                <p class="state-desc">Pago no autorizado por banco, pasarela o antifraude. El usuario puede reintentar.</p>
-            </div>
-            <div class="state-card">
-                <div class="state-header">
-                    <span class="state-name">CANCELADO</span>
-                    <span class="state-badge badge-nuevo-invertir">Nuevo — Invertir</span>
-                </div>
-                <p class="state-desc">Transaccion cancelada activamente por el usuario o el sistema.</p>
-            </div>
-            <div class="state-card">
-                <div class="state-header">
-                    <span class="state-name">EXPIRADA</span>
-                    <span class="state-badge badge-nuevo">Nuevo</span>
-                </div>
-                <p class="state-desc">Sesion vencida por tiempo limite sin completar el pago.</p>
-            </div>
-            <div class="state-card">
-                <div class="state-header">
-                    <span class="state-name">RETURNED</span>
-                    <span class="state-badge badge-nuevo">Nuevo</span>
-                </div>
-                <p class="state-desc">El usuario regreso desde el formulario de pago sin completar la transaccion.</p>
-            </div>
+            <div class="state-card"><div class="state-header"><span class="state-name">LOADED</span><span class="state-badge badge-en-implementacion">En implementacion</span></div><p class="state-desc">Formulario de pago cargado. PayLink generado, usuario aun no realiza el pago.</p></div>
+            <div class="state-card"><div class="state-header"><span class="state-name">PENDIENTE</span><span class="state-badge badge-en-implementacion">En implementacion</span></div><p class="state-desc">Pago enviado a la pasarela, esperando respuesta.</p></div>
+            <div class="state-card"><div class="state-header"><span class="state-name">APROBADO</span><span class="state-badge badge-implementado">Implementado</span></div><p class="state-desc">Pago exitoso. Venta completada, se procede con emision del producto.</p></div>
+            <div class="state-card"><div class="state-header"><span class="state-name">RECHAZADO</span><span class="state-badge badge-implementado">Implementado</span></div><p class="state-desc">Pago no autorizado por banco, pasarela o antifraude. El usuario puede reintentar.</p></div>
+            <div class="state-card"><div class="state-header"><span class="state-name">CANCELADO</span><span class="state-badge badge-nuevo">Nuevo</span></div><p class="state-desc">Transaccion cancelada activamente por el usuario o el sistema.</p></div>
+            <div class="state-card"><div class="state-header"><span class="state-name">EXPIRADA</span><span class="state-badge badge-nuevo">Nuevo</span></div><p class="state-desc">Sesion vencida por tiempo limite sin completar el pago.</p></div>
+            <div class="state-card"><div class="state-header"><span class="state-name">RETURNED</span><span class="state-badge badge-nuevo">Nuevo</span></div><p class="state-desc">El usuario regreso desde el formulario de pago sin completar la transaccion.</p></div>
         </div>
-
         <div class="legend">
             <div class="legend-item"><span class="legend-dot legend-dot-impl"></span> Implementado</div>
             <div class="legend-item"><span class="legend-dot legend-dot-wip"></span> En implementacion</div>
             <div class="legend-item"><span class="legend-dot legend-dot-new"></span> Nuevo</div>
-            <div class="legend-item"><span class="legend-dot legend-dot-invest"></span> Nuevo — Invertir</div>
         </div>
         <span class="slide-number">3 / 6</span>
     </section>
 
-    <!-- SLIDE 3B: Tabla de Estados -->
-    <section class="slide" style="padding-top: 40px;">
-        <h2 style="font-size: 2.2rem; margin-bottom: 32px; color: #f9fafb;">Tabla de Estados</h2>
-        <div style="max-width: 900px; width: 100%; overflow-x: auto;">
-            <table style="width: 100%; border-collapse: collapse; font-size: 0.95rem;">
-                <thead>
-                    <tr style="border-bottom: 2px solid #2d3748;">
-                        <th style="padding: 14px 16px; text-align: left; color: #9ca3af; font-weight: 600;">Estado</th>
-                        <th style="padding: 14px 16px; text-align: left; color: #9ca3af; font-weight: 600;">Tipo</th>
-                        <th style="padding: 14px 16px; text-align: left; color: #9ca3af; font-weight: 600;">Descripcion</th>
-                        <th style="padding: 14px 16px; text-align: left; color: #9ca3af; font-weight: 600;">Situacion</th>
-                    </tr>
-                </thead>
+    <!-- SLIDE 4: Tabla de Estados -->
+    <section class="slide" style="padding-top:40px;">
+        <h2 style="font-size:2.2rem;margin-bottom:32px;color:var(--gray-900);">Tabla de Estados</h2>
+        <div style="max-width:900px;width:100%;overflow-x:auto;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,0.06);">
+            <table class="tabla-estados">
+                <thead><tr><th>Estado</th><th>Tipo</th><th>Descripcion</th><th>Situacion</th></tr></thead>
                 <tbody>
-                    <tr style="border-bottom: 1px solid #1e293b;">
-                        <td style="padding: 12px 16px; font-weight: 700; color: #fbbf24;">LOADED</td>
-                        <td style="padding: 12px 16px; color: #d1d5db;">Inicial</td>
-                        <td style="padding: 12px 16px; color: #d1d5db;">Formulario de pago cargado. PayLink generado, usuario aun no realiza el pago.</td>
-                        <td style="padding: 12px 16px;"><span style="padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; background: rgba(251, 191, 36, 0.15); color: #fbbf24;">EN IMPLEMENTACION</span></td>
-                    </tr>
-                    <tr style="border-bottom: 1px solid #1e293b;">
-                        <td style="padding: 12px 16px; font-weight: 700; color: #60a5fa;">PENDIENTE</td>
-                        <td style="padding: 12px 16px; color: #d1d5db;">Intermedio</td>
-                        <td style="padding: 12px 16px; color: #d1d5db;">Pago enviado a la pasarela, esperando respuesta (PSE, 3DS, etc.).</td>
-                        <td style="padding: 12px 16px;"><span style="padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; background: rgba(251, 191, 36, 0.15); color: #fbbf24;">EN IMPLEMENTACION</span></td>
-                    </tr>
-                    <tr style="border-bottom: 1px solid #1e293b;">
-                        <td style="padding: 12px 16px; font-weight: 700; color: #4ade80;">APROBADO</td>
-                        <td style="padding: 12px 16px; color: #d1d5db;">Final</td>
-                        <td style="padding: 12px 16px; color: #d1d5db;">Pago exitoso. Venta completada, se procede con emision del producto.</td>
-                        <td style="padding: 12px 16px;"><span style="padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; background: rgba(74, 222, 128, 0.15); color: #4ade80;">IMPLEMENTADO</span></td>
-                    </tr>
-                    <tr style="border-bottom: 1px solid #1e293b;">
-                        <td style="padding: 12px 16px; font-weight: 700; color: #f87171;">RECHAZADO</td>
-                        <td style="padding: 12px 16px; color: #d1d5db;">Final</td>
-                        <td style="padding: 12px 16px; color: #d1d5db;">Pago no autorizado por banco, pasarela o antifraude. El usuario puede reintentar.</td>
-                        <td style="padding: 12px 16px;"><span style="padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; background: rgba(74, 222, 128, 0.15); color: #4ade80;">IMPLEMENTADO</span></td>
-                    </tr>
-                    <tr style="border-bottom: 1px solid #1e293b;">
-                        <td style="padding: 12px 16px; font-weight: 700; color: #a855f7;">CANCELADO</td>
-                        <td style="padding: 12px 16px; color: #d1d5db;">Final</td>
-                        <td style="padding: 12px 16px; color: #d1d5db;">Transaccion cancelada activamente por el usuario o el sistema.</td>
-                        <td style="padding: 12px 16px;"><span style="padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; background: rgba(168, 85, 247, 0.15); color: #a855f7;">NUEVO — INVERTIR</span></td>
-                    </tr>
-                    <tr style="border-bottom: 1px solid #1e293b;">
-                        <td style="padding: 12px 16px; font-weight: 700; color: #6b7280;">EXPIRADA</td>
-                        <td style="padding: 12px 16px; color: #d1d5db;">Final</td>
-                        <td style="padding: 12px 16px; color: #d1d5db;">Sesion vencida por tiempo limite sin completar el pago.</td>
-                        <td style="padding: 12px 16px;"><span style="padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; background: rgba(34, 211, 238, 0.15); color: #22d3ee;">NUEVO</span></td>
-                    </tr>
-                    <tr>
-                        <td style="padding: 12px 16px; font-weight: 700; color: #22d3ee;">RETURNED</td>
-                        <td style="padding: 12px 16px; color: #d1d5db;">Final</td>
-                        <td style="padding: 12px 16px; color: #d1d5db;">El usuario regreso desde el formulario de pago sin completar la transaccion.</td>
-                        <td style="padding: 12px 16px;"><span style="padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; background: rgba(34, 211, 238, 0.15); color: #22d3ee;">NUEVO</span></td>
-                    </tr>
+                    <tr><td style="font-weight:700;color:var(--primary);">LOADED</td><td>Inicial</td><td>Formulario de pago cargado. PayLink generado.</td><td><span class="state-badge badge-en-implementacion">En implementacion</span></td></tr>
+                    <tr><td style="font-weight:700;color:var(--primary);">PENDIENTE</td><td>Intermedio</td><td>Pago enviado a la pasarela, esperando respuesta.</td><td><span class="state-badge badge-en-implementacion">En implementacion</span></td></tr>
+                    <tr><td style="font-weight:700;color:var(--success);">APROBADO</td><td>Final</td><td>Pago exitoso. Venta completada.</td><td><span class="state-badge badge-implementado">Implementado</span></td></tr>
+                    <tr><td style="font-weight:700;color:var(--error);">RECHAZADO</td><td>Final</td><td>Pago no autorizado. El usuario puede reintentar.</td><td><span class="state-badge badge-implementado">Implementado</span></td></tr>
+                    <tr><td style="font-weight:700;color:var(--nuevo);">CANCELADO</td><td>Final</td><td>Transaccion cancelada activamente por el usuario o el sistema.</td><td><span class="state-badge badge-nuevo">Nuevo</span></td></tr>
+                    <tr><td style="font-weight:700;color:var(--nuevo);">EXPIRADA</td><td>Final</td><td>Sesion vencida por tiempo limite.</td><td><span class="state-badge badge-nuevo">Nuevo</span></td></tr>
+                    <tr><td style="font-weight:700;color:var(--nuevo);">RETURNED</td><td>Final</td><td>El usuario regreso sin completar la transaccion.</td><td><span class="state-badge badge-nuevo">Nuevo</span></td></tr>
                 </tbody>
             </table>
         </div>
         <span class="slide-number">4 / 6</span>
     </section>
 
-    <!-- SLIDE 4: Diagrama de Flujo -->
+    <!-- SLIDE 5: Diagrama de Flujo -->
     <section class="slide slide-flow">
-        <h2>Diagrama de Flujo</h2>
+        <h2 style="margin-bottom:40px;">Diagrama de Flujo</h2>
         <div class="flow-container">
             <svg class="svg-flow" viewBox="0 0 860 520" xmlns="http://www.w3.org/2000/svg">
-                <!-- Definitions -->
                 <defs>
-                    <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
-                        <polygon points="0 0, 8 3, 0 6" fill="#6b7280"/>
-                    </marker>
-                    <marker id="arrowhead-green" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
-                        <polygon points="0 0, 8 3, 0 6" fill="#4ade80"/>
-                    </marker>
+                    <marker id="arr" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#6b7280"/></marker>
+                    <marker id="arr-ok" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#16A34A"/></marker>
+                    <marker id="arr-err" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#DC2626"/></marker>
                 </defs>
-
-                <!-- LOADED Node -->
-                <rect x="340" y="20" width="180" height="50" rx="10" fill="#f59e0b" opacity="0.9"/>
-                <text x="430" y="50" text-anchor="middle" fill="#1a2332" font-weight="700" font-size="15">LOADED</text>
-                <text x="430" y="85" text-anchor="middle" fill="#fbbf24" font-size="10" font-weight="500">EN IMPLEMENTACION</text>
-
+                <!-- LOADED -->
+                <rect x="340" y="20" width="180" height="50" rx="10" fill="#E8632B"/>
+                <text x="430" y="50" text-anchor="middle" fill="#fff" font-weight="700" font-size="15">LOADED</text>
+                <text x="430" y="85" text-anchor="middle" fill="#E8632B" font-size="10" font-weight="500">EN IMPLEMENTACION</text>
                 <!-- Arrows from LOADED -->
-                <!-- LOADED → PENDIENTE -->
-                <line x1="430" y1="70" x2="430" y2="140" stroke="#6b7280" stroke-width="2" marker-end="url(#arrowhead)"/>
-
-                <!-- LOADED → RETURNED (left) -->
-                <path d="M 340 45 L 120 45 L 120 160" stroke="#6b7280" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
-
-                <!-- LOADED → CANCELADO (right far) -->
-                <path d="M 520 45 L 740 45 L 740 160" stroke="#6b7280" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
-
-                <!-- LOADED → EXPIRADA (right) -->
-                <path d="M 520 45 L 600 45 L 600 160" stroke="#6b7280" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
-
-                <!-- RETURNED Node -->
-                <rect x="45" y="160" width="150" height="50" rx="10" fill="#06b6d4" opacity="0.9"/>
-                <text x="120" y="190" text-anchor="middle" fill="#1a2332" font-weight="700" font-size="14">RETURNED</text>
-                <text x="120" y="225" text-anchor="middle" fill="#22d3ee" font-size="10" font-weight="500">NUEVO</text>
-
-                <!-- PENDIENTE Node -->
-                <rect x="340" y="140" width="180" height="50" rx="10" fill="#f59e0b" opacity="0.9"/>
-                <text x="430" y="170" text-anchor="middle" fill="#1a2332" font-weight="700" font-size="15">PENDIENTE</text>
-                <text x="430" y="205" text-anchor="middle" fill="#fbbf24" font-size="10" font-weight="500">EN IMPLEMENTACION</text>
-
-                <!-- EXPIRADA Node -->
-                <rect x="530" y="160" width="140" height="50" rx="10" fill="#4b5563" opacity="0.9"/>
+                <line x1="430" y1="70" x2="430" y2="140" stroke="#6b7280" stroke-width="2" marker-end="url(#arr)"/>
+                <path d="M 340 45 L 120 45 L 120 160" stroke="#6b7280" stroke-width="2" fill="none" marker-end="url(#arr)"/>
+                <path d="M 520 45 L 740 45 L 740 160" stroke="#6b7280" stroke-width="2" fill="none" marker-end="url(#arr)"/>
+                <path d="M 520 45 L 600 45 L 600 160" stroke="#6b7280" stroke-width="2" fill="none" marker-end="url(#arr)"/>
+                <!-- RETURNED -->
+                <rect x="45" y="160" width="150" height="50" rx="10" fill="#2563eb"/>
+                <text x="120" y="190" text-anchor="middle" fill="#fff" font-weight="700" font-size="14">RETURNED</text>
+                <text x="120" y="225" text-anchor="middle" fill="#2563eb" font-size="10">NUEVO</text>
+                <!-- PENDIENTE -->
+                <rect x="340" y="140" width="180" height="50" rx="10" fill="#F4845F"/>
+                <text x="430" y="170" text-anchor="middle" fill="#fff" font-weight="700" font-size="15">PENDIENTE</text>
+                <text x="430" y="205" text-anchor="middle" fill="#E8632B" font-size="10">EN IMPLEMENTACION</text>
+                <!-- EXPIRADA -->
+                <rect x="530" y="160" width="140" height="50" rx="10" fill="#2563eb"/>
                 <text x="600" y="190" text-anchor="middle" fill="#fff" font-weight="700" font-size="14">EXPIRADA</text>
-                <text x="600" y="225" text-anchor="middle" fill="#9ca3af" font-size="10" font-weight="500">NUEVO</text>
-
-                <!-- CANCELADO Node -->
-                <rect x="670" y="160" width="150" height="50" rx="10" fill="#7c3aed" opacity="0.9"/>
+                <text x="600" y="225" text-anchor="middle" fill="#2563eb" font-size="10">NUEVO</text>
+                <!-- CANCELADO -->
+                <rect x="670" y="160" width="150" height="50" rx="10" fill="#2563eb"/>
                 <text x="745" y="190" text-anchor="middle" fill="#fff" font-weight="700" font-size="14">CANCELADO</text>
-                <text x="745" y="225" text-anchor="middle" fill="#a855f7" font-size="10" font-weight="500">NUEVO — INVERTIR</text>
-
-                <!-- Arrows from PENDIENTE -->
+                <text x="745" y="225" text-anchor="middle" fill="#2563eb" font-size="10">NUEVO</text>
                 <!-- PENDIENTE → APROBADO -->
-                <line x1="380" y1="190" x2="280" y2="310" stroke="#4ade80" stroke-width="2" marker-end="url(#arrowhead-green)"/>
-
+                <line x1="380" y1="190" x2="280" y2="310" stroke="#16A34A" stroke-width="2" marker-end="url(#arr-ok)"/>
                 <!-- PENDIENTE → RECHAZADO -->
-                <line x1="480" y1="190" x2="560" y2="310" stroke="#6b7280" stroke-width="2" marker-end="url(#arrowhead)"/>
-
+                <line x1="480" y1="190" x2="560" y2="310" stroke="#DC2626" stroke-width="2" marker-end="url(#arr-err)"/>
                 <!-- PENDIENTE → EXPIRADA -->
-                <line x1="520" y1="170" x2="530" y2="175" stroke="#6b7280" stroke-width="2" marker-end="url(#arrowhead)"/>
-
-                <!-- LOADED → APROBADO (direct - immediate response) -->
-                <path d="M 370 70 L 280 310" stroke="#4ade80" stroke-width="1.5" fill="none" stroke-dasharray="6,4" marker-end="url(#arrowhead-green)"/>
-                <text x="290" y="195" fill="#4ade80" font-size="9" transform="rotate(-55, 290, 195)">respuesta inmediata</text>
-
-                <!-- APROBADO Node -->
-                <rect x="195" y="310" width="170" height="50" rx="10" fill="#22c55e" opacity="0.9"/>
-                <text x="280" y="340" text-anchor="middle" fill="#1a2332" font-weight="700" font-size="15">APROBADO</text>
-                <text x="280" y="375" text-anchor="middle" fill="#4ade80" font-size="10" font-weight="500">IMPLEMENTADO</text>
-
-                <!-- RECHAZADO Node -->
-                <rect x="490" y="310" width="170" height="50" rx="10" fill="#ef4444" opacity="0.9"/>
+                <line x1="520" y1="170" x2="530" y2="175" stroke="#6b7280" stroke-width="2" marker-end="url(#arr)"/>
+                <!-- LOADED → APROBADO directo -->
+                <path d="M 370 70 L 280 310" stroke="#16A34A" stroke-width="1.5" fill="none" stroke-dasharray="6,4" marker-end="url(#arr-ok)"/>
+                <text x="290" y="195" fill="#16A34A" font-size="9" transform="rotate(-55, 290, 195)">respuesta inmediata</text>
+                <!-- APROBADO -->
+                <rect x="195" y="310" width="170" height="50" rx="10" fill="#16A34A"/>
+                <text x="280" y="340" text-anchor="middle" fill="#fff" font-weight="700" font-size="15">APROBADO</text>
+                <text x="280" y="375" text-anchor="middle" fill="#16A34A" font-size="10">IMPLEMENTADO</text>
+                <!-- RECHAZADO -->
+                <rect x="490" y="310" width="170" height="50" rx="10" fill="#DC2626"/>
                 <text x="575" y="340" text-anchor="middle" fill="#fff" font-weight="700" font-size="15">RECHAZADO</text>
-                <text x="575" y="375" text-anchor="middle" fill="#f87171" font-size="10" font-weight="500">IMPLEMENTADO</text>
-
-                <!-- Reintento arrow from RECHAZADO back to LOADED -->
-                <path d="M 660 335 L 750 335 L 750 300 L 780 300 L 780 20 L 520 30" stroke="#f87171" stroke-width="1.5" fill="none" stroke-dasharray="4,3" marker-end="url(#arrowhead)"/>
-                <text x="785" y="170" fill="#f87171" font-size="9" transform="rotate(-90, 785, 170)">reintento</text>
-
-                <!-- APROBADO → Emision del producto -->
-                <line x1="280" y1="360" x2="280" y2="430" stroke="#4ade80" stroke-width="2" marker-end="url(#arrowhead-green)"/>
-
-                <rect x="180" y="440" width="200" height="45" rx="22" fill="rgba(74, 222, 128, 0.1)" stroke="#4ade80" stroke-width="1.5"/>
-                <text x="280" y="467" text-anchor="middle" fill="#4ade80" font-weight="600" font-size="13">Emision del Producto</text>
-
+                <text x="575" y="375" text-anchor="middle" fill="#DC2626" font-size="10">IMPLEMENTADO</text>
+                <!-- Reintento -->
+                <path d="M 660 335 L 750 335 L 750 300 L 780 300 L 780 20 L 520 30" stroke="#DC2626" stroke-width="1.5" fill="none" stroke-dasharray="4,3" marker-end="url(#arr-err)"/>
+                <text x="785" y="170" fill="#DC2626" font-size="9" transform="rotate(-90, 785, 170)">reintento</text>
+                <!-- APROBADO → Emision -->
+                <line x1="280" y1="360" x2="280" y2="430" stroke="#16A34A" stroke-width="2" marker-end="url(#arr-ok)"/>
+                <rect x="180" y="440" width="200" height="45" rx="22" fill="rgba(22,163,74,0.08)" stroke="#16A34A" stroke-width="1.5"/>
+                <text x="280" y="467" text-anchor="middle" fill="#16A34A" font-weight="600" font-size="13">Emision del Producto</text>
                 <!-- End circles -->
-                <circle cx="120" cy="250" r="8" fill="none" stroke="#22d3ee" stroke-width="2"/>
-                <circle cx="120" cy="250" r="4" fill="#22d3ee"/>
-
-                <circle cx="600" cy="250" r="8" fill="none" stroke="#6b7280" stroke-width="2"/>
-                <circle cx="600" cy="250" r="4" fill="#6b7280"/>
-
-                <circle cx="745" cy="250" r="8" fill="none" stroke="#a855f7" stroke-width="2"/>
-                <circle cx="745" cy="250" r="4" fill="#a855f7"/>
-
-                <circle cx="575" cy="395" r="8" fill="none" stroke="#f87171" stroke-width="2"/>
-                <circle cx="575" cy="395" r="4" fill="#f87171"/>
-
-                <!-- Labels on arrows -->
-                <text x="445" y="110" fill="#9ca3af" font-size="10">pago enviado</text>
-                <text x="200" y="35" fill="#9ca3af" font-size="10">usuario regresa</text>
-                <text x="630" y="35" fill="#9ca3af" font-size="10">tiempo vencido</text>
-                <text x="560" y="60" fill="#9ca3af" font-size="10">cancela</text>
+                <circle cx="120" cy="250" r="8" fill="none" stroke="#2563eb" stroke-width="2"/><circle cx="120" cy="250" r="4" fill="#2563eb"/>
+                <circle cx="600" cy="250" r="8" fill="none" stroke="#2563eb" stroke-width="2"/><circle cx="600" cy="250" r="4" fill="#2563eb"/>
+                <circle cx="745" cy="250" r="8" fill="none" stroke="#2563eb" stroke-width="2"/><circle cx="745" cy="250" r="4" fill="#2563eb"/>
+                <circle cx="575" cy="395" r="8" fill="none" stroke="#DC2626" stroke-width="2"/><circle cx="575" cy="395" r="4" fill="#DC2626"/>
+                <!-- Labels -->
+                <text x="445" y="110" fill="#6b7280" font-size="10">pago enviado</text>
+                <text x="200" y="35" fill="#6b7280" font-size="10">usuario regresa</text>
+                <text x="630" y="35" fill="#6b7280" font-size="10">tiempo vencido</text>
+                <text x="555" y="60" fill="#6b7280" font-size="10">cancela</text>
             </svg>
         </div>
         <span class="slide-number">5 / 6</span>
     </section>
 
-    <!-- SLIDE 5: Happy Path -->
+    <!-- SLIDE 6: Happy Path -->
     <section class="slide slide-happy">
-        <h2>Happy Path</h2>
+        <h2 style="margin-bottom:40px;">Happy Path</h2>
         <div class="happy-path">
             <span class="happy-step happy-step-1">LOADED</span>
             <span class="happy-arrow">&rarr;</span>
@@ -653,18 +206,14 @@
             <span class="happy-arrow">&rarr;</span>
             <span class="happy-step happy-step-4">Emision del Producto</span>
         </div>
-        <div style="margin-top: 60px; max-width: 700px; text-align: center;">
-            <p style="color: #9ca3af; font-size: 1.1rem; line-height: 1.8;">
-                El usuario carga el checkout, realiza el pago, la pasarela confirma la aprobacion
-                y se procede con la emision del producto Proyectiva.
-            </p>
-            <div style="margin-top: 32px; padding: 20px; border-radius: 12px; background: rgba(74, 222, 128, 0.05); border: 1px solid rgba(74, 222, 128, 0.2);">
-                <p style="color: #4ade80; font-weight: 600; margin-bottom: 8px;">Pasarelas con respuesta inmediata (TC)</p>
-                <p style="color: #9ca3af; font-size: 0.9rem;">LOADED &rarr; APROBADO (sin pasar por PENDIENTE)</p>
+        <div style="margin-top:60px;max-width:700px;text-align:center;">
+            <p style="color:var(--gray-700);font-size:1.1rem;line-height:1.8;">El usuario carga el checkout, realiza el pago, la pasarela confirma la aprobacion y se procede con la emision del producto Proyectiva.</p>
+            <div style="margin-top:32px;padding:20px;border-radius:12px;background:rgba(22,163,74,0.05);border:1px solid rgba(22,163,74,0.2);">
+                <p style="color:var(--success);font-weight:600;margin-bottom:8px;">Pasarelas con respuesta inmediata (TC)</p>
+                <p style="color:var(--gray-500);font-size:0.9rem;">LOADED &rarr; APROBADO (sin pasar por PENDIENTE)</p>
             </div>
         </div>
         <span class="slide-number">6 / 6</span>
     </section>
-
 </body>
 </html>
