@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seguimiento Semanal — Squad Proyectiva</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: #1a1a2e; color: #eee; }
+        
+        .slide {
+            min-height: 100vh;
+            padding: 50px 70px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            border-bottom: 2px solid #2d2d44;
+            page-break-after: always;
+        }
+
+        .slide-title { background: linear-gradient(135deg, #0f3460, #16213e); justify-content: center; }
+        .slide-soat { background: linear-gradient(135deg, #1a1a2e, #16213e); }
+        .slide-cotizador { background: linear-gradient(135deg, #1a1a2e, #0a2647); }
+        .slide-rediseno { background: linear-gradient(135deg, #1a1a2e, #1b2838); }
+
+        h1 { font-size: 3rem; margin-bottom: 10px; color: #fff; }
+        h2 { font-size: 2rem; margin-bottom: 20px; color: #4fc3f7; }
+        h3 { font-size: 1.2rem; margin: 18px 0 10px; color: #81d4fa; }
+
+        .subtitle { font-size: 1.2rem; color: #aaa; margin-bottom: 30px; }
+
+        .date-badge {
+            display: inline-block;
+            background: #e65100;
+            color: #fff;
+            padding: 6px 16px;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .success-badge {
+            display: inline-block;
+            background: #2e7d32;
+            color: #fff;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .pending-badge {
+            display: inline-block;
+            background: #f57c00;
+            color: #fff;
+            padding: 5px 14px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .section-divider {
+            width: 60px;
+            height: 4px;
+            background: #4fc3f7;
+            border-radius: 2px;
+            margin: 12px 0 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0;
+            font-size: 0.9rem;
+        }
+
+        th {
+            background: rgba(79, 195, 247, 0.15);
+            color: #4fc3f7;
+            padding: 10px 14px;
+            text-align: left;
+            border-bottom: 2px solid #4fc3f7;
+        }
+
+        td {
+            padding: 8px 14px;
+            border-bottom: 1px solid #333;
+            color: #ddd;
+        }
+
+        .feature-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin: 16px 0;
+        }
+
+        .feature-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid #333;
+            border-radius: 10px;
+            padding: 18px;
+            border-top: 4px solid #4fc3f7;
+        }
+
+        .feature-card:nth-child(2) { border-top-color: #66bb6a; }
+        .feature-card:nth-child(3) { border-top-color: #ab47bc; }
+
+        .feature-card h4 { color: #fff; margin-bottom: 8px; font-size: 0.95rem; }
+        .feature-card p { color: #aaa; font-size: 0.85rem; line-height: 1.4; }
+
+        .hu-list { list-style: none; margin: 12px 0; columns: 2; column-gap: 20px; }
+        .hu-list li {
+            padding: 6px 12px;
+            margin: 4px 0;
+            background: rgba(76, 175, 80, 0.1);
+            border-left: 3px solid #66bb6a;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            color: #c8e6c9;
+            break-inside: avoid;
+        }
+
+        .callout {
+            background: rgba(255, 152, 0, 0.1);
+            border: 1px solid rgba(255, 152, 0, 0.4);
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin: 12px 0;
+            color: #ffcc80;
+            font-size: 0.9rem;
+        }
+
+        .callout-info {
+            background: rgba(79, 195, 247, 0.08);
+            border: 1px solid rgba(79, 195, 247, 0.3);
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin: 12px 0;
+            color: #b3e5fc;
+            font-size: 0.9rem;
+        }
+
+        .risk-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 12px 0;
+        }
+
+        .risk-card {
+            background: rgba(244, 67, 54, 0.08);
+            border: 1px solid rgba(244, 67, 54, 0.3);
+            border-radius: 8px;
+            padding: 14px;
+        }
+
+        .risk-card .risk-title { color: #ef5350; font-weight: 600; margin-bottom: 4px; font-size: 0.9rem; }
+        .risk-card .risk-detail { color: #bbb; font-size: 0.82rem; }
+    </style>
+</head>
+<body>
+
+<!-- SLIDE 1: Portada -->
+<div class="slide slide-title">
+    <h1>Seguimiento Semanal</h1>
+    <p class="subtitle">Squad Proyectiva — Seguros Bolivar</p>
+    <div class="section-divider"></div>
+    <p style="font-size: 1.1rem; color: #aaa;">Viernes 20 de junio 2026</p>
+    <p style="font-size: 1rem; color: #666; margin-top: 8px;">Compromisos semana 22-27 junio 2026</p>
+</div>
+
+<!-- SLIDE 2: SOAT -->
+<div class="slide slide-soat">
+    <h2>Venta Dirigida SOAT - Flujo Tactico</h2>
+    <p class="subtitle">Monitoreo y Marcha Blanca</p>
+    <div class="section-divider"></div>
+
+    <h3>Despliegue realizado — Martes 17 de junio 2026 <span class="success-badge">PRD Exitoso</span></h3>
+    <div class="feature-cards">
+        <div class="feature-card">
+            <h4>1. Claridad en flujo de compra</h4>
+            <p>Mensajes ajustados para que el cliente entienda cada paso, reduciendo fricciones.</p>
+        </div>
+        <div class="feature-card">
+            <h4>2. Links vigencia 90 dias</h4>
+            <p>Links de compra SOAT con vigencia de 90 dias. No expiran antes de que el cliente actue.</p>
+        </div>
+        <div class="feature-card">
+            <h4>3. Backup link de poliza</h4>
+            <p>Correo electronico complementario al SMS de AXA con link de descarga de la poliza.</p>
+        </div>
+    </div>
+
+    <h3>Desarrollo de HUs para ajustar el flujo de estados de pagos (no informadas previamente)</h3>
+    <ul class="hu-list">
+        <li>Check Status obligatorio + estado Loaded</li>
+        <li>Persistencia cotizacion BD con vigencia parametrica</li>
+        <li>Control de estados y reintentos de pago</li>
+        <li>Estado CANCELADO</li>
+        <li>Estado EXPIRADA</li>
+        <li>Estado RETURNED</li>
+        <li>Estado Pendiente</li>
+    </ul>
+
+    <h3>Cronograma HUs flujo de estados de pagos</h3>
+    <table>
+        <tr><th>Dia</th><th>Actividad</th><th>Riesgo</th></tr>
+        <tr><td>Lunes 23</td><td>Finaliza DEV</td><td>—</td></tr>
+        <tr><td>Martes 24</td><td>Pruebas QA</td><td style="color:#ffab40;">Ambiente de pruebas de AXA</td></tr>
+        <tr><td>Miercoles 25</td><td>Gestion paso a PRD</td><td>Depende de QA exitoso</td></tr>
+    </table>
+
+    <h3>Tablero Datadog SOAT Digital — Miercoles 25 junio (Angelo/Equipo)</h3>
+    <div class="callout-info">
+        <strong>Punto adicional:</strong> Conversar con el orquestador para validar que la observabilidad incluya la comunicacion entre servicios propios &harr; AXA.
+    </div>
+
+    <div class="risk-row" style="margin-top: 20px;">
+        <div class="risk-card">
+            <p class="risk-title">Riesgo: Ambiente de pruebas de AXA</p>
+            <p class="risk-detail">Retrasa QA y paso a PRD. Validar disponibilidad anticipadamente.</p>
+        </div>
+        <div class="risk-card">
+            <p class="risk-title">Riesgo: Observabilidad AXA</p>
+            <p class="risk-detail">Tablero incompleto sin validar con orquestador antes del miercoles.</p>
+        </div>
+    </div>
+</div>
+
+<!-- SLIDE 3: Cotizador Arrendamiento -->
+<div class="slide slide-cotizador">
+    <h2>Cotizador Arrendamiento</h2>
+    <p class="subtitle">Rediseno Landing Cotizacion Poliza Individual Arrendamiento (Brokers, Propietarios, Inmobiliarias)</p>
+    <div class="section-divider"></div>
+
+    <table>
+        <tr><th>Dia</th><th>Actividad</th><th>Responsable</th></tr>
+        <tr><td>Lunes 22</td><td>Entrega UX</td><td>Daniel Gonzalez</td></tr>
+        <tr><td>Martes 23</td><td>Entrega UX completo (desktop, mobile, tablet + errores)</td><td>Daniel Gonzalez</td></tr>
+        <tr><td>Martes 23</td><td>Revision con Negocio del flujo de UX propuesto</td><td>Equipo</td></tr>
+        <tr><td>Martes 23</td><td>Estimacion tecnica</td><td>Cristian Mosquera</td></tr>
+        <tr><td>Miercoles 24</td><td>Consultar metricas trafico GCP con Nico Cano</td><td>Angelo</td></tr>
+        <tr><td>Miercoles 24</td><td>Diagrama de flujo propuesto</td><td>Procesos - Angelo</td></tr>
+        <tr><td>Jueves 25</td><td>Correo formal a Arquitectura (diagrama, estado actual, HTML UX, metricas)</td><td>Angelo</td></tr>
+        <tr><td>Semana</td><td>Compartir detalles proyecto/cuenta GCP a Yeselin</td><td>Cristian Mosquera</td></tr>
+    </table>
+
+    <div class="callout">
+        <strong>Proxima entrega:</strong> Se debera considerar la firma digital del documento
+    </div>
+</div>
+
+<!-- SLIDE 4: Rediseno Web + SEO -->
+<div class="slide slide-rediseno">
+    <h2>Rediseno Web Proyectiva + SEO</h2>
+    <div class="section-divider"></div>
+
+    <table>
+        <tr><th>Aspecto</th><th>Estado</th></tr>
+        <tr><td>Objetivo</td><td>Mejorar conversion e incrementar trafico organico</td></tr>
+        <tr><td>Aprobacion</td><td><span class="pending-badge">Pendiente: Paola Suarez y Norma Pi</span></td></tr>
+        <tr><td>Avance</td><td>Se monto el prototipo en Salesforce</td></tr>
+    </table>
+
+    <div class="risk-card" style="margin-top: 30px;">
+        <p class="risk-title">Riesgo: Aprobacion pendiente</p>
+        <p class="risk-detail">Paola Suarez y Norma Pi bloquean inicio de desarrollo SEO. Escalar si no hay respuesta.</p>
+    </div>
+</div>
+
+</body>
+</html>
