@@ -381,7 +381,7 @@
         <h1>Gateway de Pagos</h1>
         <p class="subtitle">Alcance para Proyectiva — Venta Digital</p>
         <span class="badge">Solo venta digital del producto</span>
-        <span class="slide-number">1 / 5</span>
+        <span class="slide-number">1 / 6</span>
     </section>
 
     <!-- SLIDE 2: Alcance -->
@@ -402,7 +402,7 @@
                 <span class="exclusion-tag">Sin abonos</span>
             </div>
         </div>
-        <span class="slide-number">2 / 5</span>
+        <span class="slide-number">2 / 6</span>
     </section>
 
     <!-- SLIDE 3: Estados -->
@@ -466,7 +466,69 @@
             <div class="legend-item"><span class="legend-dot legend-dot-new"></span> Nuevo</div>
             <div class="legend-item"><span class="legend-dot legend-dot-invest"></span> Nuevo — Invertir</div>
         </div>
-        <span class="slide-number">3 / 5</span>
+        <span class="slide-number">3 / 6</span>
+    </section>
+
+    <!-- SLIDE 3B: Tabla de Estados -->
+    <section class="slide" style="padding-top: 40px;">
+        <h2 style="font-size: 2.2rem; margin-bottom: 32px; color: #f9fafb;">Tabla de Estados</h2>
+        <div style="max-width: 900px; width: 100%; overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse; font-size: 0.95rem;">
+                <thead>
+                    <tr style="border-bottom: 2px solid #2d3748;">
+                        <th style="padding: 14px 16px; text-align: left; color: #9ca3af; font-weight: 600;">Estado</th>
+                        <th style="padding: 14px 16px; text-align: left; color: #9ca3af; font-weight: 600;">Tipo</th>
+                        <th style="padding: 14px 16px; text-align: left; color: #9ca3af; font-weight: 600;">Descripcion</th>
+                        <th style="padding: 14px 16px; text-align: left; color: #9ca3af; font-weight: 600;">Situacion</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr style="border-bottom: 1px solid #1e293b;">
+                        <td style="padding: 12px 16px; font-weight: 700; color: #fbbf24;">LOADED</td>
+                        <td style="padding: 12px 16px; color: #d1d5db;">Inicial</td>
+                        <td style="padding: 12px 16px; color: #d1d5db;">Formulario de pago cargado. PayLink generado, usuario aun no realiza el pago.</td>
+                        <td style="padding: 12px 16px;"><span style="padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; background: rgba(251, 191, 36, 0.15); color: #fbbf24;">EN IMPLEMENTACION</span></td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #1e293b;">
+                        <td style="padding: 12px 16px; font-weight: 700; color: #60a5fa;">PENDIENTE</td>
+                        <td style="padding: 12px 16px; color: #d1d5db;">Intermedio</td>
+                        <td style="padding: 12px 16px; color: #d1d5db;">Pago enviado a la pasarela, esperando respuesta (PSE, 3DS, etc.).</td>
+                        <td style="padding: 12px 16px;"><span style="padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; background: rgba(251, 191, 36, 0.15); color: #fbbf24;">EN IMPLEMENTACION</span></td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #1e293b;">
+                        <td style="padding: 12px 16px; font-weight: 700; color: #4ade80;">APROBADO</td>
+                        <td style="padding: 12px 16px; color: #d1d5db;">Final</td>
+                        <td style="padding: 12px 16px; color: #d1d5db;">Pago exitoso. Venta completada, se procede con emision del producto.</td>
+                        <td style="padding: 12px 16px;"><span style="padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; background: rgba(74, 222, 128, 0.15); color: #4ade80;">IMPLEMENTADO</span></td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #1e293b;">
+                        <td style="padding: 12px 16px; font-weight: 700; color: #f87171;">RECHAZADO</td>
+                        <td style="padding: 12px 16px; color: #d1d5db;">Final</td>
+                        <td style="padding: 12px 16px; color: #d1d5db;">Pago no autorizado por banco, pasarela o antifraude. El usuario puede reintentar.</td>
+                        <td style="padding: 12px 16px;"><span style="padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; background: rgba(74, 222, 128, 0.15); color: #4ade80;">IMPLEMENTADO</span></td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #1e293b;">
+                        <td style="padding: 12px 16px; font-weight: 700; color: #a855f7;">CANCELADO</td>
+                        <td style="padding: 12px 16px; color: #d1d5db;">Final</td>
+                        <td style="padding: 12px 16px; color: #d1d5db;">Transaccion cancelada activamente por el usuario o el sistema.</td>
+                        <td style="padding: 12px 16px;"><span style="padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; background: rgba(168, 85, 247, 0.15); color: #a855f7;">NUEVO — INVERTIR</span></td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #1e293b;">
+                        <td style="padding: 12px 16px; font-weight: 700; color: #6b7280;">EXPIRADA</td>
+                        <td style="padding: 12px 16px; color: #d1d5db;">Final</td>
+                        <td style="padding: 12px 16px; color: #d1d5db;">Sesion vencida por tiempo limite sin completar el pago.</td>
+                        <td style="padding: 12px 16px;"><span style="padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; background: rgba(34, 211, 238, 0.15); color: #22d3ee;">NUEVO</span></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 12px 16px; font-weight: 700; color: #22d3ee;">RETURNED</td>
+                        <td style="padding: 12px 16px; color: #d1d5db;">Final</td>
+                        <td style="padding: 12px 16px; color: #d1d5db;">El usuario regreso desde el formulario de pago sin completar la transaccion.</td>
+                        <td style="padding: 12px 16px;"><span style="padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; background: rgba(34, 211, 238, 0.15); color: #22d3ee;">NUEVO</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <span class="slide-number">4 / 6</span>
     </section>
 
     <!-- SLIDE 4: Diagrama de Flujo -->
@@ -576,7 +638,7 @@
                 <text x="560" y="60" fill="#9ca3af" font-size="10">cancela</text>
             </svg>
         </div>
-        <span class="slide-number">4 / 5</span>
+        <span class="slide-number">5 / 6</span>
     </section>
 
     <!-- SLIDE 5: Happy Path -->
@@ -601,7 +663,7 @@
                 <p style="color: #9ca3af; font-size: 0.9rem;">LOADED &rarr; APROBADO (sin pasar por PENDIENTE)</p>
             </div>
         </div>
-        <span class="slide-number">5 / 5</span>
+        <span class="slide-number">6 / 6</span>
     </section>
 
 </body>
