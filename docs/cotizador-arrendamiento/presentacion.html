@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flujo de Arrendamiento - Proyectiva Seguros</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'DM Sans', sans-serif; background: #0f1419; color: #e8edf4; }
+.slide { min-height: 100vh; padding: 60px 80px; display: flex; flex-direction: column; justify-content: center; border-bottom: 2px solid #2d3d52; }
+h1 { font-size: 2.8rem; font-weight: 700; color: #00d4aa; margin-bottom: 20px; }
+h2 { font-size: 2rem; font-weight: 600; color: #00d4aa; margin-bottom: 16px; }
+h3 { font-size: 1.4rem; font-weight: 500; color: #8b9cb3; margin-bottom: 12px; }
+p { font-size: 1.1rem; line-height: 1.6; color: #8b9cb3; margin-bottom: 12px; }
+.subtitle { font-size: 1.3rem; color: #8b9cb3; }
+.badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 500; }
+.badge--si { background: #00d4aa22; color: #00d4aa; }
+.badge--no { background: #e85d7522; color: #e85d75; }
+.badge--cond { background: #f0b42922; color: #f0b429; }
+</style>
+</head>
+<body>
+<!-- SLIDE 1: Portada -->
+<div class="slide" style="text-align:center; justify-content:center; align-items:center;">
+<h1>Documentacion del Flujo de Cotizacion</h1>
+<h2 style="color:#e8edf4;">Seguro de Arrendamiento</h2>
+<p class="subtitle">cotizaciones.proyectivaseguros.com</p>
+<p style="margin-top:40px; color:#8b9cb3;">Proyectiva Seguros | Seguros Bolivar<br>Fecha: 2026-06-19</p>
+</div>
+
+<!-- SLIDE 2: Resumen General -->
+<div class="slide">
+<h1>Resumen del Flujo</h1>
+<p>El cotizador tiene <strong style="color:#00d4aa;">6 pasos</strong>, <strong style="color:#00d4aa;">3 perfiles</strong> de usuario y un total de <strong style="color:#00d4aa;">29 campos</strong> que el cliente debe diligenciar.</p>
+<table style="width:100%; margin-top:30px; border-collapse:collapse;">
+<thead><tr style="border-bottom:2px solid #2d3d52;">
+<th style="padding:12px; text-align:left; color:#00d4aa;">Paso</th>
+<th style="padding:12px; text-align:left; color:#00d4aa;">Nombre</th>
+<th style="padding:12px; text-align:center; color:#00d4aa;">Campos totales</th>
+<th style="padding:12px; text-align:center; color:#00d4aa;">Diligencia el cliente</th>
+</tr></thead>
+<tbody>
+<tr style="border-bottom:1px solid #1e2a3a;"><td style="padding:12px;">Pre</td><td style="padding:12px;">Seleccion + Verificacion</td><td style="padding:12px; text-align:center;">3</td><td style="padding:12px; text-align:center; color:#00d4aa; font-weight:700;">2</td></tr>
+<tr style="border-bottom:1px solid #1e2a3a;"><td style="padding:12px;">1</td><td style="padding:12px;">Radicacion de solicitud</td><td style="padding:12px; text-align:center;">20</td><td style="padding:12px; text-align:center; color:#00d4aa; font-weight:700;">16</td></tr>
+<tr style="border-bottom:1px solid #1e2a3a;"><td style="padding:12px;">2</td><td style="padding:12px;">Cotizacion (resultado)</td><td style="padding:12px; text-align:center;">6</td><td style="padding:12px; text-align:center; color:#8b9cb3;">0 (solo lectura)</td></tr>
+<tr style="border-bottom:1px solid #1e2a3a;"><td style="padding:12px;">3</td><td style="padding:12px;">Inquilino</td><td style="padding:12px; text-align:center;">1</td><td style="padding:12px; text-align:center; color:#00d4aa; font-weight:700;">1</td></tr>
+<tr style="border-bottom:1px solid #1e2a3a;"><td style="padding:12px;">4</td><td style="padding:12px;">Estudio de arrendamiento</td><td style="padding:12px; text-align:center;">1</td><td style="padding:12px; text-align:center; color:#00d4aa; font-weight:700;">1</td></tr>
+<tr style="border-bottom:1px solid #1e2a3a;"><td style="padding:12px;">5</td><td style="padding:12px;">Carga de documentos</td><td style="padding:12px; text-align:center;">9</td><td style="padding:12px; text-align:center; color:#00d4aa; font-weight:700;">9</td></tr>
+<tr><td style="padding:12px;">6</td><td style="padding:12px;">Generacion de poliza</td><td style="padding:12px; text-align:center;">0</td><td style="padding:12px; text-align:center; color:#8b9cb3;">0 (automatico)</td></tr>
+</tbody>
+<tfoot><tr style="border-top:2px solid #2d3d52;">
+<td style="padding:12px;" colspan="2"><strong style="color:#e8edf4;">Total</strong></td>
+<td style="padding:12px; text-align:center; color:#e8edf4; font-weight:700;">40</td>
+<td style="padding:12px; text-align:center; color:#00d4aa; font-weight:700; font-size:1.2rem;">29</td>
+</tr></tfoot>
+</table>
+<p style="margin-top:20px; color:#f0b429;">El pico de friccion esta en el Paso 1 con 16 campos en dos secciones (tomador + inmueble).</p>
+</div>
+
+<!-- SLIDE 3: Perfiles -->
+<div class="slide">
+<h1>3 Perfiles de Usuario</h1>
+<div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:30px; margin-top:30px;">
+<div style="background:#1e2a3a; padding:30px; border-radius:12px; border-left:4px solid #00d4aa;">
+<h2 style="font-size:1.5rem;">Propietario</h2>
+<p>Verificacion: Numero de identificacion</p>
+<p>Valida contra BD de clientes</p>
+</div>
+<div style="background:#1e2a3a; padding:30px; border-radius:12px; border-left:4px solid #f0b429;">
+<h2 style="font-size:1.5rem; color:#f0b429;">Broker</h2>
+<p>Verificacion: Numero de identificacion</p>
+<p>Valida que sea broker registrado</p>
+</div>
+<div style="background:#1e2a3a; padding:30px; border-radius:12px; border-left:4px solid #e85d75;">
+<h2 style="font-size:1.5rem; color:#e85d75;">Inmobiliaria</h2>
+<p>Verificacion: <strong>Numero de Poliza</strong></p>
+<p>Valida contra BD de polizas</p>
+</div>
+</div>
+</div>
+
+<!-- SLIDE 4: Paso 1 -->
+<div class="slide">
+<h1>Paso 1: Radicacion de Solicitud (20 campos, 16 diligencia el cliente)</h1>
+<h3>Seccion: Datos del Tomador (9 campos — 7 diligencia el cliente)</h3>
+<table style="width:100%; border-collapse:collapse; margin-top:10px; font-size:0.9rem;">
+<thead><tr style="border-bottom:2px solid #2d3d52;">
+<th style="padding:8px; text-align:left; color:#00d4aa;">#</th>
+<th style="padding:8px; text-align:left; color:#00d4aa;">Campo</th>
+<th style="padding:8px; text-align:left; color:#00d4aa;">Tipo</th>
+<th style="padding:8px; text-align:center; color:#00d4aa;">Obligatorio</th>
+</tr></thead>
+<tbody>
+<tr style="border-bottom:1px solid #1e2a3a;"><td style="padding:8px;">1</td><td style="padding:8px;">Perfil (disabled)</td><td style="padding:8px;">Select</td><td style="padding:8px; text-align:center;"><span class="badge badge--si">Si</span></td></tr>
+<tr style="border-bottom:1px solid #1e2a3a;"><td style="padding:8px;">2</td><td style="padding:8px;">Tipo de documento tomador</td><td style="padding:8px;">Select</td><td style="padding:8px; text-align:center;"><span class="badge badge--si">Si</span></td></tr>
+<tr style="border-bottom:1px solid #1e2a3a;"><td style="padding:8px;">3</td><td style="padding:8px;">Nro. documento tomador (disabled)</td><td style="padding:8px;">Text</td><td style="padding:8px; text-align:center;"><span class="badge badge--si">Si</span></td></tr>
+<tr style="border-bottom:1px solid #1e2a3a;"><td style="padding:8px;">4</td><td style="padding:8px;">Nombres y apellidos tomador</td><td style="padding:8px;">Text</td><td style="padding:8px; text-align:center;"><span class="badge badge--si">Si</span></td></tr>
+<tr style="border-bottom:1px solid #1e2a3a;"><td style="padding:8px;">5</td><td style="padding:8px;">Numero de contacto tomador</td><td style="padding:8px;">Text</td><td style="padding:8px; text-align:center;"><span class="badge badge--si">Si</span></td></tr>
+<tr style="border-bottom:1px solid #1e2a3a;"><td style="padding:8px;">6</td><td style="padding:8px;">Correo electronico tomador</td><td style="padding:8px;">Text</td><td style="padding:8px; text-align:center;"><span class="badge badge--si">Si</span></td></tr>
+<tr style="border-bottom:1px solid #1e2a3a;"><td style="padding:8px;">7</td><td style="padding:8px;">Ubicacion del inmueble</td><td style="padding:8px;">Select</td><td style="padding:8px; text-align:center;"><span class="badge badge--si">Si</span></td></tr>
+<tr style="border-bottom:1px solid #1e2a3a;"><td style="padding:8px;">8</td><td style="padding:8px;">Tomador de la poliza</td><td style="padding:8px;">Select</td><td style="padding:8px; text-align:center;"><span class="badge badge--si">Si</span></td></tr>
+<tr><td style="padding:8px;">9</td><td style="padding:8px;">Empleado del Grupo Bolivar</td><td style="padding:8px;">Select</td><td style="padding:8px; text-align:center;"><span class="badge badge--si">Si</span></td></tr>
+</tbody>
+</table>
+</div>
+
+<!-- SLIDE 5: Paso 1 Inmueble -->
+<div class="slide">
+<h1>Paso 1: Informacion del Inmueble (11 campos — 9 diligencia el cliente)</h1>
+<table style="width:100%; border-collapse:collapse; margin-top:10px; font-size:0.9rem;">
+<thead><tr style="border-bottom:2px solid #2d3d52;">
+<th style="padding:8px; text-align:left; color:#00d4aa;">#</th>
+<th style="padding:8px; text-align:left; color:#00d4aa;">Campo</th>
+<th style="padding:8px; text-align:left; color:#00d4aa;">Tipo</th>
+<th style="padding:8px; text-align:center; color:#00d4aa;">Obligatorio</th>
+</tr></thead>
+<tbody>
+<tr style="border-bottom:1px solid #1e2a3a;"><td style="padding:8px;">10</td><td style="padding:8px;">Destino del inmueble</td><td style="padding:8px;">Select</td><td style="padding:8px; text-align:center;"><span class="badge badge--si">Si</span></td></tr>
+<tr style="border-bottom:1px solid #1e2a3a;"><td style="padding:8px;">11</td><td style="padding:8px;">Direccion inmueble</td><td style="padding:8px;">Text</td><td style="padding:8px; text-align:center;"><span class="badge badge--si">Si</span></td></tr>
+<tr style="border-bottom:1px solid #1e2a3a;"><td style="padding:8px;">12</td><td style="padding:8px;">Valor canon de arrendamiento</td><td style="padding:8px;">Moneda</td><td style="padding:8px; text-align:center;"><span class="badge badge--si">Si</span></td></tr>
+<tr style="border-bottom:1px solid #1e2a3a;"><td style="padding:8px;">13</td><td style="padding:8px;">Valor cuota de administracion</td><td style="padding:8px;">Moneda</td><td style="padding:8px; text-align:center;"><span class="badge badge--si">Si</span></td></tr>
+<tr style="border-bottom:1px solid #1e2a3a;"><td style="padding:8px;">14</td><td style="padding:8px;">Valor total a asegurar</td><td style="padding:8px;">Moneda</td><td style="padding:8px; text-align:center;"><span class="badge badge--si">Si</span></td></tr>
+<tr style="border-bottom:1px solid #1e2a3a;"><td style="padding:8px;">15</td><td style="padding:8px;">Tiene Garaje?</td><td style="padding:8px;">Select</td><td style="padding:8px; text-align:center;"><span class="badge badge--si">Si</span></td></tr>
+<tr style="border-bottom:1px solid #1e2a3a;"><td style="padding:8px;">16</td><td style="padding:8px;">Nro. del garaje</td><td style="padding:8px;">Text</td><td style="padding:8px; text-align:center;"><span class="badge badge--cond">Condicional</span></td></tr>
+<tr style="border-bottom:1px solid #1e2a3a;"><td style="padding:8px;">17</td><td style="padding:8px;">Tiene Deposito?</td><td style="padding:8px;">Select</td><td style="padding:8px; text-align:center;"><span class="badge badge--si">Si</span></td></tr>
+<tr style="border-bottom:1px solid #1e2a3a;"><td style="padding:8px;">18</td><td style="padding:8px;">Nro. del deposito</td><td style="padding:8px;">Text</td><td style="padding:8px; text-align:center;"><span class="badge badge--cond">Condicional</span></td></tr>
+<tr style="border-bottom:1px solid #1e2a3a;"><td style="padding:8px;">19</td><td style="padding:8px;">Vigencia de la poliza</td><td style="padding:8px;">Radio (6-12 meses)</td><td style="padding:8px; text-align:center;"><span class="badge badge--si">Si</span></td></tr>
+<tr><td style="padding:8px;">20</td><td style="padding:8px;">Fecha inicio vigencia</td><td style="padding:8px;">Date picker</td><td style="padding:8px; text-align:center;"><span class="badge badge--si">Si</span></td></tr>
+</tbody>
+</table>
+</div>
+
+<!-- SLIDE 6: Paso 2 -->
+<div class="slide">
+<h1>Paso 2: Cotizacion (Resultado)</h1>
+<p>El sistema genera automaticamente la cotizacion con base en los datos del Paso 1.</p>
+<div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:20px; margin-top:30px;">
+<div style="background:#1e2a3a; padding:20px; border-radius:12px; text-align:center;">
+<p style="font-size:2rem; color:#00d4aa; font-weight:700;">Vivienda</p>
+<p>Tipo Inmueble</p>
+</div>
+<div style="background:#1e2a3a; padding:20px; border-radius:12px; text-align:center;">
+<p style="font-size:2rem; color:#00d4aa; font-weight:700;">12</p>
+<p>Meses Vigencia</p>
+</div>
+<div style="background:#1e2a3a; padding:20px; border-radius:12px; text-align:center;">
+<p style="font-size:2rem; color:#00d4aa; font-weight:700;">$40.8M</p>
+<p>Total Asegurado</p>
+</div>
+<div style="background:#1e2a3a; padding:20px; border-radius:12px; text-align:center;">
+<p style="font-size:2rem; color:#f0b429; font-weight:700;">$1.7M</p>
+<p>Valor Poliza</p>
+</div>
+</div>
+<h3 style="margin-top:30px;">Coberturas opcionales:</h3>
+<p>- Servicios Publicos: $1M incluido gratis (ampliar: 5% por millon)</p>
+<p>- Danos y Faltantes: Opcional, 5% + IVA (minimo $1M)</p>
+<h3 style="margin-top:20px;">Acciones: Adquirir Poliza | Contactar un Asesor</h3>
+</div>
+
+<!-- SLIDE 7: Pasos 3 y 4 -->
+<div class="slide">
+<h1>Pasos 3 y 4: Preguntas de Decision</h1>
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:40px; margin-top:30px;">
+<div style="background:#1e2a3a; padding:40px; border-radius:12px;">
+<h2 style="font-size:1.4rem;">Paso 3: Inquilino</h2>
+<p style="margin-top:15px; font-size:1.1rem; color:#e8edf4;">"Ya cuentas con inquilino para arrendar?"</p>
+<div style="margin-top:20px;">
+<span class="badge badge--cond" style="margin-right:10px;">Estoy buscando</span>
+<span class="badge badge--si">Ya lo tengo!</span>
+</div>
+<p style="margin-top:15px; font-size:0.9rem;">Si no tiene inquilino, el flujo se pausa hasta tenerlo.</p>
+</div>
+<div style="background:#1e2a3a; padding:40px; border-radius:12px;">
+<h2 style="font-size:1.4rem;">Paso 4: Estudio</h2>
+<p style="margin-top:15px; font-size:1.1rem; color:#e8edf4;">"El inquilino ya realizo el estudio con El Libertador?"</p>
+<div style="margin-top:20px;">
+<span class="badge badge--cond" style="margin-right:10px;">Realizar estudio</span>
+<span class="badge badge--si">Ya lo tengo!</span>
+</div>
+<p style="margin-top:15px; font-size:0.9rem;">Si no tiene estudio, inicia flujo de estudio crediticio separado.</p>
+</div>
+</div>
+</div>
+
+<!-- SLIDE 8: Paso 5 -->
+<div class="slide">
+<h1>Paso 5: Carga de Documentos (9 campos)</h1>
+<h3>Datos del Inquilino</h3>
+<table style="width:100%; border-collapse:collapse; margin-top:10px; font-size:0.9rem;">
+<thead><tr style="border-bottom:2px solid #2d3d52;">
+<th style="padding:8px; text-align:left; color:#00d4aa;">#</th>
+<th style="padding:8px; text-align:left; color:#00d4aa;">Campo</th>
+<th style="padding:8px; text-align:left; color:#00d4aa;">Tipo</th>
+<th style="padding:8px; text-align:center; color:#00d4aa;">Obligatorio</th>
+</tr></thead>
+<tbody>
+<tr style="border-bottom:1px solid #1e2a3a;"><td style="padding:8px;">1</td><td style="padding:8px;">Tipo de documento inquilino</td><td style="padding:8px;">Select</td><td style="padding:8px; text-align:center;"><span class="badge badge--si">Si</span></td></tr>
+<tr style="border-bottom:1px solid #1e2a3a;"><td style="padding:8px;">2</td><td style="padding:8px;">Nro. documento inquilino</td><td style="padding:8px;">Text</td><td style="padding:8px; text-align:center;"><span class="badge badge--si">Si</span></td></tr>
+<tr style="border-bottom:1px solid #1e2a3a;"><td style="padding:8px;">3</td><td style="padding:8px;">Nombres y apellidos inquilino</td><td style="padding:8px;">Text</td><td style="padding:8px; text-align:center;"><span class="badge badge--si">Si</span></td></tr>
+<tr style="border-bottom:1px solid #1e2a3a;"><td style="padding:8px;">4</td><td style="padding:8px;">Numero solicitud estudio</td><td style="padding:8px;">Text</td><td style="padding:8px; text-align:center;"><span class="badge badge--si">Si</span></td></tr>
+<tr style="border-bottom:1px solid #1e2a3a;"><td style="padding:8px;">5</td><td style="padding:8px;">Servicios disponibles</td><td style="padding:8px;">Radio (multiple)</td><td style="padding:8px; text-align:center;"><span class="badge badge--si">Si</span></td></tr>
+<tr style="border-bottom:1px solid #1e2a3a;"><td style="padding:8px;">6</td><td style="padding:8px;">Forma de pago arriendo</td><td style="padding:8px;">Select</td><td style="padding:8px; text-align:center;"><span class="badge badge--si">Si</span></td></tr>
+</tbody>
+</table>
+<h3 style="margin-top:25px;">Documentos Requeridos (formatos: .png, .jpg, .pdf - max 8 Mb)</h3>
+<table style="width:100%; border-collapse:collapse; margin-top:10px; font-size:0.9rem;">
+<thead><tr style="border-bottom:2px solid #2d3d52;">
+<th style="padding:8px; text-align:left; color:#00d4aa;">#</th>
+<th style="padding:8px; text-align:left; color:#00d4aa;">Documento</th>
+<th style="padding:8px; text-align:center; color:#00d4aa;">Obligatorio</th>
+</tr></thead>
+<tbody>
+<tr style="border-bottom:1px solid #1e2a3a;"><td style="padding:8px;">7</td><td style="padding:8px;">Cedula de ciudadania</td><td style="padding:8px; text-align:center;"><span class="badge badge--si">Si</span></td></tr>
+<tr style="border-bottom:1px solid #1e2a3a;"><td style="padding:8px;">8</td><td style="padding:8px;">Certificado de libertad y tradicion</td><td style="padding:8px; text-align:center;"><span class="badge badge--si">Si</span></td></tr>
+<tr><td style="padding:8px;">9</td><td style="padding:8px;">Formulario B-114 diligenciado</td><td style="padding:8px; text-align:center;"><span class="badge badge--si">Si</span></td></tr>
+</tbody>
+</table>
+</div>
+
+<!-- SLIDE 9: Resumen final -->
+<div class="slide" style="text-align:center; align-items:center;">
+<h1>Resumen: Campos por Pantalla</h1>
+<div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:30px; margin-top:40px;">
+<div style="background:#1e2a3a; padding:30px; border-radius:12px;">
+<p style="font-size:3rem; color:#00d4aa; font-weight:700;">29</p>
+<p>Campos que diligencia el cliente</p>
+</div>
+<div style="background:#1e2a3a; padding:30px; border-radius:12px;">
+<p style="font-size:3rem; color:#f0b429; font-weight:700;">2</p>
+<p>Campos Condicionales</p>
+</div>
+<div style="background:#1e2a3a; padding:30px; border-radius:12px;">
+<p style="font-size:3rem; color:#8b9cb3; font-weight:700;">11</p>
+<p>Campos Automaticos / Readonly</p>
+</div>
+</div>
+
+<h2 style="margin-top:50px; text-align:left;">Desglose por pantalla</h2>
+<table style="width:100%; margin-top:20px; border-collapse:collapse; text-align:left;">
+<thead><tr style="border-bottom:2px solid #2d3d52;">
+<th style="padding:10px; color:#00d4aa;">Pantalla</th>
+<th style="padding:10px; color:#00d4aa;">Paso</th>
+<th style="padding:10px; text-align:center; color:#00d4aa;">Cliente diligencia</th>
+<th style="padding:10px; text-align:center; color:#8b9cb3;">Automaticos</th>
+</tr></thead>
+<tbody>
+<tr style="border-bottom:1px solid #1e2a3a;"><td style="padding:10px;">Seleccion de perfil</td><td style="padding:10px;">Pre</td><td style="padding:10px; text-align:center; color:#00d4aa; font-weight:700;">1</td><td style="padding:10px; text-align:center;">0</td></tr>
+<tr style="border-bottom:1px solid #1e2a3a;"><td style="padding:10px;">Consulta ID</td><td style="padding:10px;">Pre</td><td style="padding:10px; text-align:center; color:#00d4aa; font-weight:700;">1</td><td style="padding:10px; text-align:center;">0</td></tr>
+<tr style="border-bottom:1px solid #1e2a3a;"><td style="padding:10px;">Datos del Tomador</td><td style="padding:10px;">1</td><td style="padding:10px; text-align:center; color:#00d4aa; font-weight:700;">7</td><td style="padding:10px; text-align:center;">2</td></tr>
+<tr style="border-bottom:1px solid #1e2a3a;"><td style="padding:10px;">Datos del Inmueble</td><td style="padding:10px;">1</td><td style="padding:10px; text-align:center; color:#00d4aa; font-weight:700;">9</td><td style="padding:10px; text-align:center;">2</td></tr>
+<tr style="border-bottom:1px solid #1e2a3a;"><td style="padding:10px;">Cotizacion y coberturas</td><td style="padding:10px;">2</td><td style="padding:10px; text-align:center; color:#8b9cb3;">0</td><td style="padding:10px; text-align:center;">6</td></tr>
+<tr style="border-bottom:1px solid #1e2a3a;"><td style="padding:10px;">Pregunta inquilino</td><td style="padding:10px;">3</td><td style="padding:10px; text-align:center; color:#00d4aa; font-weight:700;">1</td><td style="padding:10px; text-align:center;">0</td></tr>
+<tr style="border-bottom:1px solid #1e2a3a;"><td style="padding:10px;">Pregunta estudio</td><td style="padding:10px;">4</td><td style="padding:10px; text-align:center; color:#00d4aa; font-weight:700;">1</td><td style="padding:10px; text-align:center;">0</td></tr>
+<tr style="border-bottom:1px solid #1e2a3a;"><td style="padding:10px;">Carga de documentos</td><td style="padding:10px;">5</td><td style="padding:10px; text-align:center; color:#00d4aa; font-weight:700;">9</td><td style="padding:10px; text-align:center;">0</td></tr>
+<tr style="border-top:2px solid #2d3d52;"><td style="padding:10px;" colspan="2"><strong style="color:#e8edf4;">Total</strong></td><td style="padding:10px; text-align:center; color:#00d4aa; font-weight:700; font-size:1.3rem;">29</td><td style="padding:10px; text-align:center; color:#8b9cb3; font-weight:700;">10</td></tr>
+</tbody>
+</table>
+
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:30px; margin-top:40px;">
+<div style="background:#1e2a3a; padding:30px; border-radius:12px;">
+<p style="font-size:3rem; color:#e85d75; font-weight:700;">3</p>
+<p>Documentos Requeridos</p>
+</div>
+<div style="background:#1e2a3a; padding:30px; border-radius:12px; border-left:4px solid #f0b429;">
+<p style="font-size:1.1rem; color:#f0b429; font-weight:600;">Pico de friccion</p>
+<p style="font-size:2rem; color:#e8edf4; font-weight:700; margin-top:10px;">Paso 1: 16 campos</p>
+<p style="margin-top:8px;">El cliente llena 16 campos en una sola pantalla (2 secciones). Mayor riesgo de abandono.</p>
+</div>
+</div>
+</div>
+
+</body>
+</html>
