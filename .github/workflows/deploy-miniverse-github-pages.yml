@@ -62,6 +62,7 @@ jobs:
           done
           if [ -d docs/screenshots-auditoria ]; then cp -r docs/screenshots-auditoria/. "$DIST/screenshots-auditoria/"; fi
           if [ -d docs/landing-libertador ]; then cp -r docs/landing-libertador "$DIST/landing-libertador"; fi
+          if [ -d docs/cotizador-arrendamiento ]; then cp -r docs/cotizador-arrendamiento "$DIST/cotizador-arrendamiento"; fi
           echo "Estáticos de docs/ copiados (index del SPA intacto)."
 
       - uses: actions/upload-pages-artifact@v3

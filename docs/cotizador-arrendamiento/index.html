@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cotizador Arrendamiento - Pantallas y Campos</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'DM Sans', sans-serif; background: #0f1419; color: #e8edf4; padding: 40px; }
+h1 { font-size: 2rem; color: #00d4aa; margin-bottom: 6px; text-align: center; }
+.page-subtitle { color: #8b9cb3; text-align: center; margin-bottom: 40px; }
+.screen-row { display: grid; grid-template-columns: 420px 1fr; gap: 30px; margin-bottom: 40px; padding-bottom: 40px; border-bottom: 1px solid #2d3d52; align-items: start; }
+.screen-row:last-child { border-bottom: none; }
+.thumb-container { position: relative; cursor: pointer; border-radius: 8px; overflow: hidden; border: 2px solid #2d3d52; transition: border-color 0.2s, transform 0.2s; }
+.thumb-container:hover { border-color: #00d4aa; transform: scale(1.02); }
+.thumb-container img { width: 100%; height: 200px; display: block; object-fit: cover; object-position: center top; }
+.thumb-number { position: absolute; top: 8px; left: 8px; background: #00d4aa; color: #0f1419; font-weight: 700; font-size: 0.75rem; padding: 3px 8px; border-radius: 4px; }
+.thumb-title { background: #1e2a3a; padding: 8px 10px; font-size: 0.8rem; color: #e8edf4; font-weight: 500; }
+.fields-panel h3 { font-size: 1.1rem; color: #00d4aa; margin-bottom: 10px; }
+.fields-panel p { color: #8b9cb3; font-size: 0.85rem; margin-bottom: 12px; }
+.fields-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+.fields-table th { padding: 6px 10px; text-align: left; color: #00d4aa; border-bottom: 2px solid #2d3d52; }
+.fields-table td { padding: 5px 10px; border-bottom: 1px solid #1e2a3a; }
+.badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 0.7rem; font-weight: 500; }
+.badge--si { background: #00d4aa22; color: #00d4aa; }
+.badge--no { background: #8b9cb322; color: #8b9cb3; }
+.badge--cond { background: #f0b42922; color: #f0b429; }
+.badge--auto { background: #5b8def22; color: #5b8def; }
+.no-fields { color: #8b9cb3; font-style: italic; font-size: 0.85rem; }
+.lightbox { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.93); z-index: 1000; align-items: center; justify-content: center; cursor: pointer; }
+.lightbox.active { display: flex; }
+.lightbox img { max-width: 92%; max-height: 92%; border-radius: 8px; box-shadow: 0 0 60px rgba(0,212,170,0.2); }
+.lightbox-close { position: fixed; top: 20px; right: 30px; color: #fff; font-size: 2.2rem; cursor: pointer; z-index: 1001; }
+.legend { display: flex; gap: 16px; justify-content: center; margin-bottom: 30px; flex-wrap: wrap; }
+.legend-item { font-size: 0.8rem; color: #8b9cb3; }
+</style>
+</head>
+<body>
+<h1>Cotizador de Arrendamiento — Pantallas y Campos</h1>
+<p class="page-subtitle">Proyectiva Seguros | 9 pantallas documentadas | Click en imagen para ampliar</p>
+<div class="legend">
+<span class="legend-item"><span class="badge badge--si">Si</span> Obligatorio</span>
+<span class="legend-item"><span class="badge badge--cond">Cond</span> Condicional</span>
+<span class="legend-item"><span class="badge badge--auto">Auto</span> Calculado</span>
+<span class="legend-item"><span class="badge badge--no">No</span> Opcional</span>
+</div>
+
+<!-- Screen 1 -->
+<div class="screen-row">
+<div class="thumb-container" onclick="openLightbox('01-pagina-inicial.png')">
+<span class="thumb-number">01</span>
+<img src="01-pagina-inicial.png" alt="Pagina inicial">
+<div class="thumb-title">Pagina inicial</div>
+</div>
+<div class="fields-panel">
+<h3>Pagina de bienvenida</h3>
+<p>Pantalla de entrada al cotizador. Dos opciones: "Iniciar cotizacion" y "Carga de documentos".</p>
+<p class="no-fields">Sin campos de entrada — solo navegacion.</p>
+</div>
+</div>
+
+<!-- Screen 2 -->
+<div class="screen-row">
+<div class="thumb-container" onclick="openLightbox('02-modal-seleccion-perfil.png')">
+<span class="thumb-number">02</span>
+<img src="02-modal-seleccion-perfil.png" alt="Modal seleccion perfil">
+<div class="thumb-title">Seleccion de perfil</div>
+</div>
+<div class="fields-panel">
+<h3>Seleccion de perfil de usuario</h3>
+<p>Modal donde se elige el tipo de usuario que inicia la cotizacion.</p>
+<table class="fields-table">
+<thead><tr><th>Campo</th><th>Tipo</th><th>Oblig.</th></tr></thead>
+<tbody>
+<tr><td>Perfil de usuario</td><td>Select (3 opciones)</td><td><span class="badge badge--si">Si</span></td></tr>
+</tbody>
+</table>
+<p style="margin-top:8px; font-size:0.8rem; color:#8b9cb3;">Opciones: Propietario | Broker | Inmobiliaria</p>
+</div>
+</div>
+
+<!-- Screen 3 -->
+<div class="screen-row">
+<div class="thumb-container" onclick="openLightbox('03-propietario-consulta-id.png')">
+<span class="thumb-number">03</span>
+<img src="03-propietario-consulta-id.png" alt="Propietario consulta ID">
+<div class="thumb-title">Propietario - Consulta ID</div>
+</div>
+<div class="fields-panel">
+<h3>Verificacion de identidad (Propietario)</h3>
+<p>Valida el numero de identificacion contra la base de datos de clientes.</p>
+<table class="fields-table">
+<thead><tr><th>Campo</th><th>Tipo</th><th>Oblig.</th></tr></thead>
+<tbody>
+<tr><td>Numero de identificacion</td><td>Numerico</td><td><span class="badge badge--si">Si</span></td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<!-- Screen 4 -->
+<div class="screen-row">
+<div class="thumb-container" onclick="openLightbox('05-propietario-formulario-paso1.png')">
+<span class="thumb-number">04</span>
+<img src="05-propietario-formulario-paso1.png" alt="Formulario paso 1 superior">
+<div class="thumb-title">Paso 1 - Datos del Tomador</div>
+</div>
+<div class="fields-panel">
+<h3>Radicacion de solicitud — Datos del Tomador</h3>
+<table class="fields-table">
+<thead><tr><th>Campo</th><th>Tipo</th><th>Oblig.</th></tr></thead>
+<tbody>
+<tr><td>Perfil (prellenado)</td><td>Select (disabled)</td><td><span class="badge badge--auto">Auto</span></td></tr>
+<tr><td>Tipo de documento tomador</td><td>Select</td><td><span class="badge badge--si">Si</span></td></tr>
+<tr><td>Nro. documento tomador (prellenado)</td><td>Text (disabled)</td><td><span class="badge badge--auto">Auto</span></td></tr>
+<tr><td>Nombres y apellidos tomador</td><td>Text</td><td><span class="badge badge--si">Si</span></td></tr>
+<tr><td>Numero de contacto tomador</td><td>Text</td><td><span class="badge badge--si">Si</span></td></tr>
+<tr><td>Correo electronico tomador</td><td>Text</td><td><span class="badge badge--si">Si</span></td></tr>
+<tr><td>Ubicacion del inmueble</td><td>Select</td><td><span class="badge badge--si">Si</span></td></tr>
+<tr><td>Tomador de la poliza</td><td>Select</td><td><span class="badge badge--si">Si</span></td></tr>
+<tr><td>Empleado del Grupo Bolivar</td><td>Select</td><td><span class="badge badge--si">Si</span></td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<!-- Screen 5 -->
+<div class="screen-row">
+<div class="thumb-container" onclick="openLightbox('06-propietario-paso1-completo.png')">
+<span class="thumb-number">05</span>
+<img src="06-propietario-paso1-completo.png" alt="Formulario paso 1 inferior">
+<div class="thumb-title">Paso 1 - Datos del Inmueble</div>
+</div>
+<div class="fields-panel">
+<h3>Radicacion de solicitud — Informacion del Inmueble</h3>
+<table class="fields-table">
+<thead><tr><th>Campo</th><th>Tipo</th><th>Oblig.</th></tr></thead>
+<tbody>
+<tr><td>Destino del inmueble</td><td>Select</td><td><span class="badge badge--si">Si</span></td></tr>
+<tr><td>Direccion inmueble</td><td>Text</td><td><span class="badge badge--si">Si</span></td></tr>
+<tr><td>Valor canon de arrendamiento</td><td>Moneda</td><td><span class="badge badge--si">Si</span></td></tr>
+<tr><td>Valor cuota de administracion</td><td>Moneda</td><td><span class="badge badge--si">Si</span></td></tr>
+<tr><td>Valor total a asegurar</td><td>Moneda (calculado)</td><td><span class="badge badge--auto">Auto</span></td></tr>
+<tr><td>Tiene Garaje?</td><td>Select</td><td><span class="badge badge--si">Si</span></td></tr>
+<tr><td>Nro. del garaje</td><td>Text</td><td><span class="badge badge--cond">Cond</span></td></tr>
+<tr><td>Tiene Deposito?</td><td>Select</td><td><span class="badge badge--si">Si</span></td></tr>
+<tr><td>Nro. del deposito</td><td>Text</td><td><span class="badge badge--cond">Cond</span></td></tr>
+<tr><td>Vigencia de la poliza</td><td>Radio (6-12 meses)</td><td><span class="badge badge--si">Si</span></td></tr>
+<tr><td>Fecha inicio vigencia</td><td>Date picker (flatpickr)</td><td><span class="badge badge--si">Si</span></td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<!-- Screen 6 removed - fullPage screenshot shows blank due to iframe nesting -->
+
+<!-- Screen 7 -->
+<div class="screen-row">
+<div class="thumb-container" onclick="openLightbox('09-paso2-cotizacion-coberturas.png')">
+<span class="thumb-number">06</span>
+<img src="09-paso2-cotizacion-coberturas.png" alt="Cotizacion y coberturas">
+<div class="thumb-title">Paso 2 - Cotizacion y coberturas</div>
+</div>
+<div class="fields-panel">
+<h3>Resultado de la cotizacion</h3>
+<p>Pantalla generada automaticamente con calculo de prima y coberturas opcionales.</p>
+<table class="fields-table">
+<thead><tr><th>Campo</th><th>Tipo</th><th>Oblig.</th></tr></thead>
+<tbody>
+<tr><td>Tipo inmueble</td><td>Texto (readonly)</td><td><span class="badge badge--auto">Auto</span></td></tr>
+<tr><td>Vigencia poliza</td><td>Texto (readonly)</td><td><span class="badge badge--auto">Auto</span></td></tr>
+<tr><td>Total asegurado</td><td>Moneda (readonly)</td><td><span class="badge badge--auto">Auto</span></td></tr>
+<tr><td>Servicios Publicos (ampliar)</td><td>Moneda (click)</td><td><span class="badge badge--no">No</span></td></tr>
+<tr><td>Danos y Faltantes (agregar)</td><td>Moneda (click)</td><td><span class="badge badge--no">No</span></td></tr>
+<tr><td>Valor Poliza</td><td>Moneda (readonly)</td><td><span class="badge badge--auto">Auto</span></td></tr>
+</tbody>
+</table>
+<p style="margin-top:8px; font-size:0.8rem; color:#8b9cb3;">Acciones: Adquirir Poliza | Contactar Asesor</p>
+</div>
+</div>
+
+<!-- Screen 8 -->
+<div class="screen-row">
+<div class="thumb-container" onclick="openLightbox('10-paso3-inquilino-pregunta.png')">
+<span class="thumb-number">07</span>
+<img src="10-paso3-inquilino-pregunta.png" alt="Inquilino pregunta">
+<div class="thumb-title">Paso 3 - Inquilino</div>
+</div>
+<div class="fields-panel">
+<h3>Pregunta: Ya cuentas con inquilino?</h3>
+<table class="fields-table">
+<thead><tr><th>Campo</th><th>Tipo</th><th>Oblig.</th></tr></thead>
+<tbody>
+<tr><td>Ya cuentas con inquilino?</td><td>Seleccion (2 opciones)</td><td><span class="badge badge--si">Si</span></td></tr>
+</tbody>
+</table>
+<p style="margin-top:8px; font-size:0.8rem; color:#8b9cb3;">Opciones: "Estoy buscando" (pausa flujo) | "Ya lo tengo!" (continua)</p>
+</div>
+</div>
+
+<!-- Screen 9 -->
+<div class="screen-row">
+<div class="thumb-container" onclick="openLightbox('11-paso4-estudio-pregunta.png')">
+<span class="thumb-number">08</span>
+<img src="11-paso4-estudio-pregunta.png" alt="Estudio pregunta">
+<div class="thumb-title">Paso 4 - Estudio de arrendamiento</div>
+</div>
+<div class="fields-panel">
+<h3>Pregunta: El inquilino ya realizo el estudio?</h3>
+<table class="fields-table">
+<thead><tr><th>Campo</th><th>Tipo</th><th>Oblig.</th></tr></thead>
+<tbody>
+<tr><td>El inquilino ya realizo el estudio?</td><td>Seleccion (2 opciones)</td><td><span class="badge badge--si">Si</span></td></tr>
+</tbody>
+</table>
+<p style="margin-top:8px; font-size:0.8rem; color:#8b9cb3;">Opciones: "Realizar estudio" (flujo separado) | "Ya lo tengo!" (continua)</p>
+</div>
+</div>
+
+<!-- Screen 10 -->
+<div class="screen-row">
+<div class="thumb-container" onclick="openLightbox('12-paso5-carga-documentos.png')">
+<span class="thumb-number">09</span>
+<img src="12-paso5-carga-documentos.png" alt="Carga documentos viewport">
+<div class="thumb-title">Paso 5 - Carga de documentos</div>
+</div>
+<div class="fields-panel">
+<h3>Datos del inquilino + Documentos requeridos</h3>
+<table class="fields-table">
+<thead><tr><th>Campo</th><th>Tipo</th><th>Oblig.</th></tr></thead>
+<tbody>
+<tr><td>Tipo de documento inquilino</td><td>Select</td><td><span class="badge badge--si">Si</span></td></tr>
+<tr><td>Nro. documento inquilino</td><td>Text</td><td><span class="badge badge--si">Si</span></td></tr>
+<tr><td>Nombres y apellidos inquilino</td><td>Text</td><td><span class="badge badge--si">Si</span></td></tr>
+<tr><td>Numero solicitud estudio</td><td>Text</td><td><span class="badge badge--si">Si</span></td></tr>
+<tr><td>Servicios disponibles</td><td>Checkboxes</td><td><span class="badge badge--si">Si</span></td></tr>
+<tr><td>Forma de pago arriendo</td><td>Select</td><td><span class="badge badge--si">Si</span></td></tr>
+<tr style="border-top:2px solid #2d3d52;"><td colspan="3" style="color:#8b9cb3; padding-top:8px; font-weight:600;">Documentos (png/jpg/pdf, max 8Mb)</td></tr>
+<tr><td>Cedula de ciudadania</td><td>Carga archivo</td><td><span class="badge badge--si">Si</span></td></tr>
+<tr><td>Certificado libertad y tradicion</td><td>Carga archivo</td><td><span class="badge badge--si">Si</span></td></tr>
+<tr><td>Formulario B-114 (SARLAF)</td><td>Carga archivo</td><td><span class="badge badge--si">Si</span></td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<!-- Screen 11 removed - fullPage shows blank due to iframe nesting -->
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+<span class="lightbox-close">&times;</span>
+<img id="lightbox-img" src="" alt="Pantalla ampliada">
+</div>
+
+<script>
+function openLightbox(src) {
+  document.getElementById('lightbox-img').src = src;
+  document.getElementById('lightbox').classList.add('active');
+}
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('active');
+}
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeLightbox();
+});
+</script>
+</body>
+</html>
