@@ -16,8 +16,6 @@ header::after{content:'';position:absolute;bottom:-30%;left:-5%;width:200px;heig
 header h1{font-size:1.75rem;font-weight:800;margin-bottom:0.5rem;position:relative;z-index:1}
 header .subtitle{font-size:1rem;opacity:0.9;position:relative;z-index:1}
 header .meta{display:flex;gap:2rem;margin-top:1rem;font-size:0.85rem;opacity:0.8;position:relative;z-index:1}
-.logo-container{float:right;position:relative;z-index:1}
-.logo-container svg{width:90px;height:90px}
 .resumen-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1.25rem;margin-bottom:2.5rem}
 .resumen-card{background:var(--blanco);border-radius:14px;padding:1.5rem;text-align:center;box-shadow:0 4px 16px rgba(0,0,0,0.06);border-top:4px solid var(--naranja);transition:transform 0.2s}
 .resumen-card:hover{transform:translateY(-2px)}
@@ -47,10 +45,11 @@ tr:nth-child(even) td{background:var(--gris-claro)}
 .badge-dev{background:#cce5ff;color:#004085}
 .badge-pendiente{background:#e9ecef;color:#495057}
 .badge-activo{background:#fff3cd;color:#856404}
-.alerta-box.warning{background:#fffbea;border:1px solid #ffeeba;border-left:4px solid var(--amarillo-sem);border-radius:10px;padding:1rem 1.25rem;margin-bottom:1rem}
+.alerta-box{border-radius:10px;padding:1rem 1.25rem;margin-bottom:1rem}
+.alerta-box.warning{background:#fffbea;border:1px solid #ffeeba;border-left:4px solid var(--amarillo-sem)}
 .alerta-box.warning h4{font-size:0.9rem;color:#856404;font-weight:700;margin-bottom:0.25rem}
 .alerta-box.warning p{font-size:0.85rem;color:var(--texto-sec)}
-.alerta-box.success{background:#d4edda;border:1px solid #c3e6cb;border-left:4px solid var(--verde);border-radius:10px;padding:1rem 1.25rem;margin-bottom:1rem}
+.alerta-box.success{background:#d4edda;border:1px solid #c3e6cb;border-left:4px solid var(--verde)}
 .alerta-box.success h4{font-size:0.9rem;color:#155724;font-weight:700;margin-bottom:0.25rem}
 .alerta-box.success p{font-size:0.85rem;color:var(--texto-sec)}
 .capacidades-box{background:var(--blanco);border-radius:12px;padding:1rem 1.5rem;box-shadow:0 2px 12px rgba(0,0,0,0.04);margin-top:1rem;border-left:4px solid var(--azul-profundo);display:flex;align-items:center;gap:1rem}
@@ -60,22 +59,22 @@ tr:nth-child(even) td{background:var(--gris-claro)}
 .backlog-list ul{padding-left:1.5rem}
 .backlog-list li{margin-bottom:0.4rem;font-size:0.88rem;color:var(--texto-sec)}
 .sub-title{font-size:0.95rem;color:var(--azul-profundo);font-weight:600;margin:1rem 0 0.5rem}
-.footer{text-align:center;padding:2rem 0 1rem;font-size:0.8rem;color:var(--texto-sec);border-top:1px solid var(--gris-medio);margin-top:2rem}
 .progress-bar{width:100%;height:8px;background:var(--gris-medio);border-radius:4px;overflow:hidden;margin-top:0.5rem}
 .progress-bar .fill{height:100%;border-radius:4px}
 .fill-verde{background:var(--verde)}.fill-amarillo{background:var(--amarillo-sem)}.fill-rojo{background:var(--rojo)}
+.footer{text-align:center;padding:2rem 0 1rem;font-size:0.8rem;color:var(--texto-sec);border-top:1px solid var(--gris-medio);margin-top:2rem}
 @media(max-width:768px){.container{padding:1rem}header{padding:1.5rem}header h1{font-size:1.3rem}.resumen-grid{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
 <body>
 <div class="container">
-
 <header>
 <h1>Dashboard de Seguimiento Ejecutivo</h1>
 <p class="subtitle">Agencia Proyectiva — Reporte VP Sponsor</p>
 <div class="meta"><span>Fecha de corte: Junio 29, 2026</span><span>Carriles activos: 3</span></div>
 </header>
 
+<!-- RESUMEN EJECUTIVO -->
 <section class="section"><h2 class="section-title">Resumen Ejecutivo</h2>
 <div class="resumen-grid">
 <div class="resumen-card"><div class="valor">3</div><div class="label">Carriles Estrategicos</div></div>
@@ -87,7 +86,8 @@ tr:nth-child(even) td{background:var(--gris-claro)}
 
 <!-- CARRIL 1: Experiencia Digital y Ventas -->
 <section class="section"><h2 class="section-title">1. Experiencia Digital y Ventas</h2>
-<div class="section-desc"><strong>Proposito:</strong> Impulsar la generacion de ingresos y la autogestion de clientes a traves de canales digitales, mediante la implementacion de experiencias end-to-end que permitan cotizar, adquirir y gestionar productos de forma autonoma, eficiente y escalable.</div>
+
+<div class="section-desc"><strong>Objetivo:</strong> Impulsar la generacion de ingresos y la autogestion de clientes a traves de canales digitales, mediante la implementacion de experiencias end-to-end que permitan cotizar, adquirir y gestionar productos de forma autonoma, eficiente y escalable.</div>
 
 <h3 style="font-size:1rem;color:var(--azul-profundo);margin-bottom:0.75rem">KPIs</h3>
 <div class="kpi-grid">
@@ -96,6 +96,8 @@ tr:nth-child(even) td{background:var(--gris-claro)}
 <div class="kpi-card"><div class="semaforo verde"></div><div class="kpi-info"><div class="kpi-name">SLO (confiabilidad Datadog)</div><div class="kpi-values"><span class="kpi-real">100</span><span class="kpi-obj">Obj: 90</span></div><div class="cumpl-verde">111.11%</div></div></div>
 <div class="kpi-card"><div class="semaforo gris"></div><div class="kpi-info"><div class="kpi-name">Trafico/Sesiones (Mes)</div><div class="kpi-values"><span class="kpi-real">En construccion</span></div></div></div>
 </div>
+
+<p class="sub-title">¿En que vamos?</p>
 
 <p class="sub-title">Squad Proyectiva</p>
 <div class="table-wrapper"><table><thead><tr><th>Iniciativa</th><th>Estado</th><th>Detalle</th></tr></thead><tbody>
@@ -110,19 +112,25 @@ tr:nth-child(even) td{background:var(--gris-claro)}
 <tr><td>Capitulo Cotizacion Renovacion (Brokers, Propietarios, Inmobiliarias)</td><td><span class="badge badge-pendiente">Pendiente</span></td><td>Proceso adaptado para Brokers, Propietarios e Inmobiliarias. Se priorizara posterior al cotizador.</td></tr>
 </tbody></table></div>
 
-<div class="backlog-list"><strong>Backlog - Estrategia de Conversion (Venta Digital):</strong>
+<p class="sub-title">Alertas</p>
+<div class="alerta-box warning"><h4>Rediseno Web bloqueado</h4><p>Pendiente aprobacion de Paola Suarez y Norma Pi para avanzar con el desarrollo SEO.</p></div>
+
+<p class="sub-title">Backlog</p>
+<div class="backlog-list"><strong>Estrategia de Conversion (Venta Digital):</strong>
 <ul>
 <li><strong>Atraer:</strong> Hero impactante para productos estrella (Seguro Arrendamiento)</li>
 <li><strong>Empujar:</strong> Sistema alertas inteligente (banners renovaciones)</li>
 <li><strong>Guiar:</strong> WhatsApp y agentes IA en tiempo real</li>
 </ul></div>
 
+<p class="sub-title">Equipo</p>
 <div class="capacidades-box"><span class="cap-label">Capacidades:</span><span class="equipo-tag">1 Dev</span><span class="equipo-tag">0.15 LT</span></div>
 </section>
 
 <!-- CARRIL 2: Venta de SOAT Proyectiva -->
 <section class="section"><h2 class="section-title">2. Venta de SOAT Proyectiva</h2>
-<div class="section-desc"><strong>Objetivo:</strong> Desarrollar un canal digital escalable de venta de SOAT que, a traves de la evolucion por fases, permita capturar oportunidades de mercado, optimizar la conversion y consolidar ingresos recurrentes para la agencia.</div>
+
+<div class="section-desc"><strong>Objetivo:</strong> Desarrollar un canal digital escalable de venta de SOAT que, a traves de la evolucion por fases (venta dirigida con aliados, comercializacion a bases de terceros y modelo de venta delegada), permita capturar oportunidades de mercado, optimizar la conversion y consolidar una capacidad recurrente de generacion de ingresos para la agencia.</div>
 
 <h3 style="font-size:1rem;color:var(--azul-profundo);margin-bottom:0.75rem">KPIs</h3>
 <div class="kpi-grid">
@@ -130,15 +138,17 @@ tr:nth-child(even) td{background:var(--gris-claro)}
 <div class="kpi-card"><div class="semaforo verde"></div><div class="kpi-info"><div class="kpi-name"># Polizas emitidas</div><div class="kpi-values"><span class="kpi-real">11</span><span class="kpi-obj">Obj Anual: 208,000</span></div><div class="cumpl-verde">Primeras ventas reales</div></div></div>
 </div>
 
-<p class="sub-title">Fase 1 - Flujo Tactico (Monitoreo y Marcha Blanca)</p>
-<div class="section-desc"><strong>Alcance:</strong> Venta digital SOAT AXA Colpatria dirigida a base de clientes en campanas (venta dirigida).<br><br><strong>Estado actual:</strong> Punto de venta AXA activado. Se superaron las pruebas de amigos y familia. El jueves se inicio la masificacion enviando los vencimientos diarios. Se encuentra en monitoreo.</div>
+<p class="sub-title">¿En que vamos?</p>
+<div class="section-desc"><strong>Venta SOAT Proyectiva — Fase 1 (Flujo tactico)</strong><br>
+<strong>Alcance:</strong> Venta digital SOAT de AXA Colpatria dirigida a base de clientes cargada en campanas (venta dirigida).<br><br>
+<strong>Estado actual:</strong> Punto de venta AXA activado. Se superaron las pruebas de amigos y familia. El jueves se inicio la masificacion enviando los vencimientos diarios. Se encuentra en monitoreo.</div>
 
 <div class="alerta-box success"><h4>Despliegue exitoso — Martes 17 de junio 2026 (Produccion)</h4>
 <p>1. Mensajes de claridad en el flujo de compra (reducir fricciones)<br>
 2. Links de compra con vigencia de 90 dias (evitar expiracion)<br>
 3. Notificacion de backup con link de poliza (correo complementario al SMS de AXA)</p></div>
 
-<p class="sub-title">Desarrollo en curso: HUs para ajustar el flujo de estados de pagos</p>
+<p class="sub-title">Desarrollo en curso: HUs para ajustar el flujo de estados de pagos (no informadas previamente)</p>
 <div class="table-wrapper"><table><thead><tr><th>Historia de Usuario</th></tr></thead><tbody>
 <tr><td>Implementar Check Status obligatorio y estado Loaded en flujo de pago SOAT</td></tr>
 <tr><td>Persistencia de cotizacion SOAT en BD con vigencia parametrica</td></tr>
@@ -155,35 +165,24 @@ tr:nth-child(even) td{background:var(--gris-claro)}
 <tr><td>Miercoles 25</td><td>Gestion paso a PRD</td><td>Depende de QA exitoso</td></tr>
 </tbody></table></div>
 
-<p class="sub-title">Tablero Datadog SOAT Digital — Miercoles 25 junio</p>
-<div class="alerta-box warning"><h4>Punto adicional</h4><p>Conversar con el orquestador para validar que la observabilidad incluya la comunicacion entre servicios propios y AXA.</p></div>
+<p class="sub-title">Alertas</p>
+<div class="alerta-box warning"><h4>Ambiente de pruebas de AXA</h4><p>Riesgo de retraso en QA y paso a PRD. Validar disponibilidad anticipadamente.</p></div>
+<div class="alerta-box warning"><h4>Tablero Datadog SOAT Digital (Miercoles 25)</h4><p>Conversar con el orquestador para validar que la observabilidad incluya la comunicacion entre servicios propios y AXA.</p></div>
 
-<div class="table-wrapper"><table><thead><tr><th>Venta</th><th>Fecha</th><th>Monto</th><th>Medio</th></tr></thead><tbody>
-<tr><td>1</td><td>19-06-2026</td><td>$946,600</td><td>TARJETA</td></tr>
-<tr><td>2</td><td>19-06-2026</td><td>$343,300</td><td>PSE</td></tr>
-<tr><td>3</td><td>19-06-2026</td><td>$892,900</td><td>PSE</td></tr>
-<tr><td>4</td><td>17-06-2026</td><td>$702,800</td><td>TARJETA</td></tr>
-<tr><td>5</td><td>17-06-2026</td><td>$1,017,200</td><td>PSE</td></tr>
-<tr><td>6</td><td>16-06-2026</td><td>$702,800</td><td>PSE</td></tr>
-<tr><td>7</td><td>10-06-2026</td><td>$544,700</td><td>PSE</td></tr>
-<tr><td>8</td><td>10-06-2026</td><td>$447,300</td><td>PSE</td></tr>
-<tr><td>9</td><td>10-06-2026</td><td>$677,400</td><td>PSE</td></tr>
-<tr><td>10</td><td>09-06-2026</td><td>$546,600</td><td>PSE</td></tr>
-<tr><td>11</td><td>09-06-2026</td><td>$343,300</td><td>PSE</td></tr>
-</tbody></table></div>
-
-<div class="backlog-list"><strong>Backlog:</strong>
-<ul>
+<p class="sub-title">Backlog</p>
+<div class="backlog-list"><ul>
 <li><strong>Fase 2:</strong> Flujo estrategico</li>
 <li><strong>Fase 3:</strong> Venta Mundial Seguros</li>
 <li><strong>Fase 4:</strong> Venta delegada</li>
 </ul></div>
 
+<p class="sub-title">Equipo</p>
 <div class="capacidades-box"><span class="cap-label">Capacidades:</span><span class="equipo-tag">1 Dev Fabrica</span><span class="equipo-tag">0.15 LT</span></div>
 </section>
 
 <!-- CARRIL 3: CRM Proyectiva -->
 <section class="section"><h2 class="section-title">3. CRM Proyectiva</h2>
+
 <div class="section-desc"><strong>Objetivo:</strong> Optimizar gestion de leads y conversion a polizas mediante CRM unificado.</div>
 
 <h3 style="font-size:1rem;color:var(--azul-profundo);margin-bottom:0.75rem">KPIs</h3>
@@ -193,17 +192,21 @@ tr:nth-child(even) td{background:var(--gris-claro)}
 <div class="kpi-card"><div class="semaforo amarillo"></div><div class="kpi-info"><div class="kpi-name">Conversion leads a renovacion arrendamiento</div><div class="kpi-values"><span class="kpi-real">31.05%</span><span class="kpi-obj">Obj: 60%</span></div><div style="font-size:0.8rem;font-weight:600;color:var(--amarillo-sem)">53.25%</div><div class="progress-bar"><div class="fill fill-amarillo" style="width:53%"></div></div></div></div>
 </div>
 
-<p class="sub-title">En que vamos</p>
+<p class="sub-title">¿En que vamos?</p>
 <div class="table-wrapper"><table><thead><tr><th>Iniciativa</th><th>Estado</th><th>Detalle</th></tr></thead><tbody>
 <tr><td>Conexion nueva API operacion al CRM Vida y Desempleo</td><td><span class="badge badge-prod">Completado</span></td><td>Entrega de leads completada</td></tr>
 <tr><td>Unificacion CRM para Proyectiva</td><td><span class="badge badge-pendiente">Pendiente</span></td><td>Priorizado posterior a los 2 primeros carriles de Autogestion. Espacio de objetivo abierto para automatizacion.</td></tr>
 </tbody></table></div>
 
-<div class="backlog-list"><strong>Backlog:</strong>
-<ul>
+<p class="sub-title">Alertas</p>
+<p style="font-size:0.88rem;color:var(--texto-sec);margin-bottom:1rem">Sin alertas activas.</p>
+
+<p class="sub-title">Backlog</p>
+<div class="backlog-list"><ul>
 <li><strong>Unificacion CRMs:</strong> Consolidar Vida y Desempleo, Arrendamiento, Renovaciones, Prevalidador, Autos en un solo CRM</li>
 </ul></div>
 
+<p class="sub-title">Equipo</p>
 <div class="capacidades-box"><span class="cap-label">Capacidades:</span><span class="equipo-tag">1 Dev Autogestion</span><span class="equipo-tag">0.15 LT</span></div>
 </section>
 
