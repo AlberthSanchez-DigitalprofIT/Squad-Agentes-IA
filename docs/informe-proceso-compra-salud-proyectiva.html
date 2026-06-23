@@ -4,12 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Proceso de Compra - Seguro Salud Proyectiva | SQUAD-AGENTES-IA</title>
-  <meta name="description" content="Analisis de pantallas y campos del proceso de compra de Seguro Salud a su Medida - Agencia Proyectiva">
+  <meta name="description" content="Analisis de pantallas y campos del proceso de compra digital de Seguro Salud a su Medida - Agencia Proyectiva">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="Asset/report-base.css">
   <link rel="stylesheet" href="Asset/report-components.css">
+  <style>
+    .screenshot { width: 100%; border-radius: 12px; border: 1px solid var(--border); margin: 1.5rem 0; }
+    .screenshot-caption { font-size: 0.8rem; color: var(--text-secondary); text-align: center; margin-top: -0.5rem; margin-bottom: 1.5rem; }
+  </style>
 </head>
 <body>
   <div class="container">
@@ -30,41 +34,19 @@
       <section class="section">
         <h2 class="section-title">Flujo General</h2>
         <div class="phases-grid">
-          <div class="phase-card">
-            <div class="phase-label">Paso 0</div>
-            <div class="phase-value">Landing</div>
-            <div class="phase-meta">Captacion</div>
-          </div>
-          <div class="phase-card">
-            <div class="phase-label">Paso 1</div>
-            <div class="phase-value">Asegurados</div>
-            <div class="phase-meta">Cantidad + edad</div>
-          </div>
-          <div class="phase-card">
-            <div class="phase-label">Paso 2</div>
-            <div class="phase-value">Plan</div>
-            <div class="phase-meta">S / M / L + Plus</div>
-          </div>
-          <div class="phase-card">
-            <div class="phase-label">Paso 3</div>
-            <div class="phase-value">Titular</div>
-            <div class="phase-meta">Datos + validacion</div>
-          </div>
-          <div class="phase-card">
-            <div class="phase-label">Paso 4</div>
-            <div class="phase-value">Asegurados</div>
-            <div class="phase-meta">No alcanzado</div>
-          </div>
-          <div class="phase-card">
-            <div class="phase-label">Paso 5-6</div>
-            <div class="phase-value">Confirmar / Pagar</div>
-            <div class="phase-meta">No alcanzado</div>
-          </div>
+          <div class="phase-card"><div class="phase-label">Paso 0</div><div class="phase-value">Landing</div><div class="phase-meta">Captacion</div></div>
+          <div class="phase-card"><div class="phase-label">Paso 1</div><div class="phase-value">Asegurados</div><div class="phase-meta">Cantidad + edad</div></div>
+          <div class="phase-card"><div class="phase-label">Paso 2</div><div class="phase-value">Plan</div><div class="phase-meta">S / M / L + Plus</div></div>
+          <div class="phase-card"><div class="phase-label">Paso 3</div><div class="phase-value">Titular</div><div class="phase-meta">Datos + validacion</div></div>
+          <div class="phase-card"><div class="phase-label">Paso 4</div><div class="phase-value">Asegurados</div><div class="phase-meta">No alcanzado</div></div>
+          <div class="phase-card"><div class="phase-label">Paso 5-6</div><div class="phase-value">Confirmar/Pagar</div><div class="phase-meta">No alcanzado</div></div>
         </div>
       </section>
       <section class="section">
         <h2 class="section-title">Pantalla 0: Landing / Captacion</h2>
         <div class="info-note"><strong>URL:</strong> /seguros-en-linea/seguro-salud-a-su-medida/agencia-proyectiva</div>
+        <img src="screenshots-auditoria/salud-paso0-landing.png" alt="Landing Seguro Salud Proyectiva" class="screenshot">
+        <p class="screenshot-caption">Landing con formulario de captacion, planes y beneficios</p>
         <div class="table-wrapper">
           <table>
             <thead><tr><th>#</th><th>Campo</th><th>Tipo</th><th>Placeholder</th><th>Requerido</th></tr></thead>
@@ -82,6 +64,8 @@
       <section class="section">
         <h2 class="section-title">Pantalla 1: Cantidad de Asegurados</h2>
         <div class="info-note"><strong>URL:</strong> /salud?source=agencia-proyectiva</div>
+        <img src="screenshots-auditoria/salud-paso1-cantidad-asegurados.png" alt="Paso 1 - Cantidad de Asegurados" class="screenshot">
+        <p class="screenshot-caption">Seleccion de cantidad de personas y fecha de nacimiento</p>
         <div class="table-wrapper">
           <table>
             <thead><tr><th>#</th><th>Campo</th><th>Tipo</th><th>Opciones</th><th>Requerido</th></tr></thead>
@@ -92,61 +76,63 @@
             </tbody>
           </table>
         </div>
-        <p style="margin-top:1rem;font-size:0.9rem;color:var(--text-secondary)"><strong>Alerta:</strong> "Todos los asegurados deben tener afiliacion vigente a una EPS del regimen contributivo."</p>
       </section>
+
       <section class="section">
         <h2 class="section-title">Pantalla 2a: Elija un Plan</h2>
         <div class="info-note"><strong>URL:</strong> /salud/planes</div>
+        <img src="screenshots-auditoria/salud-paso2-elegir-plan.png" alt="Paso 2a - Elegir Plan" class="screenshot">
+        <p class="screenshot-caption">Seleccion entre Plan S, Plan M y Plan L con coberturas detalladas</p>
         <div class="value-cards">
           <div class="value-card">
             <h4>Plan S &mdash; Ambulatorio</h4>
-            <p><strong style="color:var(--accent);font-family:'JetBrains Mono',monospace;">$41,500/mes</strong><br>18 especialidades. Deducible $20.000. Medico en casa 24/7. Odontologia. Ambulancia.</p>
+            <p><strong style="color:var(--accent);font-family:'JetBrains Mono',monospace;">$41,500/mes</strong><br>18 especialidades. Deducible $20.000.</p>
           </div>
           <div class="value-card">
             <h4>Plan M &mdash; Ambulatorio</h4>
-            <p><strong style="color:var(--accent);font-family:'JetBrains Mono',monospace;">$101,400/mes</strong><br>18 especialidades. $420.000 examenes. Consultas sin cita. Deducible $20.000.</p>
+            <p><strong style="color:var(--accent);font-family:'JetBrains Mono',monospace;">$101,400/mes</strong><br>18 especialidades. $420.000 examenes.</p>
           </div>
           <div class="value-card">
             <h4>Plan L &mdash; Hospitalario</h4>
-            <p><strong style="color:var(--accent);font-family:'JetBrains Mono',monospace;">Desde $378,800/mes</strong><br>Todas las especialidades. Examenes ilimitados. Hospitalizacion completa. Deducible $32.000.</p>
+            <p><strong style="color:var(--accent);font-family:'JetBrains Mono',monospace;">Desde $378,800/mes</strong><br>Todas las especialidades. Examenes ilimitados.</p>
           </div>
         </div>
         <div class="table-wrapper">
           <table>
             <thead><tr><th>#</th><th>Campo</th><th>Tipo</th><th>Requerido</th></tr></thead>
-            <tbody>
-              <tr><td class="num">1</td><td>Seleccion de plan (S/M/L)</td><td><span class="badge">radio</span></td><td>Si</td></tr>
-            </tbody>
+            <tbody><tr><td class="num">1</td><td>Seleccion de plan (S/M/L)</td><td><span class="badge">radio</span></td><td>Si</td></tr></tbody>
           </table>
         </div>
       </section>
       <section class="section">
         <h2 class="section-title">Pantalla 2b: Plan Plus (Upgrade)</h2>
         <div class="info-note"><strong>URL:</strong> /salud/planes-plus</div>
+        <img src="screenshots-auditoria/salud-paso2b-plan-plus.png" alt="Paso 2b - Plan Plus upgrade" class="screenshot">
+        <p class="screenshot-caption">Cobertura adicional Plan S Plus con toggle activo por defecto (upsell)</p>
         <div class="table-wrapper">
           <table>
             <thead><tr><th>#</th><th>Campo</th><th>Tipo</th><th>Valor</th><th>Default</th></tr></thead>
-            <tbody>
-              <tr><td class="num">1</td><td>Activar Plan S Plus</td><td><span class="badge">switch/toggle</span></td><td>+$23,300/mes &mdash; Cobertura hasta $200.000 para examenes</td><td>Activo (ON)</td></tr>
-            </tbody>
+            <tbody><tr><td class="num">1</td><td>Activar Plan S Plus</td><td><span class="badge">switch/toggle</span></td><td>+$23,300/mes</td><td>Activo (ON)</td></tr></tbody>
           </table>
         </div>
-        <p style="margin-top:1rem;font-size:0.9rem;color:var(--text-secondary)"><strong>Nota:</strong> El upgrade viene activo por defecto (patron upsell). Total con Plus: $64,800/mes.</p>
+        <p style="margin-top:1rem;font-size:0.9rem;color:var(--text-secondary)"><strong>Total con Plus:</strong> $64,800/mes (IVA incluido)</p>
       </section>
 
       <section class="section">
         <h2 class="section-title">Pantalla 2c: Detalle de Coberturas</h2>
-        <div class="info-note"><strong>URL:</strong> /salud/coberturas &mdash; <strong>Solo lectura, sin campos editables.</strong></div>
+        <div class="info-note"><strong>URL:</strong> /salud/coberturas &mdash; Solo lectura, sin campos editables.</div>
+        <img src="screenshots-auditoria/salud-paso2c-coberturas.png" alt="Paso 2c - Detalle coberturas" class="screenshot">
+        <p class="screenshot-caption">Detalle completo de coberturas del Plan S Plus seleccionado</p>
         <div class="table-wrapper">
           <table>
-            <thead><tr><th>#</th><th>Cobertura</th><th>Detalle clave</th></tr></thead>
+            <thead><tr><th>#</th><th>Cobertura</th><th>Detalle</th></tr></thead>
             <tbody>
               <tr><td class="num">1</td><td>Citas 18 especialidades</td><td>Deducible $20.000. No reembolsos.</td></tr>
               <tr><td class="num">2</td><td>Medico en casa 24/7</td><td>Red exclusiva. Sujeto a disponibilidad.</td></tr>
-              <tr><td class="num">3</td><td>Citas virtuales + orientacion</td><td>Ilimitadas. Deducible $20.000.</td></tr>
+              <tr><td class="num">3</td><td>Citas virtuales</td><td>Ilimitadas. Deducible $20.000.</td></tr>
               <tr><td class="num">4</td><td>Ambulancia</td><td>Centro aliado mas cercano. Deducible $20.000.</td></tr>
-              <tr><td class="num">5</td><td>Examenes laboratorio</td><td>Bolsa $210.000/año. Deducible $20.000.</td></tr>
-              <tr><td class="num">6</td><td>Odontologia completa</td><td>Ilimitada. Urgencias domiciliarias. Deducible $20.000.</td></tr>
+              <tr><td class="num">5</td><td>Examenes laboratorio</td><td>Bolsa $210.000/anio. Deducible $20.000.</td></tr>
+              <tr><td class="num">6</td><td>Odontologia completa</td><td>Ilimitada. Urgencias domiciliarias.</td></tr>
             </tbody>
           </table>
         </div>
@@ -154,14 +140,18 @@
       <section class="section">
         <h2 class="section-title">Pantalla 3: Datos del Titular</h2>
         <div class="info-note"><strong>URL:</strong> /salud/informacion-titular</div>
-        <h3 style="font-size:1rem;color:var(--text-primary);margin-bottom:1rem;">Seccion 1: Datos Basicos</h3>
+        <img src="screenshots-auditoria/salud-paso3-datos-titular.png" alt="Paso 3 - Datos del titular" class="screenshot">
+        <p class="screenshot-caption">Formulario de datos basicos del titular (vacio)</p>
+        <img src="screenshots-auditoria/salud-paso3-datos-titular-form.png" alt="Paso 3 - Formulario con dropdown" class="screenshot">
+        <p class="screenshot-caption">Formulario con dropdown de tipo de documento desplegado</p>
+        <h3 style="font-size:1rem;color:var(--text-primary);margin-bottom:1rem;">Campos - Datos Basicos</h3>
         <div class="table-wrapper">
           <table>
             <thead><tr><th>#</th><th>Campo</th><th>Tipo</th><th>Placeholder</th><th>Requerido</th></tr></thead>
             <tbody>
               <tr><td class="num">1</td><td>Tipo de documento</td><td><span class="badge">select</span></td><td>Seleccione una opcion</td><td>Si</td></tr>
               <tr><td class="num">2</td><td>Numero de documento</td><td><span class="badge">text</span></td><td>Ej: 1111111111</td><td>Si</td></tr>
-              <tr><td class="num">3</td><td>Fecha expedicion documento</td><td><span class="badge">datepicker</span></td><td>DD/MM/AAAA</td><td>Si</td></tr>
+              <tr><td class="num">3</td><td>Fecha expedicion</td><td><span class="badge">datepicker</span></td><td>DD/MM/AAAA</td><td>Si</td></tr>
               <tr><td class="num">4</td><td>Primer Nombre</td><td><span class="badge">text</span></td><td>Ej: Simon</td><td>Si</td></tr>
               <tr><td class="num">5</td><td>Segundo Nombre</td><td><span class="badge">text</span></td><td>Ej: Andres</td><td>No</td></tr>
               <tr><td class="num">6</td><td>Primer Apellido</td><td><span class="badge">text</span></td><td>Ej: Bolivar</td><td>Si</td></tr>
@@ -186,34 +176,41 @@
             </tbody>
           </table>
         </div>
-        <h3 style="font-size:1rem;color:var(--text-primary);margin:1.5rem 0 1rem;">Seccion 2: Datos Complementarios</h3>
-        <p style="font-size:0.9rem;color:var(--text-secondary);">Bloqueado hasta completar validacion de identidad. Campos no visibles.</p>
       </section>
       <section class="section">
-        <h2 class="section-title">Validacion de Identidad (Paso 3 sub-flujo)</h2>
-        <div class="value-cards">
-          <div class="value-card">
-            <h4>1. OTP por SMS</h4>
-            <p>Codigo de 6 digitos enviado al celular registrado. Vigencia: 72 segundos. Opciones: Reenviar codigo / Intentar otro metodo.</p>
-          </div>
-          <div class="value-card">
-            <h4>2. Preguntas Bureau de Credito</h4>
-            <p>3-4 preguntas secuenciales tipo radio (5-6 opciones). Temas: creditos, cuentas de ahorro, planes de celular, saldos hipotecarios.</p>
-          </div>
-          <div class="value-card">
-            <h4>3. Resultado</h4>
-            <p><strong>Exito:</strong> desbloquea Datos Complementarios.<br><strong>Fallo:</strong> modal de error + reintento.<br><strong>Bloqueo:</strong> tras multiples fallos, bloqueo temporal (contactar asesor).</p>
-          </div>
-        </div>
+        <h2 class="section-title">Validacion de Identidad (Sub-flujo Paso 3)</h2>
+        <h3 style="font-size:1rem;color:var(--text-primary);margin-bottom:1rem;">3.1 Codigo OTP por SMS</h3>
+        <img src="screenshots-auditoria/salud-paso3-validacion-otp.png" alt="OTP enviado por SMS" class="screenshot">
+        <p class="screenshot-caption">Modal de codigo OTP enviado al celular registrado (72 seg vigencia)</p>
         <div class="table-wrapper">
           <table>
-            <thead><tr><th>Sub-pantalla</th><th>Campo</th><th>Tipo</th><th>Notas</th></tr></thead>
+            <thead><tr><th>Campo</th><th>Tipo</th><th>Notas</th></tr></thead>
             <tbody>
-              <tr><td>OTP</td><td>Codigo de verificacion</td><td><span class="badge">text (6 digitos)</span></td><td>Placeholder: 111111. Timer visible.</td></tr>
-              <tr><td>Preguntas</td><td>Pregunta seguridad</td><td><span class="badge">radio (5-6 opts)</span></td><td>Siempre incluye "Ninguna de las anteriores"</td></tr>
+              <tr><td>Codigo de verificacion</td><td><span class="badge">text (6 digitos)</span></td><td>Placeholder: 111111. Timer visible. Opciones: Reenviar / Otro metodo.</td></tr>
             </tbody>
           </table>
         </div>
+
+        <h3 style="font-size:1rem;color:var(--text-primary);margin:1.5rem 0 1rem;">3.2 Preguntas de Seguridad (Bureau de Credito)</h3>
+        <img src="screenshots-auditoria/salud-paso3-validacion-identidad-pregunta.png" alt="Pregunta validacion identidad" class="screenshot">
+        <p class="screenshot-caption">Pregunta de seguridad tipo bureau de credito con opciones de radio</p>
+        <div class="table-wrapper">
+          <table>
+            <thead><tr><th>Campo</th><th>Tipo</th><th>Notas</th></tr></thead>
+            <tbody>
+              <tr><td>Pregunta de validacion</td><td><span class="badge">radio (5-6 opciones)</span></td><td>3-4 preguntas secuenciales. Siempre incluye "Ninguna de las anteriores".</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="info-note"><strong>Tipos de preguntas observadas:</strong> Valor cuota credito vivienda, entidad con credito en ultimos 5 anios, tiempo de credito hipotecario, entidad con cuenta de ahorro, planes celular postpago.</div>
+
+        <h3 style="font-size:1rem;color:var(--text-primary);margin:1.5rem 0 1rem;">3.3 Error de Validacion</h3>
+        <img src="screenshots-auditoria/salud-paso3-validacion-fallida.png" alt="Validacion fallida" class="screenshot">
+        <p class="screenshot-caption">Modal de error: respuestas no coinciden con registros</p>
+
+        <h3 style="font-size:1rem;color:var(--text-primary);margin:1.5rem 0 1rem;">3.4 Bloqueo por Multiples Fallos</h3>
+        <img src="screenshots-auditoria/salud-paso3-error-validacion-bloqueado.png" alt="Bloqueo validacion" class="screenshot">
+        <p class="screenshot-caption">Bloqueo temporal: contactar asesor Red #322 o WhatsApp</p>
       </section>
       <section class="section">
         <h2 class="section-title">Pantallas 4-6 (No alcanzadas)</h2>
@@ -234,18 +231,19 @@
         <h2 class="section-title">Observaciones Tecnicas</h2>
         <ul class="deliverables-list">
           <li>Aplicacion Angular (SPA) &mdash; no permite navegacion directa a pasos intermedios</li>
-          <li>Parametro <code>?source=agencia-proyectiva</code> se mantiene en toda la navegacion (trazabilidad)</li>
+          <li>Parametro <code style="color:var(--accent)">?source=agencia-proyectiva</code> se mantiene en toda la navegacion</li>
           <li>Stepper de 6 pasos visible en sidebar durante todo el flujo</li>
           <li>Validacion progresiva: botones deshabilitados hasta completar campos obligatorios</li>
           <li>Pre-llenado de celular desde landing hacia paso 3</li>
           <li>Plan Plus activo por defecto (patron upsell &mdash; opt-out)</li>
           <li>Logo Agencia Proyectiva visible en header durante todo el flujo</li>
-          <li>Calendario con selector: decada &rarr; a&ntilde;o &rarr; mes &rarr; dia</li>
+          <li>Calendario con selector: decada &rarr; anio &rarr; mes &rarr; dia</li>
           <li>Validacion identidad: OTP SMS + preguntas bureau credito (2 etapas)</li>
           <li>Bloqueo temporal tras multiples fallos (seguridad anti-fraude)</li>
           <li>Sin limite de edad de ingreso. Planes S y M sin preexistencias.</li>
         </ul>
       </section>
+
     </main>
     <footer class="footer">
       <p>Reporte generado el 2026-06-20</p>
