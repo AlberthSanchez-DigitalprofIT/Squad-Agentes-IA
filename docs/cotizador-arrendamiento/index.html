@@ -38,7 +38,8 @@ h1 { font-size: 2rem; color: #00d4aa; margin-bottom: 6px; text-align: center; }
 </head>
 <body>
 <h1>Cotizador de Arrendamiento — Pantallas y Campos</h1>
-<p class="page-subtitle">Proyectiva Seguros | 9 pantallas documentadas | Click en imagen para ampliar</p>
+<p class="page-subtitle">Proyectiva Seguros | 15 pantallas documentadas (Propietario + Broker + Inmobiliaria) | Click en imagen para ampliar</p>
+<p style="text-align:center; margin-bottom:20px;"><a href="comparativo-flujos.html" style="color:#00d4aa; text-decoration:none; font-size:0.9rem;">Ver comparativo de flujos &rarr;</a></p>
 <div class="legend">
 <span class="legend-item"><span class="badge badge--si">Si</span> Obligatorio</span>
 <span class="legend-item"><span class="badge badge--cond">Cond</span> Condicional</span>
@@ -246,6 +247,140 @@ h1 { font-size: 2rem; color: #00d4aa; margin-bottom: 6px; text-align: center; }
 </div>
 
 <!-- Screen 11 removed - fullPage shows blank due to iframe nesting -->
+
+<!-- ========== FLUJO BROKER ========== -->
+<h2 style="font-size:1.4rem; color:#f0b429; margin:50px 0 20px; padding-bottom:8px; border-bottom:2px solid #2d3d52;">Flujo Broker</h2>
+<p style="color:#8b9cb3; font-size:0.85rem; margin-bottom:20px;">Autenticacion por CC del broker → Formulario unico de radicacion. Usuario prueba: 1030558939 (Wilber Barrera).</p>
+
+<!-- Broker Screen 1 -->
+<div class="screen-row">
+<div class="thumb-container" onclick="openLightbox('broker-01-consulta-id.png')">
+<span class="thumb-number">B1</span>
+<img src="broker-01-consulta-id.png" alt="Broker - Consulta identificacion">
+<div class="thumb-title">Broker - Consulta ID</div>
+</div>
+<div class="fields-panel">
+<h3>Verificacion de identidad (Broker)</h3>
+<p>Modal que valida el numero de cedula del broker contra la base de datos.</p>
+<table class="fields-table">
+<thead><tr><th>Campo</th><th>Tipo</th><th>Oblig.</th></tr></thead>
+<tbody>
+<tr><td>Numero de identificacion</td><td>Numerico (CC)</td><td><span class="badge badge--si">Si</span></td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<!-- Broker Screen 2 -->
+<div class="screen-row">
+<div class="thumb-container" onclick="openLightbox('broker-02-bienvenida.png')">
+<span class="thumb-number">B2</span>
+<img src="broker-02-bienvenida.png" alt="Broker - Bienvenida">
+<div class="thumb-title">Broker - Bienvenida</div>
+</div>
+<div class="fields-panel">
+<h3>Confirmacion de identidad</h3>
+<p>Mensaje de bienvenida con nombre del broker autenticado. Accion: "Radicar" para continuar al formulario.</p>
+<p class="no-fields">Sin campos — solo confirmacion y boton Radicar.</p>
+</div>
+</div>
+
+<!-- Broker Screen 3 -->
+<div class="screen-row">
+<div class="thumb-container" onclick="openLightbox('broker-03-formulario.png')">
+<span class="thumb-number">B3</span>
+<img src="broker-03-formulario.png" alt="Broker - Formulario radicacion">
+<div class="thumb-title">Broker - Formulario de radicacion</div>
+</div>
+<div class="fields-panel">
+<h3>Seguro de Arrendamiento Brokers</h3>
+<p>Formulario unico de radicacion con datos del propietario y documentos.</p>
+<table class="fields-table">
+<thead><tr><th>Campo</th><th>Tipo</th><th>Oblig.</th></tr></thead>
+<tbody>
+<tr><td>Numero de celular</td><td>Text</td><td><span class="badge badge--si">Si</span></td></tr>
+<tr><td>Nro. solicitud inquilino aprobada</td><td>Text</td><td><span class="badge badge--si">Si</span></td></tr>
+<tr><td>¿El propietario es?</td><td>Select (PN/PJ)</td><td><span class="badge badge--si">Si</span></td></tr>
+<tr><td>Tipo Doc Propietario</td><td>Select</td><td><span class="badge badge--si">Si</span></td></tr>
+<tr><td>Nro. Doc Propietario</td><td>Text</td><td><span class="badge badge--si">Si</span></td></tr>
+<tr><td>Nombres y Apellidos Propietario</td><td>Text</td><td><span class="badge badge--si">Si</span></td></tr>
+<tr><td>Celular del Propietario</td><td>Text</td><td><span class="badge badge--si">Si</span></td></tr>
+<tr><td>Correo del Propietario</td><td>Text</td><td><span class="badge badge--si">Si</span></td></tr>
+<tr><td>Cedula Propietario</td><td>Carga archivo</td><td><span class="badge badge--si">Si</span></td></tr>
+<tr><td>¿Quien firma el contrato?</td><td>Select</td><td><span class="badge badge--si">Si</span></td></tr>
+<tr><td>Formulario SARLAFT</td><td>Carga archivo</td><td><span class="badge badge--si">Si</span></td></tr>
+<tr><td>Certificado Libertad y Tradicion</td><td>Carga archivo</td><td><span class="badge badge--si">Si</span></td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<!-- ========== FLUJO INMOBILIARIA ========== -->
+<h2 style="font-size:1.4rem; color:#5b8def; margin:50px 0 20px; padding-bottom:8px; border-bottom:2px solid #2d3d52;">Flujo Inmobiliaria</h2>
+<p style="color:#8b9cb3; font-size:0.85rem; margin-bottom:20px;">Autenticacion por Numero de Poliza → Formulario unico de radicacion. Usuario prueba: 161616161 (Prueba Javier).</p>
+
+<!-- Inmobiliaria Screen 1 -->
+<div class="screen-row">
+<div class="thumb-container" onclick="openLightbox('inmobiliaria-01-consulta-poliza.png')">
+<span class="thumb-number">I1</span>
+<img src="inmobiliaria-01-consulta-poliza.png" alt="Inmobiliaria - Consulta poliza">
+<div class="thumb-title">Inmobiliaria - Consulta Poliza</div>
+</div>
+<div class="fields-panel">
+<h3>Verificacion de identidad (Inmobiliaria)</h3>
+<p>Modal que valida el numero de poliza de la inmobiliaria. Diferente al broker que pide CC.</p>
+<table class="fields-table">
+<thead><tr><th>Campo</th><th>Tipo</th><th>Oblig.</th></tr></thead>
+<tbody>
+<tr><td>Numero de Poliza</td><td>Numerico</td><td><span class="badge badge--si">Si</span></td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<!-- Inmobiliaria Screen 2 -->
+<div class="screen-row">
+<div class="thumb-container" onclick="openLightbox('inmobiliaria-02-bienvenida.png')">
+<span class="thumb-number">I2</span>
+<img src="inmobiliaria-02-bienvenida.png" alt="Inmobiliaria - Bienvenida">
+<div class="thumb-title">Inmobiliaria - Bienvenida</div>
+</div>
+<div class="fields-panel">
+<h3>Confirmacion de identidad</h3>
+<p>Mensaje de bienvenida con nombre de la inmobiliaria autenticada. Accion: "Radicar" para continuar.</p>
+<p class="no-fields">Sin campos — solo confirmacion y boton Radicar.</p>
+</div>
+</div>
+
+<!-- Inmobiliaria Screen 3 -->
+<div class="screen-row">
+<div class="thumb-container" onclick="openLightbox('inmobiliaria-03-formulario.png')">
+<span class="thumb-number">I3</span>
+<img src="inmobiliaria-03-formulario.png" alt="Inmobiliaria - Formulario radicacion">
+<div class="thumb-title">Inmobiliaria - Formulario de radicacion</div>
+</div>
+<div class="fields-panel">
+<h3>Seguro de Arrendamiento Inmobiliarias</h3>
+<p>Formulario identico al broker. Texto dirigido: "Estimada inmobiliaria..."</p>
+<table class="fields-table">
+<thead><tr><th>Campo</th><th>Tipo</th><th>Oblig.</th></tr></thead>
+<tbody>
+<tr><td>Numero de celular</td><td>Text</td><td><span class="badge badge--si">Si</span></td></tr>
+<tr><td>Nro. solicitud inquilino aprobada</td><td>Text</td><td><span class="badge badge--si">Si</span></td></tr>
+<tr><td>¿El propietario es?</td><td>Select (PN/PJ)</td><td><span class="badge badge--si">Si</span></td></tr>
+<tr><td>Tipo Doc Propietario</td><td>Select</td><td><span class="badge badge--si">Si</span></td></tr>
+<tr><td>Nro. Doc Propietario</td><td>Text</td><td><span class="badge badge--si">Si</span></td></tr>
+<tr><td>Nombres y Apellidos Propietario</td><td>Text</td><td><span class="badge badge--si">Si</span></td></tr>
+<tr><td>Celular del Propietario</td><td>Text</td><td><span class="badge badge--si">Si</span></td></tr>
+<tr><td>Correo del Propietario</td><td>Text</td><td><span class="badge badge--si">Si</span></td></tr>
+<tr><td>Cedula Propietario</td><td>Carga archivo</td><td><span class="badge badge--si">Si</span></td></tr>
+<tr><td>¿Quien firma el contrato?</td><td>Select</td><td><span class="badge badge--si">Si</span></td></tr>
+<tr><td>Formulario SARLAFT</td><td>Carga archivo</td><td><span class="badge badge--si">Si</span></td></tr>
+<tr><td>Certificado Libertad y Tradicion</td><td>Carga archivo</td><td><span class="badge badge--si">Si</span></td></tr>
+</tbody>
+</table>
+</div>
+</div>
 
 <!-- Lightbox -->
 <div class="lightbox" id="lightbox" onclick="closeLightbox()">
