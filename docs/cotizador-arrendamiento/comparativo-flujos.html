@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Comparativo de Flujos — Cotizador de Arrendamiento</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'DM Sans', sans-serif; background: #0f1419; color: #e8edf4; padding: 40px 20px; max-width: 1400px; margin: 0 auto; }
+h1 { font-size: 2rem; color: #00d4aa; margin-bottom: 6px; text-align: center; }
+.subtitle { color: #8b9cb3; text-align: center; margin-bottom: 40px; font-size: 0.95rem; }
+h2 { font-size: 1.4rem; color: #00d4aa; margin: 40px 0 16px; padding-bottom: 8px; border-bottom: 2px solid #2d3d52; }
+h3 { font-size: 1.1rem; color: #5b8def; margin: 24px 0 12px; }
+
+/* Cards grid */
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 24px; margin-bottom: 40px; }
+.card { background: #1e2a3a; border-radius: 12px; padding: 24px; border: 1px solid #2d3d52; }
+.card-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 4px; }
+.card-title.propietario { color: #00d4aa; }
+.card-title.broker { color: #f0b429; }
+.card-title.inmobiliaria { color: #5b8def; }
+.card-subtitle { font-size: 0.8rem; color: #8b9cb3; margin-bottom: 16px; }
+.card-steps { list-style: none; counter-reset: step; }
+.card-steps li { counter-increment: step; padding: 8px 0 8px 32px; position: relative; font-size: 0.85rem; border-bottom: 1px solid #2d3d5233; }
+.card-steps li:last-child { border-bottom: none; }
+.card-steps li::before { content: counter(step); position: absolute; left: 0; top: 8px; width: 22px; height: 22px; border-radius: 50%; background: #2d3d52; color: #e8edf4; font-size: 0.7rem; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+
+/* Comparison table */
+.comp-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin-bottom: 40px; }
+.comp-table th { padding: 10px 12px; text-align: left; color: #0f1419; font-weight: 600; }
+.comp-table th:nth-child(1) { background: #8b9cb3; border-radius: 6px 0 0 0; }
+.comp-table th:nth-child(2) { background: #00d4aa; }
+.comp-table th:nth-child(3) { background: #f0b429; }
+.comp-table th:nth-child(4) { background: #5b8def; border-radius: 0 6px 0 0; }
+.comp-table td { padding: 8px 12px; border-bottom: 1px solid #2d3d52; vertical-align: top; }
+.comp-table tr:last-child td { border-bottom: none; }
+.comp-table tr:hover td { background: #1e2a3a; }
+.badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 0.7rem; font-weight: 500; }
+.badge--yes { background: #00d4aa22; color: #00d4aa; }
+.badge--no { background: #ff6b6b22; color: #ff6b6b; }
+.badge--partial { background: #f0b42922; color: #f0b429; }
+
+/* Documents section */
+.docs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-bottom: 40px; }
+.doc-item { background: #1e2a3a; border-radius: 8px; padding: 16px; border-left: 4px solid #00d4aa; }
+.doc-item h4 { font-size: 0.9rem; color: #e8edf4; margin-bottom: 4px; }
+.doc-item p { font-size: 0.8rem; color: #8b9cb3; }
+
+/* Auth comparison */
+.auth-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 40px; }
+.auth-card { background: #1e2a3a; border-radius: 8px; padding: 20px; text-align: center; border-top: 3px solid; }
+.auth-card.propietario { border-top-color: #00d4aa; }
+.auth-card.broker { border-top-color: #f0b429; }
+.auth-card.inmobiliaria { border-top-color: #5b8def; }
+.auth-card .auth-icon { font-size: 2rem; margin-bottom: 8px; }
+.auth-card .auth-label { font-size: 0.75rem; color: #8b9cb3; text-transform: uppercase; letter-spacing: 1px; }
+.auth-card .auth-field { font-size: 0.9rem; font-weight: 600; margin: 6px 0; }
+.auth-card .auth-user { font-size: 0.8rem; color: #8b9cb3; }
+
+/* Stats */
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 40px; }
+.stat { background: #1e2a3a; border-radius: 8px; padding: 16px; text-align: center; }
+.stat-value { font-size: 1.8rem; font-weight: 700; color: #00d4aa; }
+.stat-label { font-size: 0.75rem; color: #8b9cb3; margin-top: 4px; }
+
+/* Notes */
+.notes { background: #1e2a3a; border-radius: 8px; padding: 20px; border-left: 4px solid #f0b429; margin-bottom: 40px; }
+.notes h3 { color: #f0b429; margin-bottom: 12px; font-size: 1rem; }
+.notes ul { list-style: disc; padding-left: 20px; }
+.notes li { font-size: 0.85rem; margin-bottom: 6px; color: #8b9cb3; }
+
+/* Back link */
+.back-link { display: inline-block; color: #00d4aa; text-decoration: none; font-size: 0.85rem; margin-bottom: 20px; }
+.back-link:hover { text-decoration: underline; }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .auth-grid { grid-template-columns: 1fr; }
+  .cards { grid-template-columns: 1fr; }
+  body { padding: 20px 12px; }
+}
+</style>
+</head>
+<body>
+
+<a href="index.html" class="back-link">&larr; Ver pantallas y campos</a>
+
+<h1>Comparativo de Flujos</h1>
+<p class="subtitle">Cotizador de Arrendamiento — Proyectiva Seguros | 3 perfiles | Datos ficticios</p>
+
+<!-- Stats resumen -->
+<div class="stats">
+  <div class="stat"><div class="stat-value">3</div><div class="stat-label">Perfiles de usuario</div></div>
+  <div class="stat"><div class="stat-value">9</div><div class="stat-label">Pantallas documentadas</div></div>
+  <div class="stat"><div class="stat-value">6</div><div class="stat-label">Pasos (Propietario)</div></div>
+  <div class="stat"><div class="stat-value">3</div><div class="stat-label">Documentos obligatorios</div></div>
+</div>
+
+<!-- Autenticacion -->
+<h2>Autenticacion por perfil</h2>
+<div class="auth-grid">
+  <div class="auth-card propietario">
+    <div class="auth-icon">🏠</div>
+    <div class="auth-label">Propietario</div>
+    <div class="auth-field">Numero de identificacion</div>
+    <div class="auth-user">CC: 80123456 (ficticio)</div>
+  </div>
+  <div class="auth-card broker">
+    <div class="auth-icon">🤝</div>
+    <div class="auth-label">Broker</div>
+    <div class="auth-field">Numero de identificacion</div>
+    <div class="auth-user">CC: 1030558939 → Wilber Barrera</div>
+  </div>
+  <div class="auth-card inmobiliaria">
+    <div class="auth-icon">🏢</div>
+    <div class="auth-label">Inmobiliaria</div>
+    <div class="auth-field">Numero de Poliza</div>
+    <div class="auth-user">Poliza: 161616161 → Prueba Javier</div>
+  </div>
+</div>
+
+<!-- Flujos resumidos -->
+<h2>Resumen de pasos por perfil</h2>
+<div class="cards">
+  <div class="card">
+    <div class="card-title propietario">Propietario</div>
+    <div class="card-subtitle">Flujo completo — 6 pasos con stepper</div>
+    <ol class="card-steps">
+      <li>Radicacion: Datos tomador + Informacion inmueble (20 campos)</li>
+      <li>Cotizacion: Calculo automatico prima + coberturas opcionales</li>
+      <li>Inquilino: Ya lo tengo / Estoy buscando</li>
+      <li>Estudio de arrendamiento: Ya lo tengo / Realizar estudio</li>
+      <li>Carga de documentos: Datos inquilino + 3 archivos obligatorios</li>
+      <li>Generacion de poliza: Emision del documento final</li>
+    </ol>
+  </div>
+  <div class="card">
+    <div class="card-title broker">Broker</div>
+    <div class="card-subtitle">Flujo reducido — Formulario unico de radicacion</div>
+    <ol class="card-steps">
+      <li>Autenticacion: CC del broker registrado</li>
+      <li>Datos generales: Celular, Nro solicitud inquilino, tipo propietario</li>
+      <li>Info propietario: Tipo doc, Nro doc, nombre, celular, correo</li>
+      <li>Documentos: Cedula propietario + Sarlaft + CTL</li>
+      <li>Firma contrato: Propietario o Apoderado</li>
+    </ol>
+  </div>
+  <div class="card">
+    <div class="card-title inmobiliaria">Inmobiliaria</div>
+    <div class="card-subtitle">Flujo reducido — Formulario unico de radicacion</div>
+    <ol class="card-steps">
+      <li>Autenticacion: Numero de poliza de la inmobiliaria</li>
+      <li>Datos generales: Celular, Nro solicitud inquilino, tipo propietario</li>
+      <li>Info propietario: Tipo doc, Nro doc, nombre, celular, correo</li>
+      <li>Documentos: Cedula propietario + Sarlaft + CTL</li>
+      <li>Firma contrato: Propietario o Apoderado</li>
+    </ol>
+  </div>
+</div>
+
+<!-- Tabla comparativa detallada -->
+<h2>Tabla comparativa detallada</h2>
+<table class="comp-table">
+  <thead>
+    <tr>
+      <th>Aspecto</th>
+      <th>Propietario</th>
+      <th>Broker</th>
+      <th>Inmobiliaria</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Metodo de autenticacion</td>
+      <td>Cedula (CC)</td>
+      <td>Cedula (CC)</td>
+      <td>Numero de Poliza</td>
+    </tr>
+    <tr>
+      <td>Pasos del flujo</td>
+      <td>6 (stepper guiado)</td>
+      <td>1 (formulario unico)</td>
+      <td>1 (formulario unico)</td>
+    </tr>
+    <tr>
+      <td>Cotizacion en linea</td>
+      <td><span class="badge badge--yes">Si</span> calculo automatico</td>
+      <td><span class="badge badge--no">No</span></td>
+      <td><span class="badge badge--no">No</span></td>
+    </tr>
+    <tr>
+      <td>Datos del inmueble</td>
+      <td><span class="badge badge--yes">Si</span> direccion, canon, admin, garaje, deposito</td>
+      <td><span class="badge badge--no">No</span> (solo solicitud aprobada)</td>
+      <td><span class="badge badge--no">No</span> (solo solicitud aprobada)</td>
+    </tr>
+    <tr>
+      <td>Vigencia poliza (selector)</td>
+      <td><span class="badge badge--yes">Si</span> 6-12 meses</td>
+      <td><span class="badge badge--no">No</span></td>
+      <td><span class="badge badge--no">No</span></td>
+    </tr>
+    <tr>
+      <td>Coberturas opcionales</td>
+      <td><span class="badge badge--yes">Si</span> Servicios Publicos + Danos y Faltantes</td>
+      <td><span class="badge badge--no">No</span></td>
+      <td><span class="badge badge--no">No</span></td>
+    </tr>
+    <tr>
+      <td>Calculo de prima visible</td>
+      <td><span class="badge badge--yes">Si</span> $1.424.430 (ejemplo)</td>
+      <td><span class="badge badge--no">No</span></td>
+      <td><span class="badge badge--no">No</span></td>
+    </tr>
+    <tr>
+      <td>Datos del inquilino</td>
+      <td><span class="badge badge--yes">Si</span> (paso 5)</td>
+      <td><span class="badge badge--no">No</span> (prerrequisito externo)</td>
+      <td><span class="badge badge--no">No</span> (prerrequisito externo)</td>
+    </tr>
+    <tr>
+      <td>Estudio de arrendamiento</td>
+      <td><span class="badge badge--yes">Si</span> (paso 4)</td>
+      <td><span class="badge badge--partial">Previo</span> (Nro solicitud aprobada)</td>
+      <td><span class="badge badge--partial">Previo</span> (Nro solicitud aprobada)</td>
+    </tr>
+    <tr>
+      <td>Politica de datos (checkbox)</td>
+      <td><span class="badge badge--yes">Si</span> obligatorio</td>
+      <td><span class="badge badge--no">No visible</span></td>
+      <td><span class="badge badge--no">No visible</span></td>
+    </tr>
+    <tr>
+      <td>Ubicacion del inmueble</td>
+      <td><span class="badge badge--yes">Si</span> Bogota/Villavicencio/Cundinamarca</td>
+      <td><span class="badge badge--no">No</span></td>
+      <td><span class="badge badge--no">No</span></td>
+    </tr>
+    <tr>
+      <td>Empleado Grupo Bolivar</td>
+      <td><span class="badge badge--yes">Si</span> (Si/No)</td>
+      <td><span class="badge badge--no">No</span></td>
+      <td><span class="badge badge--no">No</span></td>
+    </tr>
+    <tr>
+      <td>Documentos obligatorios</td>
+      <td>Cedula + CTL + SARLAF</td>
+      <td>Cedula + CTL + Sarlaft</td>
+      <td>Cedula + CTL + Sarlaft</td>
+    </tr>
+    <tr>
+      <td>Quien firma contrato</td>
+      <td>No visible en flujo digital</td>
+      <td><span class="badge badge--yes">Si</span> Propietario/Apoderado</td>
+      <td><span class="badge badge--yes">Si</span> Propietario/Apoderado</td>
+    </tr>
+    <tr>
+      <td>Prerrequisito externo</td>
+      <td>Ninguno</td>
+      <td>Solicitud inquilino aprobada</td>
+      <td>Solicitud inquilino aprobada</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- Documentos -->
+<h2>Documentos obligatorios (todos los flujos)</h2>
+<div class="docs-grid">
+  <div class="doc-item">
+    <h4>Cedula del Propietario</h4>
+    <p>Foto o scan de la cedula del propietario del inmueble. Formato: png, jpg o pdf. Max 8Mb.</p>
+  </div>
+  <div class="doc-item">
+    <h4>Formulario SARLAFT (B-114)</h4>
+    <p>Formato completamente diligenciado con huella y firma del propietario. Si falta alguno, el proceso queda pendiente.</p>
+  </div>
+  <div class="doc-item">
+    <h4>Certificado de Libertad y Tradicion (CTL)</h4>
+    <p>Documento oficial del inmueble a arrendar. Emitido por la Oficina de Registro.</p>
+  </div>
+</div>
+
+<!-- Notas tecnicas -->
+<div class="notes">
+  <h3>Notas tecnicas</h3>
+  <ul>
+    <li>La app usa <strong>iframes anidados</strong> (3 niveles: WebApp → Cotizaciones El Libertador → Cotizaciones El Libertador).</li>
+    <li>Formularios <strong>dinamicos</strong>: campos condicionales aparecen segun selecciones (garaje, deposito, tipo propietario PN/PJ).</li>
+    <li><strong>Flatpickr</strong> para seleccion de fechas en el flujo Propietario.</li>
+    <li>El campo "Valor total a asegurar" es <strong>editable</strong> (permite asegurar solo canon o canon + admin).</li>
+    <li>Broker/Inmobiliaria requieren una <strong>solicitud de inquilino previamente aprobada</strong> como prerrequisito.</li>
+    <li>La opcion <strong>"Persona Juridica"</strong> puede desplegar campos adicionales (NIT, razon social, representante legal).</li>
+    <li>La opcion <strong>"Comercio"</strong> en destino del inmueble puede desplegar campos adicionales (tipo de comercio, leasing).</li>
+  </ul>
+</div>
+
+<p style="text-align:center; color:#8b9cb3; font-size:0.8rem; margin-top:40px;">
+  Documentado el 2026-06-24 | Proyectiva Seguros / Seguros Bolivar | Datos ficticios para pruebas
+</p>
+
+</body>
+</html>
