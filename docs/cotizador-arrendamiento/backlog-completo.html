@@ -7,7 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: 'DM Sans', sans-serif; background: #0f1419; color: #e8edf4; padding: 40px 20px; max-width: 1400px; margin: 0 auto; }
+body { font-family: 'DM Sans', sans-serif; background: #0f1419; color: #e8edf4; padding: 40px 20px; max-width: 1600px; margin: 0 auto; }
 h1 { font-size: 2rem; color: #00d4aa; margin-bottom: 6px; text-align: center; }
 .subtitle { color: #8b9cb3; text-align: center; margin-bottom: 10px; font-size: 0.95rem; }
 .source { color: #5b8def; text-align: center; margin-bottom: 30px; font-size: 0.8rem; }
@@ -34,6 +34,13 @@ tbody tr:hover td { background: #1e2a3a88; }
 .badge-media { background: #f0b42922; color: #f0b429; }
 .badge-baja { background: #8b9cb322; color: #8b9cb3; }
 .progress { display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 0.65rem; background: #00d4aa22; color: #00d4aa; }
+.img-cell { text-align: center; }
+.img-cell img { max-width: 180px; max-height: 320px; border-radius: 8px; border: 1px solid #2d3d52; cursor: pointer; transition: transform 0.2s; }
+.img-cell img:hover { transform: scale(1.05); border-color: #00d4aa; }
+/* Modal/lightbox */
+.modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000; justify-content: center; align-items: center; cursor: zoom-out; }
+.modal-overlay.active { display: flex; }
+.modal-overlay img { max-width: 90vw; max-height: 90vh; border-radius: 12px; box-shadow: 0 0 40px rgba(0,212,170,0.3); }
 </style>
 </head>
 <body>
@@ -45,21 +52,21 @@ tbody tr:hover td { background: #1e2a3a88; }
 <div class="stats">
   <div class="stat"><div class="stat-value">17</div><div class="stat-label">Historias de Usuario</div></div>
   <div class="stat"><div class="stat-value">4</div><div class="stat-label">&Eacute;picas</div></div>
-  <div class="stat"><div class="stat-value">13</div><div class="stat-label">Pantallas (Spec)</div></div>
+  <div class="stat"><div class="stat-value">16</div><div class="stat-label">Pantallas Figma</div></div>
   <div class="stat"><div class="stat-value">2</div><div class="stat-label">Bloques funcionales</div></div>
 </div>
 
 <table>
 <thead>
 <tr>
-  <th style="width:5%">ID</th>
-  <th style="width:8%">&Eacute;pica</th>
-  <th style="width:12%">Pantalla</th>
-  <th style="width:20%">Nombre HU</th>
-  <th style="width:30%">Campos / Elementos</th>
-  <th style="width:15%">Reglas clave</th>
-  <th style="width:5%">Progreso</th>
-  <th style="width:5%">Prior.</th>
+  <th style="width:4%">ID</th>
+  <th style="width:7%">&Eacute;pica</th>
+  <th style="width:10%">Pantalla</th>
+  <th style="width:16%">Nombre HU</th>
+  <th style="width:22%">Campos / Elementos</th>
+  <th style="width:14%">Reglas clave</th>
+  <th style="width:14%">Imagen Figma</th>
+  <th style="width:4%">Prior.</th>
 </tr>
 </thead>
 <tbody>
@@ -74,7 +81,18 @@ tbody tr:hover td { background: #1e2a3a88; }
   <td><strong>Cu&eacute;ntanos del lugar</strong><br><small>Datos del inmueble y arriendo para calcular precio</small></td>
   <td>Departamento (Select dependiente) &bull; Ciudad (Select dependiente) &bull; &iquest;Cu&aacute;nto vale el arriendo? ($ moneda) &bull; &iquest;Tiene cuota de administraci&oacute;n? (Toggle S&iacute;/No) &bull; &iquest;Cu&aacute;nto vale la administraci&oacute;n? (condicional, $ moneda) &bull; &iquest;Por cu&aacute;nto tiempo lo asegurar&aacute;s? (Select: 12/24/36 meses)</td>
   <td>Ciudad bloqueada hasta elegir Depto. Campo admin solo si toggle=S&iacute;. CTA 'Cotizar' deshabilitado hasta campos OK.</td>
-  <td><span class="progress">9%</span></td>
+  <td class="img-cell"><img src="img/002-cotizacion-datos.png" alt="P-01 Cotizaci&oacute;n datos" onclick="openModal(this)"></td>
+  <td><span class="badge badge-alta">Alta</span></td>
+</tr>
+
+<tr>
+  <td>P-01b</td>
+  <td>Cotizaci&oacute;n</td>
+  <td>Paso 1 (Admin visible)</td>
+  <td><strong>Cu&eacute;ntanos del lugar — Con administraci&oacute;n</strong><br><small>Variante con campo administraci&oacute;n activo</small></td>
+  <td>Mismos campos de P-01 + campo &iquest;Cu&aacute;nto vale la administraci&oacute;n? visible ($ moneda, obligatorio cuando toggle=S&iacute;)</td>
+  <td>Al activar toggle 'S&iacute;' aparece campo de administraci&oacute;n con animaci&oacute;n. Se suma al valor asegurado.</td>
+  <td class="img-cell"><img src="img/003-cotizacion-admin.png" alt="P-01b Admin visible" onclick="openModal(this)"></td>
   <td><span class="badge badge-alta">Alta</span></td>
 </tr>
 
@@ -85,7 +103,7 @@ tbody tr:hover td { background: #1e2a3a88; }
   <td><strong>&iexcl;Todo listo! Este es tu presupuesto</strong><br><small>Resultado de cotizaci&oacute;n con coberturas</small></td>
   <td>Precio destacado (din&aacute;mico) &bull; Cobertura: Arriendo hasta 12 meses (drawer) &bull; Cobertura: Facturas servicios (drawer) &bull; Cobertura: Tr&aacute;mites desocupaci&oacute;n (drawer) &bull; Cobertura: Asistencia jur&iacute;dica 24/7 (drawer) &bull; Addon: Servicios p&uacute;blicos $3M (+$20K, ON por defecto) &bull; Addon: Faltas inventario $950K (+$20K, OFF por defecto)</td>
   <td>Precio = base + addons activos (recalcula en tiempo real). CTA 'Continuar' siempre habilitado. Drawers se cierran con X/overlay/Escape.</td>
-  <td><span class="progress">27%</span></td>
+  <td class="img-cell"><img src="img/004-presupuesto.png" alt="P-02 Presupuesto" onclick="openModal(this)"></td>
   <td><span class="badge badge-alta">Alta</span></td>
 </tr>
 
@@ -96,8 +114,19 @@ tbody tr:hover td { background: #1e2a3a88; }
   <td><strong>Cotiza de manera r&aacute;pida</strong><br><small>Captura datos de contacto</small></td>
   <td>Nombre completo (text, min 3 chars) &bull; N&uacute;mero de celular (tel, min 7 d&iacute;gitos) &bull; Correo electr&oacute;nico (email, debe contener @)</td>
   <td>CTA 'Enviar' deshabilitado hasta 3 campos v&aacute;lidos. Atributos autocomplete para UX.</td>
-  <td><span class="progress">45%</span></td>
+  <td class="img-cell"><img src="img/005-datos-contacto.png" alt="P-03 Datos contacto" onclick="openModal(this)"></td>
   <td><span class="badge badge-alta">Alta</span></td>
+</tr>
+
+<tr>
+  <td>P-03b</td>
+  <td>Cotizaci&oacute;n</td>
+  <td>Paso 3 (variante)</td>
+  <td><strong>Datos de contacto — Variante</strong><br><small>Estado alternativo del formulario de contacto</small></td>
+  <td>Mismos campos con estado de validaci&oacute;n o variante visual diferente</td>
+  <td>Variante visual del paso 3 seg&uacute;n flujo (inmobiliaria/broker).</td>
+  <td class="img-cell"><img src="img/006-datos-contacto-v2.png" alt="P-03b Contacto variante" onclick="openModal(this)"></td>
+  <td><span class="badge badge-media">Media</span></td>
 </tr>
 
 <tr>
@@ -107,7 +136,7 @@ tbody tr:hover td { background: #1e2a3a88; }
   <td><strong>Confirmaci&oacute;n y decisi&oacute;n</strong><br><small>Resumen post-env&iacute;o con ID del proceso</small></td>
   <td>&Iacute;cono &eacute;xito &bull; Bloque precio (naranja, solo lectura) &bull; Datos contacto (editable, redirige P-03) &bull; ID del proceso (copiable) &bull; Nota 'Guarda este n&uacute;mero...'</td>
   <td>T&iacute;tulo din&aacute;mico con nombre. 2 CTAs: 'Proteger mi arriendo' &rarr; P-05 | 'Esperar la llamada' &rarr; P-09.</td>
-  <td><span class="progress">55%</span></td>
+  <td class="img-cell"><img src="img/007-confirmacion.png" alt="P-04 Confirmaci&oacute;n" onclick="openModal(this)"></td>
   <td><span class="badge badge-alta">Alta</span></td>
 </tr>
 
@@ -121,30 +150,8 @@ tbody tr:hover td { background: #1e2a3a88; }
   <td><strong>&iquest;Tu inquilino tiene estudio de arrendamiento?</strong><br><small>Bifurcaci&oacute;n por tarjetas de opci&oacute;n</small></td>
   <td>Tarjeta: 'S&iacute;, ya est&aacute; aprobado' (&iacute;cono check verde) &bull; Tarjeta: 'A&uacute;n no lo tengo' (&iacute;cono casa naranja) &bull; Banner: '&iquest;No tienes inquilino? Publica tu inmueble...'</td>
   <td>Sin CTA — la selecci&oacute;n navega inmediato. S&iacute; &rarr; P-06, No &rarr; P-05b.</td>
-  <td><span class="progress">64%</span></td>
+  <td class="img-cell"><img src="img/008-tiene-estudio.png" alt="P-05 Tiene estudio" onclick="openModal(this)"></td>
   <td><span class="badge badge-alta">Alta</span></td>
-</tr>
-
-<tr>
-  <td>P-05b</td>
-  <td>Compra</td>
-  <td>Derivaci&oacute;n</td>
-  <td><strong>Comparte el estudio con tu inquilino</strong><br><small>Env&iacute;o de enlace por correo y WhatsApp</small></td>
-  <td>N&uacute;mero celular inquilino (tel, min 7) &bull; Correo electr&oacute;nico inquilino (email, debe contener @)</td>
-  <td>CTA 'Enviar' deshabilitado hasta ambos campos v&aacute;lidos. Avanza a P-05c.</td>
-  <td><span class="progress">64%</span></td>
-  <td><span class="badge badge-alta">Alta</span></td>
-</tr>
-
-<tr>
-  <td>P-05c</td>
-  <td>Compra</td>
-  <td>Derivaci&oacute;n</td>
-  <td><strong>&iexcl;Listo! Le avisamos a tu inquilino</strong><br><small>Confirmaci&oacute;n de env&iacute;o — dead-end</small></td>
-  <td>&Iacute;cono &eacute;xito &bull; Bloque '&iquest;Qu&eacute; sigue?' (naranja) &bull; ID del proceso (copiable) &bull; Nota auxiliar</td>
-  <td>Dead-end del flujo. CTA 'Volver al inicio' &rarr; P-01. El propietario retoma cuando inquilino tenga estudio aprobado.</td>
-  <td><span class="progress">64%</span></td>
-  <td><span class="badge badge-media">Media</span></td>
 </tr>
 
 <tr>
@@ -154,7 +161,7 @@ tbody tr:hover td { background: #1e2a3a88; }
   <td><strong>N&uacute;mero del estudio de arrendamiento</strong><br><small>B&uacute;squeda por proceso o documento</small></td>
   <td>Toggle: 'No de proceso' | 'Documento de identidad' &bull; Modo A: N&uacute;mero de proceso (num&eacute;rico, min 4) &bull; Modo B: Tipo documento (CC/CE/Pasaporte) + N&uacute;mero documento (min 4)</td>
   <td>Toggle muta campos visibles. Al cambiar modo se oculta el anterior. CTA 'Continuar' seg&uacute;n modo activo.</td>
-  <td><span class="progress">73%</span></td>
+  <td class="img-cell"><img src="img/009-numero-estudio.png" alt="P-06 N&uacute;mero estudio" onclick="openModal(this)"></td>
   <td><span class="badge badge-alta">Alta</span></td>
 </tr>
 
@@ -165,8 +172,19 @@ tbody tr:hover td { background: #1e2a3a88; }
   <td><strong>&iquest;Qui&eacute;n contrata la p&oacute;liza?</strong><br><small>Identificaci&oacute;n del tomador</small></td>
   <td>Toggle: 'Due&ntilde;o' | 'Apoderado' &bull; Tipo de documento (CC/CE/Pasaporte/NIT) &bull; N&uacute;mero de documento (min 4)</td>
   <td>Toggle solo cambia etiqueta visual. Campos iguales en ambos casos. Nombre aparece en contrato.</td>
-  <td><span class="progress">82%</span></td>
+  <td class="img-cell"><img src="img/010-formulario.png" alt="P-07 Qui&eacute;n contrata" onclick="openModal(this)"></td>
   <td><span class="badge badge-alta">Alta</span></td>
+</tr>
+
+<tr>
+  <td>P-07b</td>
+  <td>Compra</td>
+  <td>Paso 3 (variante)</td>
+  <td><strong>&iquest;Qui&eacute;n contrata? — Variante apoderado</strong><br><small>Formulario con toggle en modo Apoderado</small></td>
+  <td>Mismos campos con toggle en posici&oacute;n 'Apoderado' y campos adicionales de representaci&oacute;n</td>
+  <td>Toggle cambia contexto del formulario. Puede requerir poder notarial.</td>
+  <td class="img-cell"><img src="img/011-formulario-v2.png" alt="P-07b Variante apoderado" onclick="openModal(this)"></td>
+  <td><span class="badge badge-media">Media</span></td>
 </tr>
 
 <tr>
@@ -176,8 +194,19 @@ tbody tr:hover td { background: #1e2a3a88; }
   <td><strong>Carga tus documentos</strong><br><small>Upload de c&eacute;dula y certificado tradici&oacute;n</small></td>
   <td>C&eacute;dula del propietario (file: PDF/JPG/JPEG/PNG) &bull; Certificado de tradici&oacute;n y libertad (file: PDF/JPG/JPEG/PNG)</td>
   <td>Estado inicial: 'Toca para cargar'. Cargado: check verde. Re-tocar elimina archivo. CTA habilitado solo con ambos docs cargados.</td>
-  <td><span class="progress">91%</span></td>
+  <td class="img-cell"><img src="img/012-carga-documentos.png" alt="P-08 Carga documentos" onclick="openModal(this)"></td>
   <td><span class="badge badge-alta">Alta</span></td>
+</tr>
+
+<tr>
+  <td>P-08b</td>
+  <td>Compra</td>
+  <td>Paso 4 (docs cargados)</td>
+  <td><strong>Documentos cargados</strong><br><small>Estado con ambos documentos subidos exitosamente</small></td>
+  <td>C&eacute;dula: check verde (nombre archivo) &bull; Certificado: check verde (nombre archivo) &bull; CTA 'Continuar' habilitado</td>
+  <td>Check verde indica carga exitosa. Tap sobre doc cargado lo elimina (confirmar). CTA se activa.</td>
+  <td class="img-cell"><img src="img/013-documentos-cargados.png" alt="P-08b Docs cargados" onclick="openModal(this)"></td>
+  <td><span class="badge badge-media">Media</span></td>
 </tr>
 
 <tr>
@@ -187,7 +216,7 @@ tbody tr:hover td { background: #1e2a3a88; }
   <td><strong>Todo listo, nuestro equipo se pondr&aacute; en contacto</strong><br><small>Confirmaci&oacute;n intermedia</small></td>
   <td>&Iacute;cono &eacute;xito &bull; Datos contacto (editable) &bull; ID del proceso (copiable)</td>
   <td>Destino dual: desde P-04 'Esperar llamada' o desde P-08. 2 CTAs: 'Generar contrato' &rarr; P-10 | 'Salir' &rarr; P-01.</td>
-  <td><span class="progress">95%</span></td>
+  <td class="img-cell"><img src="img/014-confirmacion-compra.png" alt="P-09 Confirmaci&oacute;n compra" onclick="openModal(this)"></td>
   <td><span class="badge badge-alta">Alta</span></td>
 </tr>
 
@@ -198,65 +227,21 @@ tbody tr:hover td { background: #1e2a3a88; }
   <td><strong>Confirma unos datos</strong><br><small>Datos adicionales para generar contrato</small></td>
   <td>&iquest;Tiene garaje? (Toggle) &bull; Cantidad garajes (condicional, 1-10) &bull; &iquest;Tiene dep&oacute;sito? (Toggle) &bull; Cantidad dep&oacute;sitos (condicional, 1-10) &bull; &iquest;Cu&aacute;les servicios? (Checkboxes: Agua/Luz/Gas/Caldera) &bull; Cl&aacute;usulas adicionales (Textarea, opcional)</td>
   <td>Toggles cambian visibilidad de campos cantidad. Servicios y cl&aacute;usulas no bloquean CTA. Al cambiar S&iacute;&rarr;No se limpia el campo.</td>
-  <td><span class="progress">98%</span></td>
+  <td class="img-cell"><img src="img/015-datos-contrato.png" alt="P-10 Datos contrato" onclick="openModal(this)"></td>
   <td><span class="badge badge-alta">Alta</span></td>
 </tr>
 
-<tr>
-  <td>P-11</td>
-  <td>Compra</td>
-  <td>Final</td>
-  <td><strong>Todo listo, te enviamos el contrato para que lo firmes</strong><br><small>Pantalla final — contrato enviado por correo</small></td>
-  <td>&Iacute;cono &eacute;xito &bull; Correo confirmado (din&aacute;mico) &bull; ID del proceso (copiable)</td>
-  <td>Progreso 100%. CTA 'Volver al inicio' &rarr; P-01. No hay campos de entrada.</td>
-  <td><span class="progress">100%</span></td>
-  <td><span class="badge badge-media">Media</span></td>
-</tr>
-
-<!-- SECCIONES FIGMA ADICIONALES -->
-<tr class="epic-header epic-figma"><td colspan="8"><span>FIGMA:</span> Secciones adicionales (Login, Consultar, Radicar, SARLAFT)</td></tr>
-
-<tr>
-  <td>F-01</td>
-  <td>Figma</td>
-  <td>Login</td>
-  <td><strong>Autenticaci&oacute;n de usuario</strong><br><small>Pantalla de acceso para retomar proceso con ID</small></td>
-  <td>Pendiente definir campos exactos (visible en Figma como 'Login')</td>
-  <td>Pendiente definir — Permite retomar un proceso existente con el ID generado en P-04.</td>
-  <td>—</td>
-  <td><span class="badge badge-alta">Alta</span></td>
-</tr>
-
-<tr>
-  <td>F-02</td>
-  <td>Figma</td>
-  <td>Consultar</td>
-  <td><strong>Consulta de estado del proceso</strong><br><small>Verificar estado de solicitud por ID</small></td>
-  <td>Pendiente definir campos exactos (visible en Figma como 'Consultar')</td>
-  <td>Pendiente definir — El usuario consulta el avance de su proceso.</td>
-  <td>—</td>
-  <td><span class="badge badge-media">Media</span></td>
-</tr>
-
-<tr>
-  <td>F-03</td>
-  <td>Figma</td>
-  <td>Radicar</td>
-  <td><strong>Radicaci&oacute;n de solicitud</strong><br><small>Formulario de radicaci&oacute;n formal</small></td>
-  <td>Pendiente definir campos exactos (visible en Figma como 'Radicar')</td>
-  <td>Pendiente definir — Proceso de radicaci&oacute;n post-aprobaci&oacute;n.</td>
-  <td>—</td>
-  <td><span class="badge badge-media">Media</span></td>
-</tr>
+<!-- SARLAFT -->
+<tr class="epic-header epic-figma"><td colspan="8"><span>&Eacute;PICA:</span> SARLAFT Simplificado Natural — Pendiente definir</td></tr>
 
 <tr>
   <td>F-04</td>
-  <td>Figma</td>
   <td>SARLAFT</td>
-  <td><strong>SARLAFT Simplificado Natural</strong><br><small>Formulario de prevenci&oacute;n lavado de activos</small></td>
+  <td>Formulario SARLAFT</td>
+  <td><strong>SARLAFT Simplificado Natural</strong><br><small>Formulario de prevenci&oacute;n lavado de activos — Pendiente definir</small></td>
   <td>Pendiente definir — Secci&oacute;n visible en Figma con formulario SARLAFT simplificado para persona natural</td>
   <td>Pendiente definir — Requerido para cumplimiento normativo previo a emisi&oacute;n de p&oacute;liza.</td>
-  <td>—</td>
+  <td class="img-cell"><img src="img/016-sarlaft.png" alt="SARLAFT" onclick="openModal(this)"></td>
   <td><span class="badge badge-alta">Alta</span></td>
 </tr>
 
@@ -266,11 +251,11 @@ tbody tr:hover td { background: #1e2a3a88; }
 <tr>
   <td>T-01</td>
   <td>T&eacute;cnica</td>
-  <td>—</td>
-  <td><strong>Motor de c&aacute;lculo de prima</strong><br><small>L&oacute;gica de precio base + addons en tiempo real</small></td>
-  <td>Precio base + addon Servicios P&uacute;blicos (+$20K) + addon Inventario (+$20K). Recalcula en cada toggle.</td>
-  <td>Sincronizado globalmente entre P-02 y P-04. Debe escalar a motor OpenL en fase 2.</td>
-  <td>—</td>
+  <td>Landing / Banner</td>
+  <td><strong>Landing y banner principal</strong><br><small>Pantalla de entrada con CTA principal</small></td>
+  <td>Banner hero con imagen/ilustraci&oacute;n &bull; Titulo principal &bull; CTA 'Cotizar' o 'Comenzar' &bull; Informaci&oacute;n de valor del producto</td>
+  <td>Primer punto de contacto. CTA dirige a P-01. Responsive mobile-first.</td>
+  <td class="img-cell"><img src="img/001-landing.png" alt="Landing" onclick="openModal(this)"></td>
   <td><span class="badge badge-alta">Alta</span></td>
 </tr>
 
@@ -278,10 +263,10 @@ tbody tr:hover td { background: #1e2a3a88; }
   <td>T-02</td>
   <td>T&eacute;cnica</td>
   <td>—</td>
-  <td><strong>Notificaciones WhatsApp + Email</strong><br><small>Env&iacute;o de estudio al inquilino (P-05b)</small></td>
-  <td>Integraci&oacute;n Infobip (WhatsApp) + Gmail para enviar enlace de estudio al inquilino.</td>
-  <td>Se dispara al completar P-05b. Template con enlace personalizado.</td>
-  <td>—</td>
+  <td><strong>Motor de c&aacute;lculo de prima</strong><br><small>L&oacute;gica de precio base + addons en tiempo real</small></td>
+  <td>Precio base + addon Servicios P&uacute;blicos (+$20K) + addon Inventario (+$20K). Recalcula en cada toggle.</td>
+  <td>Sincronizado globalmente entre P-02 y P-04. Debe escalar a motor OpenL en fase 2.</td>
+  <td class="img-cell">—</td>
   <td><span class="badge badge-alta">Alta</span></td>
 </tr>
 
@@ -289,15 +274,47 @@ tbody tr:hover td { background: #1e2a3a88; }
   <td>T-03</td>
   <td>T&eacute;cnica</td>
   <td>—</td>
+  <td><strong>Notificaciones WhatsApp + Email</strong><br><small>Env&iacute;o de estudio al inquilino (P-05b)</small></td>
+  <td>Integraci&oacute;n Infobip (WhatsApp) + Gmail para enviar enlace de estudio al inquilino.</td>
+  <td>Se dispara al completar P-05b. Template con enlace personalizado.</td>
+  <td class="img-cell">—</td>
+  <td><span class="badge badge-alta">Alta</span></td>
+</tr>
+
+<tr>
+  <td>T-04</td>
+  <td>T&eacute;cnica</td>
+  <td>—</td>
   <td><strong>Barra de progreso global + Navegaci&oacute;n</strong><br><small>Componente de progreso y bot&oacute;n Atr&aacute;s</small></td>
   <td>Barra con % seg&uacute;n pantalla (9%-100%). Oculta en P-01. Bot&oacute;n Atr&aacute;s seg&uacute;n mapa de navegaci&oacute;n.</td>
   <td>P-01 no tiene Atr&aacute;s. Cada pantalla tiene su destino de retroceso espec&iacute;fico.</td>
-  <td>—</td>
+  <td class="img-cell">—</td>
   <td><span class="badge badge-media">Media</span></td>
 </tr>
 
 </tbody>
 </table>
+
+<!-- Modal lightbox -->
+<div class="modal-overlay" id="imgModal" onclick="closeModal()">
+  <img id="modalImg" src="" alt="Vista ampliada">
+</div>
+
+<script>
+function openModal(img) {
+  const modal = document.getElementById('imgModal');
+  const modalImg = document.getElementById('modalImg');
+  modalImg.src = img.src;
+  modalImg.alt = img.alt;
+  modal.classList.add('active');
+}
+function closeModal() {
+  document.getElementById('imgModal').classList.remove('active');
+}
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeModal();
+});
+</script>
 
 </body>
 </html>
