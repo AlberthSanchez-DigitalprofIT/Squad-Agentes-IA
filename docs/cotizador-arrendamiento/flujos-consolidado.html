@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flujos del Cotizador de Arrendamiento</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'DM Sans', sans-serif; background: #0f1419; color: #e8edf4; padding: 40px 60px; }
+h1 { font-size: 2.2rem; color: #00d4aa; text-align: center; margin-bottom: 8px; }
+.subtitle { color: #8b9cb3; text-align: center; font-size: 0.95rem; margin-bottom: 50px; }
+.flow-section { margin-bottom: 60px; }
+.flow-header { display: flex; align-items: center; gap: 14px; margin-bottom: 24px; padding-bottom: 12px; border-bottom: 2px solid #2d3d52; }
+.flow-header h2 { font-size: 1.5rem; }
+.flow-header .flow-badge { padding: 4px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
+.flow-header--propietario h2 { color: #00d4aa; }
+.flow-header--propietario .flow-badge { background: #00d4aa22; color: #00d4aa; }
+.flow-header--broker h2 { color: #f0b429; }
+.flow-header--broker .flow-badge { background: #f0b42922; color: #f0b429; }
+.flow-header--inmobiliaria h2 { color: #5b8def; }
+.flow-header--inmobiliaria .flow-badge { background: #5b8def22; color: #5b8def; }
+.flow-description { color: #8b9cb3; font-size: 0.9rem; margin-bottom: 20px; line-height: 1.5; }
+.steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 24px; }
+.step-card { background: #1a2332; border-radius: 12px; overflow: hidden; border: 1px solid #2d3d52; transition: border-color 0.2s, transform 0.15s; cursor: pointer; }
+.step-card:hover { border-color: #00d4aa; transform: translateY(-3px); }
+.step-card img { width: 100%; height: auto; display: block; }
+.step-card-footer { padding: 12px 16px; display: flex; align-items: center; gap: 10px; }
+.step-number { background: #00d4aa; color: #0f1419; font-weight: 700; font-size: 0.75rem; padding: 3px 9px; border-radius: 4px; white-space: nowrap; }
+.step-card--broker .step-number { background: #f0b429; }
+.step-card--inmobiliaria .step-number { background: #5b8def; color: #fff; }
+.step-label { font-size: 0.88rem; font-weight: 500; color: #e8edf4; }
+.step-description { font-size: 0.78rem; color: #8b9cb3; margin-top: 4px; }
+.back-link { text-align: center; margin-top: 40px; }
+.back-link a { color: #00d4aa; text-decoration: none; font-size: 0.9rem; }
+.back-link a:hover { text-decoration: underline; }
+.lightbox { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.93); z-index: 1000; align-items: center; justify-content: center; cursor: pointer; }
+.lightbox.active { display: flex; }
+.lightbox img { max-width: 94%; max-height: 94%; border-radius: 8px; box-shadow: 0 0 60px rgba(0,212,170,0.15); }
+.lightbox-close { position: fixed; top: 20px; right: 30px; color: #fff; font-size: 2.2rem; cursor: pointer; z-index: 1001; }
+</style>
+</head>
+<body>
+<h1>Flujos del Cotizador de Arrendamiento</h1>
+<p class="subtitle">Proyectiva Seguros — 3 flujos documentados con capturas de pantalla | Click en imagen para ampliar</p>
+<div class="flow-section">
+<div class="flow-header flow-header--propietario"><h2>Flujo Propietario</h2><span class="flow-badge">9 pantallas</span></div>
+<p class="flow-description">El propietario se autentica con su numero de identificacion. El flujo incluye: radicacion de datos del tomador e inmueble, cotizacion con coberturas, preguntas sobre inquilino/estudio, y carga de documentos.</p>
+<div class="steps-grid">
+<div class="step-card" onclick="openLightbox('01-pagina-inicial.png')"><img src="01-pagina-inicial.png" alt="Pagina inicial"><div class="step-card-footer"><span class="step-number">P1</span><div><div class="step-label">Pagina inicial</div><div class="step-description">Opciones: Iniciar cotizacion / Carga de documentos</div></div></div></div>
+<div class="step-card" onclick="openLightbox('02-modal-seleccion-perfil.png')"><img src="02-modal-seleccion-perfil.png" alt="Seleccion de perfil"><div class="step-card-footer"><span class="step-number">P2</span><div><div class="step-label">Seleccion de perfil</div><div class="step-description">Propietario / Broker / Inmobiliaria</div></div></div></div>
+<div class="step-card" onclick="openLightbox('03-propietario-consulta-id.png')"><img src="03-propietario-consulta-id.png" alt="Consulta ID propietario"><div class="step-card-footer"><span class="step-number">P3</span><div><div class="step-label">Consulta de identificacion</div><div class="step-description">Ingresa numero de identificacion del propietario</div></div></div></div>
+<div class="step-card" onclick="openLightbox('05-propietario-formulario-paso1.png')"><img src="05-propietario-formulario-paso1.png" alt="Formulario paso 1 - Tomador"><div class="step-card-footer"><span class="step-number">P4</span><div><div class="step-label">Paso 1 — Datos del Tomador</div><div class="step-description">Datos personales, contacto y ubicacion del inmueble</div></div></div></div>
+<div class="step-card" onclick="openLightbox('06-propietario-paso1-completo.png')"><img src="06-propietario-paso1-completo.png" alt="Formulario paso 1 - Inmueble"><div class="step-card-footer"><span class="step-number">P5</span><div><div class="step-label">Paso 1 — Datos del Inmueble</div><div class="step-description">Direccion, canon, administracion, garaje, deposito, vigencia</div></div></div></div>
+<div class="step-card" onclick="openLightbox('09-paso2-cotizacion-coberturas.png')"><img src="09-paso2-cotizacion-coberturas.png" alt="Cotizacion y coberturas"><div class="step-card-footer"><span class="step-number">P6</span><div><div class="step-label">Paso 2 — Cotizacion y coberturas</div><div class="step-description">Resultado con prima, coberturas opcionales y valor poliza</div></div></div></div>
+<div class="step-card" onclick="openLightbox('10-paso3-inquilino-pregunta.png')"><img src="10-paso3-inquilino-pregunta.png" alt="Pregunta inquilino"><div class="step-card-footer"><span class="step-number">P7</span><div><div class="step-label">Paso 3 — Inquilino</div><div class="step-description">Ya cuentas con inquilino? (Estoy buscando / Ya lo tengo)</div></div></div></div>
+<div class="step-card" onclick="openLightbox('11-paso4-estudio-pregunta.png')"><img src="11-paso4-estudio-pregunta.png" alt="Pregunta estudio"><div class="step-card-footer"><span class="step-number">P8</span><div><div class="step-label">Paso 4 — Estudio de arrendamiento</div><div class="step-description">El inquilino ya realizo el estudio?</div></div></div></div>
+<div class="step-card" onclick="openLightbox('12-paso5-carga-documentos.png')"><img src="12-paso5-carga-documentos.png" alt="Carga documentos"><div class="step-card-footer"><span class="step-number">P9</span><div><div class="step-label">Paso 5 — Carga de documentos</div><div class="step-description">Datos inquilino + documentos (cedula, libertad, SARLAFT)</div></div></div></div>
+</div>
+</div>
+<div class="flow-section">
+<div class="flow-header flow-header--broker"><h2>Flujo Broker</h2><span class="flow-badge">3 pantallas</span></div>
+<p class="flow-description">El broker se autentica con su numero de cedula (CC). Tras confirmacion de identidad, accede a un formulario unico de radicacion con datos del propietario y documentos requeridos.<br><strong>Usuario prueba:</strong> CC 1030558939 (Wilber Barrera)</p>
+<div class="steps-grid">
+<div class="step-card step-card--broker" onclick="openLightbox('broker-01-consulta-id.png')"><img src="broker-01-consulta-id.png" alt="Broker - Consulta ID"><div class="step-card-footer"><span class="step-number">B1</span><div><div class="step-label">Consulta de identificacion</div><div class="step-description">Modal: Ingresa numero de cedula del broker</div></div></div></div>
+<div class="step-card step-card--broker" onclick="openLightbox('broker-02-bienvenida.png')"><img src="broker-02-bienvenida.png" alt="Broker - Bienvenida"><div class="step-card-footer"><span class="step-number">B2</span><div><div class="step-label">Bienvenida</div><div class="step-description">Hola Wilber Barrera, ya puedes radicar un nuevo cliente</div></div></div></div>
+<div class="step-card step-card--broker" onclick="openLightbox('broker-03-formulario.png')"><img src="broker-03-formulario.png" alt="Broker - Formulario"><div class="step-card-footer"><span class="step-number">B3</span><div><div class="step-label">Formulario de radicacion</div><div class="step-description">Datos propietario, celular, solicitud, documentos</div></div></div></div>
+</div>
+</div>
+<div class="flow-section">
+<div class="flow-header flow-header--inmobiliaria"><h2>Flujo Inmobiliaria</h2><span class="flow-badge">3 pantallas</span></div>
+<p class="flow-description">La inmobiliaria se autentica con su numero de poliza. Tras confirmacion, accede al mismo formulario de radicacion que el broker, con texto dirigido a inmobiliarias.<br><strong>Usuario prueba:</strong> Poliza 161616161 (Prueba Javier)</p>
+<div class="steps-grid">
+<div class="step-card step-card--inmobiliaria" onclick="openLightbox('inmobiliaria-01-consulta-poliza.png')"><img src="inmobiliaria-01-consulta-poliza.png" alt="Inmobiliaria - Consulta Poliza"><div class="step-card-footer"><span class="step-number">I1</span><div><div class="step-label">Consulta de poliza</div><div class="step-description">Modal: Ingresa numero de poliza de la inmobiliaria</div></div></div></div>
+<div class="step-card step-card--inmobiliaria" onclick="openLightbox('inmobiliaria-02-bienvenida.png')"><img src="inmobiliaria-02-bienvenida.png" alt="Inmobiliaria - Bienvenida"><div class="step-card-footer"><span class="step-number">I2</span><div><div class="step-label">Bienvenida</div><div class="step-description">Hola Prueba Javier, ya puedes radicar un nuevo cliente</div></div></div></div>
+<div class="step-card step-card--inmobiliaria" onclick="openLightbox('inmobiliaria-03-formulario.png')"><img src="inmobiliaria-03-formulario.png" alt="Inmobiliaria - Formulario"><div class="step-card-footer"><span class="step-number">I3</span><div><div class="step-label">Formulario de radicacion</div><div class="step-description">Mismo formulario que broker, texto: "Estimada inmobiliaria..."</div></div></div></div>
+</div>
+</div>
+<div class="back-link">
+<a href="index.html">&larr; Ver documentacion completa con campos</a> &nbsp;|&nbsp;
+<a href="comparativo-flujos.html">Ver comparativo de flujos &rarr;</a>
+</div>
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+<span class="lightbox-close">&times;</span>
+<img id="lightbox-img" src="" alt="Pantalla ampliada">
+</div>
+<script>
+function openLightbox(src) {
+  document.getElementById('lightbox-img').src = src;
+  document.getElementById('lightbox').classList.add('active');
+}
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('active');
+}
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeLightbox();
+});
+</script>
+</body>
+</html>
