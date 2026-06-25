@@ -3,438 +3,297 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Backlog Completo — Cotizador Seguro de Arrendamiento</title>
+<title>Backlog — Cotizador Seguro de Arrendamiento (Proyectiva)</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: 'DM Sans', sans-serif; background: #0f1419; color: #e8edf4; padding: 40px 20px; }
+body { font-family: 'DM Sans', sans-serif; background: #0f1419; color: #e8edf4; padding: 40px 20px; max-width: 1400px; margin: 0 auto; }
 h1 { font-size: 2rem; color: #00d4aa; margin-bottom: 6px; text-align: center; }
-.subtitle { color: #8b9cb3; text-align: center; margin-bottom: 40px; font-size: 0.95rem; }
-.stats { display: flex; gap: 24px; justify-content: center; margin-bottom: 30px; flex-wrap: wrap; }
-.stat { background: #1e2a3a; border-radius: 8px; padding: 12px 24px; text-align: center; }
-.stat-value { font-size: 1.6rem; font-weight: 700; color: #00d4aa; }
-.stat-label { font-size: 0.75rem; color: #8b9cb3; margin-top: 2px; }
+.subtitle { color: #8b9cb3; text-align: center; margin-bottom: 10px; font-size: 0.95rem; }
+.source { color: #5b8def; text-align: center; margin-bottom: 30px; font-size: 0.8rem; }
+.source a { color: #5b8def; text-decoration: none; }
+.source a:hover { text-decoration: underline; }
+.stats { display: flex; gap: 20px; justify-content: center; margin-bottom: 30px; flex-wrap: wrap; }
+.stat { background: #1e2a3a; border-radius: 8px; padding: 12px 20px; text-align: center; }
+.stat-value { font-size: 1.5rem; font-weight: 700; color: #00d4aa; }
+.stat-label { font-size: 0.7rem; color: #8b9cb3; margin-top: 2px; }
 table { width: 100%; border-collapse: collapse; margin-bottom: 40px; font-size: 0.82rem; }
 thead th { position: sticky; top: 0; background: #1e2a3a; padding: 10px 12px; text-align: left; color: #00d4aa; border-bottom: 2px solid #2d3d52; z-index: 10; }
 tbody td { padding: 10px 12px; border-bottom: 1px solid #2d3d52; vertical-align: top; }
 tbody tr:hover td { background: #1e2a3a88; }
 .epic-header td { background: #2d3d52; font-weight: 700; font-size: 0.9rem; padding: 12px; border-bottom: 2px solid #00d4aa; }
 .epic-header td span { color: #00d4aa; }
-.epic-broker td { border-bottom-color: #f0b429; }
-.epic-broker td span { color: #f0b429; }
-.epic-inmob td { border-bottom-color: #5b8def; }
-.epic-inmob td span { color: #5b8def; }
-.epic-motor td { border-bottom-color: #a78bfa; }
-.epic-motor td span { color: #a78bfa; }
-.epic-backend td { border-bottom-color: #f97316; }
-.epic-backend td span { color: #f97316; }
-.epic-transversal td { border-bottom-color: #ec4899; }
-.epic-transversal td span { color: #ec4899; }
-.epic-sarlaft td { border-bottom-color: #14b8a6; }
-.epic-sarlaft td span { color: #14b8a6; }
-.img-thumb { width: 120px; height: 70px; object-fit: cover; object-position: center top; border-radius: 4px; border: 1px solid #2d3d52; cursor: pointer; transition: transform 0.2s; }
-.img-thumb:hover { transform: scale(1.5); z-index: 100; position: relative; }
-.no-img { color: #8b9cb3; font-style: italic; font-size: 0.75rem; }
+.epic-compra td { border-bottom-color: #f0b429; }
+.epic-compra td span { color: #f0b429; }
+.epic-figma td { border-bottom-color: #5b8def; }
+.epic-figma td span { color: #5b8def; }
+.epic-tech td { border-bottom-color: #a78bfa; }
+.epic-tech td span { color: #a78bfa; }
 .badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 0.7rem; font-weight: 500; }
 .badge-alta { background: #ef444422; color: #f87171; }
 .badge-media { background: #f0b42922; color: #f0b429; }
 .badge-baja { background: #8b9cb322; color: #8b9cb3; }
-.back-link { display: inline-block; color: #00d4aa; text-decoration: none; font-size: 0.85rem; margin-bottom: 20px; }
-.back-link:hover { text-decoration: underline; }
+.progress { display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 0.65rem; background: #00d4aa22; color: #00d4aa; }
 </style>
 </head>
 <body>
-<a href="index.html" class="back-link">&larr; Ver pantallas y campos</a>
-<h1>Backlog Completo — Cotizador Seguro de Arrendamiento</h1>
-<p class="subtitle">Proyectiva Seguros | Basado en Figma (nodo 573-12013) | Generado 2026-06-24</p>
+
+<h1>Backlog — Cotizador Seguro de Arrendamiento</h1>
+<p class="subtitle">Proyectiva Seguros | Basado en Especificaci&oacute;n Funcional v1.0 (Junio 2025) + Figma</p>
+<p class="source">Figma: <a href="https://www.figma.com/design/0bBeGqw5PTYeOioHSQysqv/Seguro-Arrendamiento---Proyectiva?node-id=564-2072" target="_blank">Abrir dise&ntilde;o</a> | Generado: 2026-06-25</p>
+
 <div class="stats">
-  <div class="stat"><div class="stat-value">33</div><div class="stat-label">Historias de Usuario</div></div>
-  <div class="stat"><div class="stat-value">7</div><div class="stat-label">Épicas</div></div>
-  <div class="stat"><div class="stat-value">3</div><div class="stat-label">Flujos de usuario</div></div>
-  <div class="stat"><div class="stat-value">15</div><div class="stat-label">Pantallas Figma</div></div>
+  <div class="stat"><div class="stat-value">17</div><div class="stat-label">Historias de Usuario</div></div>
+  <div class="stat"><div class="stat-value">4</div><div class="stat-label">&Eacute;picas</div></div>
+  <div class="stat"><div class="stat-value">13</div><div class="stat-label">Pantallas (Spec)</div></div>
+  <div class="stat"><div class="stat-value">2</div><div class="stat-label">Bloques funcionales</div></div>
 </div>
 
 <table>
 <thead>
 <tr>
-  <th style="width:12%">Épica</th>
-  <th style="width:14%">Nombre HU</th>
-  <th style="width:28%">Descripción</th>
-  <th style="width:30%">Campos</th>
-  <th style="width:10%">Imagen Figma</th>
-  <th style="width:6%">Prioridad</th>
+  <th style="width:5%">ID</th>
+  <th style="width:8%">&Eacute;pica</th>
+  <th style="width:12%">Pantalla</th>
+  <th style="width:20%">Nombre HU</th>
+  <th style="width:30%">Campos / Elementos</th>
+  <th style="width:15%">Reglas clave</th>
+  <th style="width:5%">Progreso</th>
+  <th style="width:5%">Prior.</th>
 </tr>
 </thead>
 <tbody>
 
-<!-- ÉPICA 1: Zona Pública Propietario -->
-<tr class="epic-header"><td colspan="6"><span>ÉPICA 1:</span> Zona Pública — Cotización (Flujo Propietario)</td></tr>
+<!-- BLOQUE 1: COTIZACION -->
+<tr class="epic-header"><td colspan="8"><span>BLOQUE 1:</span> Cotizaci&oacute;n (Pasos 1–4)</td></tr>
 
 <tr>
-  <td>Zona Pública</td>
-  <td>Landing del cotizador</td>
-  <td>Página de entrada con 2 CTAs: "Iniciar cotización" y "Carga de documentos"</td>
-  <td>Sin campos — solo navegación</td>
-  <td><img class="img-thumb" src="01-pagina-inicial.png" alt="Landing"></td>
+  <td>P-01</td>
+  <td>Cotizaci&oacute;n</td>
+  <td>Paso 1 de 4</td>
+  <td><strong>Cu&eacute;ntanos del lugar</strong><br><small>Datos del inmueble y arriendo para calcular precio</small></td>
+  <td>Departamento (Select dependiente) &bull; Ciudad (Select dependiente) &bull; &iquest;Cu&aacute;nto vale el arriendo? ($ moneda) &bull; &iquest;Tiene cuota de administraci&oacute;n? (Toggle S&iacute;/No) &bull; &iquest;Cu&aacute;nto vale la administraci&oacute;n? (condicional, $ moneda) &bull; &iquest;Por cu&aacute;nto tiempo lo asegurar&aacute;s? (Select: 12/24/36 meses)</td>
+  <td>Ciudad bloqueada hasta elegir Depto. Campo admin solo si toggle=S&iacute;. CTA 'Cotizar' deshabilitado hasta campos OK.</td>
+  <td><span class="progress">9%</span></td>
   <td><span class="badge badge-alta">Alta</span></td>
 </tr>
 
 <tr>
-  <td>Zona Pública</td>
-  <td>Modal selección de perfil</td>
-  <td>Selector de tipo de usuario que direcciona al flujo correspondiente</td>
-  <td>Perfil de usuario (Select: Propietario / Broker / Inmobiliaria) — Obligatorio</td>
-  <td><img class="img-thumb" src="02-modal-seleccion-perfil.png" alt="Modal perfil"></td>
+  <td>P-02</td>
+  <td>Cotizaci&oacute;n</td>
+  <td>Paso 2 de 4</td>
+  <td><strong>&iexcl;Todo listo! Este es tu presupuesto</strong><br><small>Resultado de cotizaci&oacute;n con coberturas</small></td>
+  <td>Precio destacado (din&aacute;mico) &bull; Cobertura: Arriendo hasta 12 meses (drawer) &bull; Cobertura: Facturas servicios (drawer) &bull; Cobertura: Tr&aacute;mites desocupaci&oacute;n (drawer) &bull; Cobertura: Asistencia jur&iacute;dica 24/7 (drawer) &bull; Addon: Servicios p&uacute;blicos $3M (+$20K, ON por defecto) &bull; Addon: Faltas inventario $950K (+$20K, OFF por defecto)</td>
+  <td>Precio = base + addons activos (recalcula en tiempo real). CTA 'Continuar' siempre habilitado. Drawers se cierran con X/overlay/Escape.</td>
+  <td><span class="progress">27%</span></td>
   <td><span class="badge badge-alta">Alta</span></td>
 </tr>
 
 <tr>
-  <td>Zona Pública</td>
-  <td>Verificación identidad Propietario</td>
-  <td>Valida número de identificación contra base de datos de clientes</td>
-  <td>Número de identificación (Numérico, obligatorio)</td>
-  <td><img class="img-thumb" src="03-propietario-consulta-id.png" alt="Consulta ID"></td>
+  <td>P-03</td>
+  <td>Cotizaci&oacute;n</td>
+  <td>Paso 3 de 4</td>
+  <td><strong>Cotiza de manera r&aacute;pida</strong><br><small>Captura datos de contacto</small></td>
+  <td>Nombre completo (text, min 3 chars) &bull; N&uacute;mero de celular (tel, min 7 d&iacute;gitos) &bull; Correo electr&oacute;nico (email, debe contener @)</td>
+  <td>CTA 'Enviar' deshabilitado hasta 3 campos v&aacute;lidos. Atributos autocomplete para UX.</td>
+  <td><span class="progress">45%</span></td>
   <td><span class="badge badge-alta">Alta</span></td>
 </tr>
 
 <tr>
-  <td>Zona Pública</td>
-  <td>Paso 1 — Datos del Tomador</td>
-  <td>Formulario con información personal del tomador de la póliza</td>
-  <td>Perfil (auto), Tipo doc (Select), Nro doc (auto), Nombres (Text), Contacto (Text), Correo (Text), Ubicación inmueble (Select), Tomador póliza (Select), Empleado Grupo Bolívar (Select)</td>
-  <td><img class="img-thumb" src="05-propietario-formulario-paso1.png" alt="Paso 1 Tomador"></td>
+  <td>P-04</td>
+  <td>Cotizaci&oacute;n</td>
+  <td>Paso 4 de 4</td>
+  <td><strong>Confirmaci&oacute;n y decisi&oacute;n</strong><br><small>Resumen post-env&iacute;o con ID del proceso</small></td>
+  <td>&Iacute;cono &eacute;xito &bull; Bloque precio (naranja, solo lectura) &bull; Datos contacto (editable, redirige P-03) &bull; ID del proceso (copiable) &bull; Nota 'Guarda este n&uacute;mero...'</td>
+  <td>T&iacute;tulo din&aacute;mico con nombre. 2 CTAs: 'Proteger mi arriendo' &rarr; P-05 | 'Esperar la llamada' &rarr; P-09.</td>
+  <td><span class="progress">55%</span></td>
+  <td><span class="badge badge-alta">Alta</span></td>
+</tr>
+
+<!-- BLOQUE 2: COMPRA -->
+<tr class="epic-header epic-compra"><td colspan="8"><span>BLOQUE 2:</span> Compra (Pasos 1–5 + derivaciones)</td></tr>
+
+<tr>
+  <td>P-05</td>
+  <td>Compra</td>
+  <td>Paso 1 de 5</td>
+  <td><strong>&iquest;Tu inquilino tiene estudio de arrendamiento?</strong><br><small>Bifurcaci&oacute;n por tarjetas de opci&oacute;n</small></td>
+  <td>Tarjeta: 'S&iacute;, ya est&aacute; aprobado' (&iacute;cono check verde) &bull; Tarjeta: 'A&uacute;n no lo tengo' (&iacute;cono casa naranja) &bull; Banner: '&iquest;No tienes inquilino? Publica tu inmueble...'</td>
+  <td>Sin CTA — la selecci&oacute;n navega inmediato. S&iacute; &rarr; P-06, No &rarr; P-05b.</td>
+  <td><span class="progress">64%</span></td>
   <td><span class="badge badge-alta">Alta</span></td>
 </tr>
 
 <tr>
-  <td>Zona Pública</td>
-  <td>Paso 1 — Datos del Inmueble</td>
-  <td>Formulario con información del inmueble a asegurar</td>
-  <td>Destino inmueble (Select), Dirección (Text), Canon arrendamiento ($), Cuota administración ($), Total asegurado (auto), Garaje (Select), Nro garaje (cond), Depósito (Select), Nro depósito (cond), Vigencia (Radio 6-12 meses), Fecha inicio (DatePicker)</td>
-  <td><img class="img-thumb" src="06-propietario-paso1-completo.png" alt="Paso 1 Inmueble"></td>
+  <td>P-05b</td>
+  <td>Compra</td>
+  <td>Derivaci&oacute;n</td>
+  <td><strong>Comparte el estudio con tu inquilino</strong><br><small>Env&iacute;o de enlace por correo y WhatsApp</small></td>
+  <td>N&uacute;mero celular inquilino (tel, min 7) &bull; Correo electr&oacute;nico inquilino (email, debe contener @)</td>
+  <td>CTA 'Enviar' deshabilitado hasta ambos campos v&aacute;lidos. Avanza a P-05c.</td>
+  <td><span class="progress">64%</span></td>
   <td><span class="badge badge-alta">Alta</span></td>
 </tr>
 
 <tr>
-  <td>Zona Pública</td>
-  <td>Paso 2 — Cotización y Coberturas</td>
-  <td>Resultado automático con cálculo de prima y coberturas opcionales. CTAs: Adquirir Póliza / Contactar Asesor</td>
-  <td>Tipo inmueble (readonly), Vigencia (readonly), Total asegurado (readonly), Servicios Públicos (opcional $), Daños y Faltantes (opcional $), Valor Póliza (auto)</td>
-  <td><img class="img-thumb" src="09-paso2-cotizacion-coberturas.png" alt="Cotización"></td>
-  <td><span class="badge badge-alta">Alta</span></td>
-</tr>
-
-<tr>
-  <td>Zona Pública</td>
-  <td>Paso 3 — Pregunta Inquilino</td>
-  <td>Pregunta binaria que bifurca el flujo según si ya tiene inquilino</td>
-  <td>¿Ya cuentas con inquilino? (Select: "Estoy buscando" → pausa / "Ya lo tengo" → continúa)</td>
-  <td><img class="img-thumb" src="10-paso3-inquilino-pregunta.png" alt="Inquilino"></td>
-  <td><span class="badge badge-alta">Alta</span></td>
-</tr>
-
-<tr>
-  <td>Zona Pública</td>
-  <td>Paso 4 — Pregunta Estudio</td>
-  <td>Pregunta sobre si el inquilino ya realizó el estudio de arrendamiento</td>
-  <td>¿Inquilino ya realizó estudio? (Select: "Realizar estudio" → flujo separado / "Ya lo tengo" → continúa)</td>
-  <td><img class="img-thumb" src="11-paso4-estudio-pregunta.png" alt="Estudio"></td>
-  <td><span class="badge badge-alta">Alta</span></td>
-</tr>
-
-<tr>
-  <td>Zona Pública</td>
-  <td>Paso 5 — Datos Inquilino y Documentos</td>
-  <td>Formulario con datos del inquilino y carga de 3 documentos obligatorios (png/jpg/pdf, max 8MB)</td>
-  <td>Tipo doc inquilino (Select), Nro doc (Text), Nombres (Text), Nro solicitud estudio (Text), Servicios disponibles (Checkboxes), Forma de pago (Select), Cédula (archivo), Cert. Libertad y Tradición (archivo), Formulario B-114 SARLAFT (archivo)</td>
-  <td><img class="img-thumb" src="12-paso5-carga-documentos.png" alt="Documentos"></td>
-  <td><span class="badge badge-alta">Alta</span></td>
-</tr>
-
-</tbody>
-</table>
-
-<!-- TABLA 2: BROKER + INMOBILIARIA + SARLAFT -->
-<table>
-<thead>
-<tr>
-  <th style="width:12%">Épica</th>
-  <th style="width:14%">Nombre HU</th>
-  <th style="width:28%">Descripción</th>
-  <th style="width:30%">Campos</th>
-  <th style="width:10%">Imagen Figma</th>
-  <th style="width:6%">Prioridad</th>
-</tr>
-</thead>
-<tbody>
-
-<!-- ÉPICA 2: Flujo Broker -->
-<tr class="epic-header epic-broker"><td colspan="6"><span>ÉPICA 2:</span> Flujo Broker</td></tr>
-
-<tr>
-  <td>Broker</td>
-  <td>Verificación identidad Broker</td>
-  <td>Modal que valida cédula del broker contra base de intermediarios</td>
-  <td>Número de identificación (Numérico CC, obligatorio)</td>
-  <td><img class="img-thumb" src="broker-01-consulta-id.png" alt="Broker ID"></td>
-  <td><span class="badge badge-alta">Alta</span></td>
-</tr>
-
-<tr>
-  <td>Broker</td>
-  <td>Bienvenida Broker</td>
-  <td>Confirmación de identidad con nombre del broker autenticado. Acción: "Radicar"</td>
-  <td>Sin campos — solo confirmación y botón Radicar</td>
-  <td><img class="img-thumb" src="broker-02-bienvenida.png" alt="Broker Bienvenida"></td>
+  <td>P-05c</td>
+  <td>Compra</td>
+  <td>Derivaci&oacute;n</td>
+  <td><strong>&iexcl;Listo! Le avisamos a tu inquilino</strong><br><small>Confirmaci&oacute;n de env&iacute;o — dead-end</small></td>
+  <td>&Iacute;cono &eacute;xito &bull; Bloque '&iquest;Qu&eacute; sigue?' (naranja) &bull; ID del proceso (copiable) &bull; Nota auxiliar</td>
+  <td>Dead-end del flujo. CTA 'Volver al inicio' &rarr; P-01. El propietario retoma cuando inquilino tenga estudio aprobado.</td>
+  <td><span class="progress">64%</span></td>
   <td><span class="badge badge-media">Media</span></td>
 </tr>
 
 <tr>
-  <td>Broker</td>
-  <td>Formulario radicación Broker</td>
-  <td>Formulario único con datos del propietario y documentos de soporte para radicación</td>
-  <td>Celular (Text), Nro solicitud inquilino aprobada (Text), ¿Propietario es? (Select PN/PJ), Tipo doc propietario (Select), Nro doc propietario (Text), Nombres propietario (Text), Celular propietario (Text), Correo propietario (Text), ¿Quién firma contrato? (Select), Cédula propietario (archivo), SARLAFT (archivo), Cert. Libertad y Tradición (archivo)</td>
-  <td><img class="img-thumb" src="broker-03-formulario.png" alt="Broker Formulario"></td>
-  <td><span class="badge badge-alta">Alta</span></td>
-</tr>
-
-<!-- ÉPICA 3: Flujo Inmobiliaria -->
-<tr class="epic-header epic-inmob"><td colspan="6"><span>ÉPICA 3:</span> Flujo Inmobiliaria</td></tr>
-
-<tr>
-  <td>Inmobiliaria</td>
-  <td>Verificación identidad Inmobiliaria</td>
-  <td>Modal que valida número de póliza contra base de inmobiliarias (diferente al broker que usa CC)</td>
-  <td>Número de Póliza (Numérico, obligatorio)</td>
-  <td><img class="img-thumb" src="inmobiliaria-01-consulta-poliza.png" alt="Inmob Póliza"></td>
+  <td>P-06</td>
+  <td>Compra</td>
+  <td>Paso 2 de 5</td>
+  <td><strong>N&uacute;mero del estudio de arrendamiento</strong><br><small>B&uacute;squeda por proceso o documento</small></td>
+  <td>Toggle: 'No de proceso' | 'Documento de identidad' &bull; Modo A: N&uacute;mero de proceso (num&eacute;rico, min 4) &bull; Modo B: Tipo documento (CC/CE/Pasaporte) + N&uacute;mero documento (min 4)</td>
+  <td>Toggle muta campos visibles. Al cambiar modo se oculta el anterior. CTA 'Continuar' seg&uacute;n modo activo.</td>
+  <td><span class="progress">73%</span></td>
   <td><span class="badge badge-alta">Alta</span></td>
 </tr>
 
 <tr>
-  <td>Inmobiliaria</td>
-  <td>Bienvenida Inmobiliaria</td>
-  <td>Confirmación de identidad con nombre de la inmobiliaria autenticada. Acción: "Radicar"</td>
-  <td>Sin campos — solo confirmación y botón Radicar</td>
-  <td><img class="img-thumb" src="inmobiliaria-02-bienvenida.png" alt="Inmob Bienvenida"></td>
+  <td>P-07</td>
+  <td>Compra</td>
+  <td>Paso 3 de 5</td>
+  <td><strong>&iquest;Qui&eacute;n contrata la p&oacute;liza?</strong><br><small>Identificaci&oacute;n del tomador</small></td>
+  <td>Toggle: 'Due&ntilde;o' | 'Apoderado' &bull; Tipo de documento (CC/CE/Pasaporte/NIT) &bull; N&uacute;mero de documento (min 4)</td>
+  <td>Toggle solo cambia etiqueta visual. Campos iguales en ambos casos. Nombre aparece en contrato.</td>
+  <td><span class="progress">82%</span></td>
+  <td><span class="badge badge-alta">Alta</span></td>
+</tr>
+
+<tr>
+  <td>P-08</td>
+  <td>Compra</td>
+  <td>Paso 4 de 5</td>
+  <td><strong>Carga tus documentos</strong><br><small>Upload de c&eacute;dula y certificado tradici&oacute;n</small></td>
+  <td>C&eacute;dula del propietario (file: PDF/JPG/JPEG/PNG) &bull; Certificado de tradici&oacute;n y libertad (file: PDF/JPG/JPEG/PNG)</td>
+  <td>Estado inicial: 'Toca para cargar'. Cargado: check verde. Re-tocar elimina archivo. CTA habilitado solo con ambos docs cargados.</td>
+  <td><span class="progress">91%</span></td>
+  <td><span class="badge badge-alta">Alta</span></td>
+</tr>
+
+<tr>
+  <td>P-09</td>
+  <td>Compra</td>
+  <td>Confirmaci&oacute;n</td>
+  <td><strong>Todo listo, nuestro equipo se pondr&aacute; en contacto</strong><br><small>Confirmaci&oacute;n intermedia</small></td>
+  <td>&Iacute;cono &eacute;xito &bull; Datos contacto (editable) &bull; ID del proceso (copiable)</td>
+  <td>Destino dual: desde P-04 'Esperar llamada' o desde P-08. 2 CTAs: 'Generar contrato' &rarr; P-10 | 'Salir' &rarr; P-01.</td>
+  <td><span class="progress">95%</span></td>
+  <td><span class="badge badge-alta">Alta</span></td>
+</tr>
+
+<tr>
+  <td>P-10</td>
+  <td>Compra</td>
+  <td>Paso 5 de 5</td>
+  <td><strong>Confirma unos datos</strong><br><small>Datos adicionales para generar contrato</small></td>
+  <td>&iquest;Tiene garaje? (Toggle) &bull; Cantidad garajes (condicional, 1-10) &bull; &iquest;Tiene dep&oacute;sito? (Toggle) &bull; Cantidad dep&oacute;sitos (condicional, 1-10) &bull; &iquest;Cu&aacute;les servicios? (Checkboxes: Agua/Luz/Gas/Caldera) &bull; Cl&aacute;usulas adicionales (Textarea, opcional)</td>
+  <td>Toggles cambian visibilidad de campos cantidad. Servicios y cl&aacute;usulas no bloquean CTA. Al cambiar S&iacute;&rarr;No se limpia el campo.</td>
+  <td><span class="progress">98%</span></td>
+  <td><span class="badge badge-alta">Alta</span></td>
+</tr>
+
+<tr>
+  <td>P-11</td>
+  <td>Compra</td>
+  <td>Final</td>
+  <td><strong>Todo listo, te enviamos el contrato para que lo firmes</strong><br><small>Pantalla final — contrato enviado por correo</small></td>
+  <td>&Iacute;cono &eacute;xito &bull; Correo confirmado (din&aacute;mico) &bull; ID del proceso (copiable)</td>
+  <td>Progreso 100%. CTA 'Volver al inicio' &rarr; P-01. No hay campos de entrada.</td>
+  <td><span class="progress">100%</span></td>
+  <td><span class="badge badge-media">Media</span></td>
+</tr>
+
+<!-- SECCIONES FIGMA ADICIONALES -->
+<tr class="epic-header epic-figma"><td colspan="8"><span>FIGMA:</span> Secciones adicionales (Login, Consultar, Radicar, SARLAFT)</td></tr>
+
+<tr>
+  <td>F-01</td>
+  <td>Figma</td>
+  <td>Login</td>
+  <td><strong>Autenticaci&oacute;n de usuario</strong><br><small>Pantalla de acceso para retomar proceso con ID</small></td>
+  <td>Pendiente definir campos exactos (visible en Figma como 'Login')</td>
+  <td>Pendiente definir — Permite retomar un proceso existente con el ID generado en P-04.</td>
+  <td>—</td>
+  <td><span class="badge badge-alta">Alta</span></td>
+</tr>
+
+<tr>
+  <td>F-02</td>
+  <td>Figma</td>
+  <td>Consultar</td>
+  <td><strong>Consulta de estado del proceso</strong><br><small>Verificar estado de solicitud por ID</small></td>
+  <td>Pendiente definir campos exactos (visible en Figma como 'Consultar')</td>
+  <td>Pendiente definir — El usuario consulta el avance de su proceso.</td>
+  <td>—</td>
   <td><span class="badge badge-media">Media</span></td>
 </tr>
 
 <tr>
-  <td>Inmobiliaria</td>
-  <td>Formulario radicación Inmobiliaria</td>
-  <td>Formulario idéntico al broker con texto adaptado ("Estimada inmobiliaria...")</td>
-  <td>Celular (Text), Nro solicitud inquilino aprobada (Text), ¿Propietario es? (Select PN/PJ), Tipo doc propietario (Select), Nro doc propietario (Text), Nombres propietario (Text), Celular propietario (Text), Correo propietario (Text), ¿Quién firma contrato? (Select), Cédula propietario (archivo), SARLAFT (archivo), Cert. Libertad y Tradición (archivo)</td>
-  <td><img class="img-thumb" src="inmobiliaria-03-formulario.png" alt="Inmob Formulario"></td>
-  <td><span class="badge badge-alta">Alta</span></td>
+  <td>F-03</td>
+  <td>Figma</td>
+  <td>Radicar</td>
+  <td><strong>Radicaci&oacute;n de solicitud</strong><br><small>Formulario de radicaci&oacute;n formal</small></td>
+  <td>Pendiente definir campos exactos (visible en Figma como 'Radicar')</td>
+  <td>Pendiente definir — Proceso de radicaci&oacute;n post-aprobaci&oacute;n.</td>
+  <td>—</td>
+  <td><span class="badge badge-media">Media</span></td>
 </tr>
 
-<!-- ÉPICA 4: SARLAFT -->
-<tr class="epic-header epic-sarlaft"><td colspan="6"><span>ÉPICA 4:</span> SARLAFT (Prevención Lavado de Activos)</td></tr>
-
 <tr>
+  <td>F-04</td>
+  <td>Figma</td>
   <td>SARLAFT</td>
-  <td>SARLAFT</td>
-  <td>Pendiente definir — Épica de cumplimiento SARLAFT para el cotizador de arrendamiento. Incluye formulario B-114 digital, validación contra listas restrictivas y generación de PDF firmado.</td>
-  <td>Pendiente definir</td>
-  <td><span class="no-img">Pendiente definir</span></td>
+  <td><strong>SARLAFT Simplificado Natural</strong><br><small>Formulario de prevenci&oacute;n lavado de activos</small></td>
+  <td>Pendiente definir — Secci&oacute;n visible en Figma con formulario SARLAFT simplificado para persona natural</td>
+  <td>Pendiente definir — Requerido para cumplimiento normativo previo a emisi&oacute;n de p&oacute;liza.</td>
+  <td>—</td>
   <td><span class="badge badge-alta">Alta</span></td>
 </tr>
 
-</tbody>
-</table>
-
-<!-- TABLA 3: MOTOR + BACKEND + TRANSVERSALES -->
-<table>
-<thead>
-<tr>
-  <th style="width:12%">Épica</th>
-  <th style="width:14%">Nombre HU</th>
-  <th style="width:28%">Descripción</th>
-  <th style="width:30%">Campos</th>
-  <th style="width:10%">Imagen Figma</th>
-  <th style="width:6%">Prioridad</th>
-</tr>
-</thead>
-<tbody>
-
-<!-- ÉPICA 5: Motor de Cálculo -->
-<tr class="epic-header epic-motor"><td colspan="6"><span>ÉPICA 5:</span> Motor de Cálculo y Reglas de Negocio</td></tr>
+<!-- HISTORIAS TECNICAS -->
+<tr class="epic-header epic-tech"><td colspan="8"><span>T&Eacute;CNICAS:</span> Transversales (Motor, Integraciones, Observabilidad)</td></tr>
 
 <tr>
-  <td>Motor Cálculo</td>
-  <td>Cálculo automático de prima</td>
-  <td>Motor que calcula valor total asegurado (canon + administración) y valor de póliza según vigencia (6 o 12 meses)</td>
-  <td>Inputs: canon, administración, vigencia. Outputs: total asegurado, valor póliza</td>
-  <td><span class="no-img">Sin pantalla — lógica backend</span></td>
+  <td>T-01</td>
+  <td>T&eacute;cnica</td>
+  <td>—</td>
+  <td><strong>Motor de c&aacute;lculo de prima</strong><br><small>L&oacute;gica de precio base + addons en tiempo real</small></td>
+  <td>Precio base + addon Servicios P&uacute;blicos (+$20K) + addon Inventario (+$20K). Recalcula en cada toggle.</td>
+  <td>Sincronizado globalmente entre P-02 y P-04. Debe escalar a motor OpenL en fase 2.</td>
+  <td>—</td>
   <td><span class="badge badge-alta">Alta</span></td>
 </tr>
 
 <tr>
-  <td>Motor Cálculo</td>
-  <td>Coberturas opcionales</td>
-  <td>Lógica para agregar/ampliar "Servicios Públicos" y "Daños y Faltantes" al valor de la póliza</td>
-  <td>Inputs: selección cobertura, monto. Output: prima ajustada</td>
-  <td><span class="no-img">Sin pantalla — lógica backend</span></td>
+  <td>T-02</td>
+  <td>T&eacute;cnica</td>
+  <td>—</td>
+  <td><strong>Notificaciones WhatsApp + Email</strong><br><small>Env&iacute;o de estudio al inquilino (P-05b)</small></td>
+  <td>Integraci&oacute;n Infobip (WhatsApp) + Gmail para enviar enlace de estudio al inquilino.</td>
+  <td>Se dispara al completar P-05b. Template con enlace personalizado.</td>
+  <td>—</td>
+  <td><span class="badge badge-alta">Alta</span></td>
+</tr>
+
+<tr>
+  <td>T-03</td>
+  <td>T&eacute;cnica</td>
+  <td>—</td>
+  <td><strong>Barra de progreso global + Navegaci&oacute;n</strong><br><small>Componente de progreso y bot&oacute;n Atr&aacute;s</small></td>
+  <td>Barra con % seg&uacute;n pantalla (9%-100%). Oculta en P-01. Bot&oacute;n Atr&aacute;s seg&uacute;n mapa de navegaci&oacute;n.</td>
+  <td>P-01 no tiene Atr&aacute;s. Cada pantalla tiene su destino de retroceso espec&iacute;fico.</td>
+  <td>—</td>
   <td><span class="badge badge-media">Media</span></td>
-</tr>
-
-<tr>
-  <td>Motor Cálculo</td>
-  <td>Validación campos condicionales</td>
-  <td>Mostrar/ocultar campos: Nro garaje (si tiene garaje=Sí), Nro depósito (si tiene depósito=Sí)</td>
-  <td>Lógica UI reactiva según valores de selects</td>
-  <td><span class="no-img">Sin pantalla — lógica frontend</span></td>
-  <td><span class="badge badge-media">Media</span></td>
-</tr>
-
-<tr>
-  <td>Motor Cálculo</td>
-  <td>Integración motor suscripción (OpenL)</td>
-  <td>Conectar reglas dinámicas de suscripción para evaluación en tiempo real. Negocio parametriza sin tecnología</td>
-  <td>API call al motor OpenL con datos del formulario</td>
-  <td><span class="no-img">Sin pantalla — integración</span></td>
-  <td><span class="badge badge-alta">Alta</span></td>
-</tr>
-
-<!-- ÉPICA 6: Integraciones Backend -->
-<tr class="epic-header epic-backend"><td colspan="6"><span>ÉPICA 6:</span> Integraciones Backend</td></tr>
-
-<tr>
-  <td>Backend</td>
-  <td>API validación identidad (clientes)</td>
-  <td>Endpoint para validar cédula/documento del propietario contra base de datos de clientes existentes</td>
-  <td>Input: tipo doc + nro doc. Output: datos cliente o error</td>
-  <td><span class="no-img">Sin pantalla — API</span></td>
-  <td><span class="badge badge-alta">Alta</span></td>
-</tr>
-
-<tr>
-  <td>Backend</td>
-  <td>API validación broker</td>
-  <td>Endpoint para validar CC del broker contra base de intermediarios registrados</td>
-  <td>Input: CC broker. Output: nombre broker o error</td>
-  <td><span class="no-img">Sin pantalla — API</span></td>
-  <td><span class="badge badge-alta">Alta</span></td>
-</tr>
-
-<tr>
-  <td>Backend</td>
-  <td>API validación inmobiliaria</td>
-  <td>Endpoint para validar nro de póliza contra base de inmobiliarias</td>
-  <td>Input: nro póliza. Output: nombre inmobiliaria o error</td>
-  <td><span class="no-img">Sin pantalla — API</span></td>
-  <td><span class="badge badge-alta">Alta</span></td>
-</tr>
-
-<tr>
-  <td>Backend</td>
-  <td>API emisión pólizas individuales</td>
-  <td>Conectar cotizador → motor suscripción → SAI para emisión automática de póliza</td>
-  <td>Input: datos completos solicitud. Output: nro póliza emitida</td>
-  <td><span class="no-img">Sin pantalla — API</span></td>
-  <td><span class="badge badge-alta">Alta</span></td>
-</tr>
-
-<tr>
-  <td>Backend</td>
-  <td>Servicio carga de documentos</td>
-  <td>Upload de archivos (png/jpg/pdf, max 8MB) con almacenamiento seguro (S3)</td>
-  <td>Input: archivo + metadata. Output: URL almacenamiento</td>
-  <td><span class="no-img">Sin pantalla — servicio</span></td>
-  <td><span class="badge badge-alta">Alta</span></td>
-</tr>
-
-<tr>
-  <td>Backend</td>
-  <td>Integración estudio digital</td>
-  <td>Conectar con API de estudio de arrendamiento existente para validar inquilinos</td>
-  <td>Input: nro solicitud estudio. Output: estado aprobado/rechazado</td>
-  <td><span class="no-img">Sin pantalla — integración</span></td>
-  <td><span class="badge badge-media">Media</span></td>
-</tr>
-
-<tr>
-  <td>Backend</td>
-  <td>Notificaciones (WhatsApp/Email)</td>
-  <td>Confirmación de radicación y OTP vía Infobip WhatsApp + Gmail</td>
-  <td>Input: celular/correo + template. Output: confirmación envío</td>
-  <td><span class="no-img">Sin pantalla — servicio</span></td>
-  <td><span class="badge badge-media">Media</span></td>
-</tr>
-
-<!-- ÉPICA 7: Transversales -->
-<tr class="epic-header epic-transversal"><td colspan="6"><span>ÉPICA 7:</span> Transversales (UX, Seguridad, Observabilidad)</td></tr>
-
-<tr>
-  <td>Transversal</td>
-  <td>Responsive design</td>
-  <td>Adaptar los 3 flujos a dispositivos móviles y tablets</td>
-  <td>N/A — adaptación visual</td>
-  <td><span class="no-img">Sin pantalla específica</span></td>
-  <td><span class="badge badge-media">Media</span></td>
-</tr>
-
-<tr>
-  <td>Transversal</td>
-  <td>Validaciones frontend</td>
-  <td>Validación de campos en tiempo real: formatos de documento, email, teléfono, moneda</td>
-  <td>Validaciones para todos los campos de los formularios</td>
-  <td><span class="no-img">Sin pantalla específica</span></td>
-  <td><span class="badge badge-alta">Alta</span></td>
-</tr>
-
-<tr>
-  <td>Transversal</td>
-  <td>Manejo de errores y estados de carga</td>
-  <td>Mensajes de error amigables + loaders durante validaciones y cálculos</td>
-  <td>N/A — UX transversal</td>
-  <td><span class="no-img">Sin pantalla específica</span></td>
-  <td><span class="badge badge-media">Media</span></td>
-</tr>
-
-<tr>
-  <td>Transversal</td>
-  <td>Seguridad — Sanitización inputs</td>
-  <td>Prevención de inyección, validación estricta de tipos en todos los campos</td>
-  <td>N/A — lógica de seguridad</td>
-  <td><span class="no-img">Sin pantalla específica</span></td>
-  <td><span class="badge badge-alta">Alta</span></td>
-</tr>
-
-<tr>
-  <td>Transversal</td>
-  <td>Seguridad — Enmascaramiento PII</td>
-  <td>Datos sensibles enmascarados en logs y respuestas de API</td>
-  <td>N/A — infraestructura</td>
-  <td><span class="no-img">Sin pantalla específica</span></td>
-  <td><span class="badge badge-alta">Alta</span></td>
-</tr>
-
-<tr>
-  <td>Transversal</td>
-  <td>Observabilidad — Tags y tracking</td>
-  <td>Etiquetado de eventos para medición de conversión por perfil (mercadeo)</td>
-  <td>N/A — analytics</td>
-  <td><span class="no-img">Sin pantalla específica</span></td>
-  <td><span class="badge badge-media">Media</span></td>
-</tr>
-
-<tr>
-  <td>Transversal</td>
-  <td>SEO y meta tags</td>
-  <td>Optimización para descubrimiento orgánico del cotizador</td>
-  <td>N/A — meta tags HTML</td>
-  <td><span class="no-img">Sin pantalla específica</span></td>
-  <td><span class="badge badge-baja">Baja</span></td>
-</tr>
-
-<tr>
-  <td>Transversal</td>
-  <td>Migración al stack aprobado</td>
-  <td>Reescritura dentro del stack tecnológico (Angular 17+ / Node.js) eliminando versión vulnerable actual</td>
-  <td>N/A — arquitectura completa</td>
-  <td><span class="no-img">Sin pantalla específica</span></td>
-  <td><span class="badge badge-alta">Alta</span></td>
 </tr>
 
 </tbody>
